@@ -25,6 +25,28 @@
     "/home".options = [ "compress=zstd" ];
     "/nix".options = [ "compress=zstd" "noatime" ];
     "/swap".options = [ "noatime" ];
+    "/mnt/mediadata" = {
+      label = "mediadata";
+      fsType = "btrfs";
+      options = [ "compress=zstd" "nofail" "users" "exec" ];
+    };
+    "/mnt/attach1" = {
+      label = "attach1";
+      fsType = "btrfs";
+      options = [ "compress=zstd" "nofail" "users" ];
+    };
+
+    "/mnt/attach2" = {
+      label = "attach2";
+      fsType = "btrfs";
+      options = [ "compress=zstd" "nofail" "user" "noauto" ];
+    };
+
+    "/mnt/x7music" = {
+      label = "X7MUSIC";
+      fsType = "vfat";
+      options = [ "nofail" "user" "noauto" ];
+    };
   };
   swapDevices = [{ 
     device = "/swap/swapfile"; 
