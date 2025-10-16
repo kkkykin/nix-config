@@ -68,6 +68,7 @@
 
           modules = [
             sops-nix.nixosModules.sops
+            ./hosts/asus
             ./users/${username}/nixos.nix
 
             home-manager.nixosModules.home-manager
@@ -80,7 +81,7 @@
               };
             }
           ];
-        }
+        };
     };
     devShells = {
       x86_64-linux.default = let
