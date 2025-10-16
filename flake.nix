@@ -35,7 +35,7 @@
     nixosConfigurations = {
       legion-wsl = let
         username = "nixos";
-        specialArgs = {inherit username;};
+        specialArgs = inputs // {inherit username;};
       in
         nixpkgs.lib.nixosSystem {
           inherit specialArgs;
