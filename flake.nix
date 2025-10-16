@@ -58,6 +58,29 @@
             }
           ];
         };
+      asus = let
+        username = "kkky";
+        specialArgs = inputs // {inherit username;};
+      in
+        nixpkgs.lib.nixosSystem {
+          inherit specialArgs;
+          system = "x86_64-linux";
+
+          modules = [
+            sops-nix.nixosModules.sops
+            ./users/${username}/nixos.nix
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                extraSpecialArgs = inputs // specialArgs;
+                users.${username} = import ./users/${username}/home.nix;
+              };
+            }
+          ];
+        }
     };
     devShells = {
       x86_64-linux.default = let

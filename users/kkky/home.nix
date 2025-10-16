@@ -2,6 +2,7 @@
   imports = [
     ../../home/core.nix
     ../../home/programs
+    ../../home/programs/emacs.nix
   ];
 
   programs.git = {
