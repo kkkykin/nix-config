@@ -4,7 +4,8 @@
   services = {
     openssh = {
       enable = true;
+      settings.PasswordAuthentication = false;
+      openFirewall = true;
     };
   };
-  networking.firewall.allowedTCPPorts = [ 22 ];
 }
