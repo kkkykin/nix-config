@@ -13,6 +13,7 @@
 allow-emacs-pinentry
 allow-loopback-pinentry
 '';
+    pinentry.package = pkgs.pinentry-curses;
     sshKeys = [
       "3B9C987396950F02C10B797D9E3B93358DEFD686"
     ];
