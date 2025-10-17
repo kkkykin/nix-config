@@ -68,6 +68,15 @@
 
           modules = [
             sops-nix.nixosModules.sops
+            {
+              sops = {
+                gnupg = {
+                  home = "/root/.gnupg";
+                  sshKeyPaths = [];
+                };
+              };
+            }
+
             ./hosts/asus
             ./users/${username}/nixos.nix
 

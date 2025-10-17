@@ -10,6 +10,7 @@
     ../../modules/system.nix
     ../../modules/server.nix
     ../../modules/nixpkgs.nix
+    ../../modules/sing-box.nix
     ./hardware-configuration.nix
   ];
 
