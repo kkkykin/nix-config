@@ -2,6 +2,15 @@
   config,
   ...
 }: {
-  users.users.nixos = {
+  sops = {
+    gnupg.home = "/root/.gnupg";
+    defaultSopsFile = ../../secrets/users.yaml;
+    secrets.nixos_pass.neededForUsers = true;
+  };
+  users = {
+    mutableUsers = false;
+    users.nixos = {
+      hashedPasswordFile = config.sops.secrets.nixos_pass.path;
+    };
   };
 }
