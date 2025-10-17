@@ -18,4 +18,7 @@ allow-loopback-pinentry
       "3B9C987396950F02C10B797D9E3B93358DEFD686"
     ];
   };
+  home.packages = with pkgs;[
+    sops
+  ];
 }
