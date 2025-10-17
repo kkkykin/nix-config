@@ -5,6 +5,9 @@
     ../../home/programs/emacs.nix
     ../../home/programs/coding-agents.nix
   ];
+  home.packages = with pkgs; [
+    torsocks
+  ];
 
   programs.git = {
     userName = "kkky";
