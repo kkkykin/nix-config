@@ -5,6 +5,10 @@
   programs.emacs = {
     package = pkgs.emacs-nox;
     enable = true;
+    extraPackages = epkgs: [
+      epkgs.nix-ts-mode
+      epkgs.eat
+    ];
   };
   home.packages = with pkgs;[
     aspell
