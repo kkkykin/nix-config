@@ -3,7 +3,26 @@
   lib,
   username,
   ...
-}: {
+}: let
+  lowerHttpProxy = builtins.getEnv "http_proxy";
+  upperHttpProxy = builtins.getEnv "HTTP_PROXY";
+  lowerHttpsProxy = builtins.getEnv "https_proxy";
+  upperHttpsProxy = builtins.getEnv "HTTPS_PROXY";
+  lowerAllProxy = builtins.getEnv "all_proxy";
+  upperAllProxy = builtins.getEnv "ALL_PROXY";
+  lowerNoProxy = builtins.getEnv "no_proxy";
+  upperNoProxy = builtins.getEnv "NO_PROXY";
+  mkVar = name: value: lib.optional (value != "") "${name}=${value}";
+  impureEnvVars =
+    mkVar "http_proxy" lowerHttpProxy
+    ++ mkVar "https_proxy" lowerHttpsProxy
+    ++ mkVar "all_proxy" lowerAllProxy
+    ++ mkVar "no_proxy" lowerNoProxy
+    ++ mkVar "HTTP_PROXY" upperHttpProxy
+    ++ mkVar "HTTPS_PROXY" upperHttpsProxy
+    ++ mkVar "ALL_PROXY" upperAllProxy
+    ++ mkVar "NO_PROXY" upperNoProxy;
+in {
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${username} = {
     isNormalUser = true;
@@ -19,7 +38,13 @@
   # customise /etc/nix/nix.conf declaratively via `nix.settings`
   nix.settings = {
     # enable flakes globally
-    experimental-features = ["nix-command" "flakes"];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+      "configurable-impure-env"
+    ];
+
+    impure-env = impureEnvVars;
 
     substituters = [
       # cache mirror located in China
@@ -49,18 +74,6 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "zh_CN.UTF-8";
-    LC_IDENTIFICATION = "zh_CN.UTF-8";
-    LC_MEASUREMENT = "zh_CN.UTF-8";
-    LC_MONETARY = "zh_CN.UTF-8";
-    LC_NAME = "zh_CN.UTF-8";
-    LC_NUMERIC = "zh_CN.UTF-8";
-    LC_PAPER = "zh_CN.UTF-8";
-    LC_TELEPHONE = "zh_CN.UTF-8";
-    LC_TIME = "zh_CN.UTF-8";
-  };
 
   programs.dconf.enable = true;
 
