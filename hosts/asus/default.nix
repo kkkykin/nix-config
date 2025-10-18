@@ -11,6 +11,7 @@
     ../../modules/server.nix
     ../../modules/nixpkgs.nix
     ../../modules/sing-box.nix
+    ../../modules/aria2.nix
     ./hardware-configuration.nix
   ];
   sops = {
