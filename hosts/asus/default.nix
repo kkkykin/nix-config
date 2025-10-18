@@ -25,10 +25,80 @@
       "postgresql_init_script" = {
         owner = "postgres";
       };
+      wireless = {
+        sopsFile = ../../secrets/wireless.env;
+        key = "";
+        format = "dotenv";
+      };
     };
   };
 
   services = {
+    caddy = {
+      enable = true;
+      package = pkgs.unstable.caddy.withPlugins {
+        plugins = [
+          "github.com/mholt/caddy-l4@v0.0.0-20251001194302-2e3e6cf60b25"
+          "github.com/abiosoft/caddy-exec=github.com/kkkykin/caddy-exec@v0.0.0-20250930150303-c92bd5346ec8"
+          "github.com/kkkykin/caddy-aria2@v1.0.0"
+        ];
+        hash = "sha256-rwcUojIoSUI5ljzfbGrcdkRvPkPUTHYpHOKj1I5ltF4=";
+      };
+      globalConfig = ''
+${builtins.readFile ./caddy/global/misc.Caddyfile}
+      '';
+      extraConfig = ''
+${builtins.readFile ./caddy/snippets/cors.Caddyfile}
+${builtins.readFile ./caddy/snippets/lb.Caddyfile}
+'';
+      virtualHosts = {
+        ":80" = {
+          extraConfig = ''
+            encode gzip zstd
+
+${builtins.readFile ./caddy/sub/aria2.Caddyfile}
+${builtins.readFile ./caddy/sub/rsshub.Caddyfile}
+
+            handle_path /jellyfin/* {
+              reverse_proxy 127.0.0.1:8096
+            }
+
+    # 1. 处理 /fdroid/archive/ 前缀
+    handle_path /fdroid/archive/* {
+        root * /var/www/fdroid/archive
+        file_server
+    }
+
+    # 2. 处理 /fdroid/repo/ 前缀
+    handle_path /fdroid/repo/* {
+        root * /var/www/fdroid/repo
+        # 先在本目录找，找不到就“内部重写”到 /fdroid/archive/同一文件
+        try_files {path} /fdroid/archive/{file}
+        file_server
+    }
+
+reverse_proxy /dav/public/* 127.0.0.1:5244
+
+route /komga/* {
+    # 匹配 KOReader 同步请求
+    @koreaderSync {
+        header Content-Type "application/vnd.koreader.v1+json"
+        path /komga/koreader/syncs/progress/*
+    }
+
+    # 匹配到的：先代理，再改响应头
+    handle @koreaderSync {
+        reverse_proxy 127.0.0.1:5001 {
+            header_down Content-Type application/json
+        }
+    }
+    reverse_proxy 127.0.0.1:5001
+}
+          '';
+        };
+      };
+    };
+
     freshrss = {
       enable = true;
       package = pkgs.unstable.freshrss;
@@ -74,9 +144,22 @@
     };
   };
 
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [ 80 6800 ];
+  networking = {
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [
+        80
+        6800
+      ];
+    };
+    wireless = {
+      enable = true;
+      userControlled.enable = true;
+      secretsFile = config.sops.secrets.wireless.path;
+      # generated with `wpa_passphrase ${ssid} ${password}`
+      networks.ppptppo.pskRaw = "ext:psk_ppptppo";
+    };
+    hostName = "asus";
   };
 
   boot = {
@@ -114,9 +197,9 @@
       options = [ "nofail" "user" "noauto" ];
     };
   };
-  swapDevices = [{ 
-    device = "/swap/swapfile"; 
-    size = 8*1024; # Creates an 8GB swap file 
+  swapDevices = [{
+    device = "/swap/swapfile";
+    size = 8*1024; # Creates an 8GB swap file
   }];
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

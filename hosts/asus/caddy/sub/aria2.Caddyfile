@@ -1,0 +1,11 @@
+# [[file:../../20251001T004952--caddy__server.org::#c88e06a5-88ea-4ebf-934a-9a9b5be4e002][aria2:1]]
+handle_path /aria2-jsonrpc {
+    aria2_middleware {
+        upstream http://127.0.0.1:6800/jsonrpc
+        transform_uri ^https://pixeldrain\.com/(.*) "$0" "https://habitica-assets.kkky.eu.org/$0"
+        add_server_option ^https?://[^/]+\.baidu(?:pcs)?\.com/file/ max-connection-per-server 2
+        add_server_option ^https://[^/]+\.mypikpak\.com/ max-connection-per-server 2
+        add_server_option ^https://pixeldrain\.com/ max-connection-per-server 1
+    }
+}
+# aria2:1 ends here

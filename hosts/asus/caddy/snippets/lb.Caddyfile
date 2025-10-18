@@ -1,0 +1,45 @@
+# [[file:../../../20251001T004952--caddy__server.org::#072fe3c4-fc1a-44e0-8ccc-64a9630ca915][load balance:1]]
+(common_lb) {
+    {block}
+    # 1) 负载均衡：首选 least_conn（资源最闲节点），
+    #    如果所有节点都满了就退回 random，保证一定能选出节点。
+    lb_policy least_conn {
+        fallback random
+    }
+
+    # 2) Passive Health-Check —— 关键三行
+    fail_duration          30s     # 30 秒内出现失败记录都视为“污点”
+    max_fails              3       # 连续 3 次失败才踢掉（避免偶发抖动）
+    unhealthy_latency      2s      # 响应超过 2s 也算一次失败
+
+    # 3) 重试（配合健康检测才有意义）
+    lb_retries             2       # 最多重试 2 次
+    lb_try_duration        5s      # 整体等待上限 5s
+    lb_try_interval        200ms   # 每次重试间隔
+}
+
+(slow_lb) {
+    {blocks.main}
+    # 1. 负载均衡：轮询，简单公平
+    lb_policy round_robin
+
+    # 2. 被动健康检查 —— 放大版
+    fail_duration          120s
+    max_fails              2
+    unhealthy_latency      18s
+    unhealthy_status       3xx 4xx 5xx
+
+    # 3. 重试
+    lb_try_duration        {args[0]}
+    lb_retry_match         method GET HEAD
+
+    # 4. 传输超时放大
+    transport http {
+        {blocks.transport}
+        dial_timeout                3s
+        response_header_timeout     15s
+        read_timeout                20s
+        write_timeout               20s
+    }
+}
+# load balance:1 ends here

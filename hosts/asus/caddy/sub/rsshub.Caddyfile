@@ -1,0 +1,20 @@
+# [[file:../../20251001T004952--caddy__server.org::#cc962bac-3d8f-428e-b0ce-b31541933960][rsshub:1]]
+handle_path /rsshub/* {
+    reverse_proxy https://rsshub.cups.moe https://rss.4040940.xyz https://rsshub2.asailor.org https://rsshub.asailor.org https://rss.datuan.dev https://rsshub.email-once.com https://rsshub.isrss.com https://rsshub.umzzz.com https://holoxx.f5.si https://rsshub.henry.wang https://rss.wudifeixue.com https://rss.owo.nz https://rsshub.ktachibana.party https://rsshub.rss.tips https://rsshub.pseudoyu.com https://hub.slarker.me https://rsshub.rssforever.com https://rsshub.app https://rsshub-vercel-rss3.vercel.app https://rsshub-vercel-wine.vercel.app {
+        header_up Host {upstream_hostport}
+        header_up -X-Forwarded-*
+        header_up -via
+
+        import slow_lb 120s {
+            main {
+                health_uri      /healthz
+                health_interval 5m
+                health_body     ok
+            }
+            transport {
+                network_proxy url http://127.0.0.1:10807
+            }
+        }
+    }
+}
+# rsshub:1 ends here

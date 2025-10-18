@@ -1,0 +1,4 @@
+# [[file:../../../20251001T004952--caddy__server.org::#87e8d3b9-696c-4dc0-b041-6ab479876b29][global:1]]
+order aria2_middleware before reverse_proxy
+auto_https disable_redirects
+# global:1 ends here
