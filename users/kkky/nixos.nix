@@ -4,10 +4,10 @@
   ...
 }: {
   sops = {
-    gnupg.home = "/root/.gnupg";
-    sshKeyPaths = lib.mkForce [];
-    defaultSopsFile = ../../secrets/users.yaml;
-    secrets.kkky_pass.neededForUsers = true;
+    secrets.kkky_pass = {
+      neededForUsers = true;
+      sopsFile = ../../secrets/users.yaml;
+    };
   }; 
   users = {
     mutableUsers = false;

@@ -13,6 +13,71 @@
     ../../modules/sing-box.nix
     ./hardware-configuration.nix
   ];
+  sops = {
+    defaultSopsFile = ../../secrets/asus.yaml;
+    secrets = {
+      "freshrss_user_pass" = {
+        owner = "freshrss";
+      };
+      "freshrss_db_pass" = {
+        owner = "freshrss";
+      };
+      "postgresql_init_script" = {
+        owner = "postgres";
+      };
+    };
+  };
+
+  services = {
+    freshrss = {
+      enable = true;
+      package = pkgs.unstable.freshrss;
+      webserver = "caddy";
+      defaultUser = "kkky";
+      passwordFile = config.sops.secrets."freshrss_user_pass".path;
+      baseUrl = "http://127.0.0.1";
+      virtualHost = ":80";
+      language = "en";
+      database = {
+        type = "pgsql";
+        name = "freshrss";
+        user = "freshrss";
+        host = "127.0.0.1";
+        port = 5432;
+        passFile = config.sops.secrets."freshrss_db_pass".path;
+      };
+    };
+    postgresql = {
+      enable = true;
+      authentication = ''
+        host openlist openlist 127.0.0.1/32 scram-sha-256
+        host freshrss freshrss 127.0.0.1/32 scram-sha-256
+      '';
+      ensureDatabases = [
+        "openlist"
+        "freshrss"
+      ];
+      ensureUsers = [
+        {
+          name = "openlist";
+          ensureDBOwnership = true;
+        }
+        {
+          name = "freshrss";
+          ensureDBOwnership = true;
+        }
+      ];
+      extensions = ps: with ps; [
+        plpython3
+      ];
+      initialScript = config.sops.secrets."postgresql_init_script".path;
+    };
+  };
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 80 6800 ];
+  };
 
   boot = {
     loader = {
