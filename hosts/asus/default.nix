@@ -63,6 +63,10 @@ ${builtins.readFile ./caddy/snippets/lb.Caddyfile}
           extraConfig = ''
             encode gzip zstd
 
+handle /aria2-redir {
+    uri replace /aria2-redir /jsonrpc
+    reverse_proxy http://127.0.0.1:6800
+}
 ${builtins.readFile ./caddy/sub/aria2.Caddyfile}
 ${builtins.readFile ./caddy/sub/rsshub.Caddyfile}
 
@@ -160,7 +164,7 @@ route /komga/* {
       enable = true;
       allowedTCPPorts = [
         80
-        6800
+        5244
       ];
     };
     wireless = {
