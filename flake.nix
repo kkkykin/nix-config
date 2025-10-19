@@ -78,6 +78,7 @@
             {
               hardware = {
                 asus.battery.chargeUpto = 60;
+                intelgpu.vaapiDriver = "intel-media-driver";
               };
             }
             sops-nix.nixosModules.sops
