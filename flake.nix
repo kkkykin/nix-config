@@ -13,6 +13,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -28,6 +29,7 @@
     nixpkgs,
     nixpkgs-unstable,
     nixos-wsl,
+    nixos-hardware,
     sops-nix,
     home-manager,
     ...
@@ -67,6 +69,16 @@
           system = "x86_64-linux";
 
           modules = [
+            nixos-hardware.nixosModules.asus-battery
+            nixos-hardware.nixosModules.common-cpu-intel
+            nixos-hardware.nixosModules.common-gpu-nvidia-disable
+            nixos-hardware.nixosModules.common-pc-laptop-hdd
+            nixos-hardware.nixosModules.common-pc-laptop-ssd
+            {
+              hardware = {
+                asus.battery.chargeUpto = 60;
+              };
+            }
             sops-nix.nixosModules.sops
             {
               sops = {
