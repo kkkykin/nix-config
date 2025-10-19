@@ -62,7 +62,8 @@
         };
       asus = let
         username = "kkky";
-        specialArgs = inputs // {inherit username;};
+        dotfileDir = "/home/${username}/dotfiles";
+        specialArgs = inputs // {inherit username dotfileDir;};
       in
         nixpkgs.lib.nixosSystem {
           inherit specialArgs;

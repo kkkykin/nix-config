@@ -1,19 +1,11 @@
 {
   username,
+  dotfileDir,
   pkgs,
   lib,
   config,
   ...
 }: {
-  sops = {
-    secrets.sing-box = {
-      owner = username;
-      sopsFile = ../secrets/sing-box.json;
-      format = "json";
-      key = "";
-      restartUnits = [ "sing-box.service" ];
-    };
-  };
   systemd.services.sing-box = {
     serviceConfig = {
       User = username;
@@ -26,7 +18,7 @@
       ];
       ExecStart = [
         ""
-        "${pkgs.unstable.sing-box}/bin/sing-box -c ${config.sops.secrets.sing-box.path} run"
+        "${pkgs.unstable.sing-box}/bin/sing-box -c \"${dotfileDir}/sing-box/_tangle/client/500-tun.json\" run"
       ];
     };
   };
