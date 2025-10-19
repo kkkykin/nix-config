@@ -8,6 +8,7 @@
     extraPackages = epkgs: [
       epkgs.nix-ts-mode
       epkgs.eat
+      epkgs.denote
     ];
   };
   home.packages = with pkgs;[
