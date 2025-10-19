@@ -159,6 +159,10 @@ route /komga/* {
       initialScript = config.sops.secrets."postgresql_init_script".path;
     };
   };
+  
+  environment.systemPackages = with pkgs; [
+    p7zip
+  ];
 
   networking = {
     firewall = {
