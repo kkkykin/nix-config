@@ -12,6 +12,7 @@
     ../../modules/nixpkgs.nix
     ../../modules/sing-box.nix
     ../../modules/aria2.nix
+    ../../modules/openlist.nix
     ./hardware-configuration.nix
   ];
   sops = {
@@ -28,6 +29,11 @@
       };
       wireless = {
         sopsFile = ../../secrets/wireless.env;
+        key = "";
+        format = "dotenv";
+      };
+      openlist = {
+        sopsFile = ../../secrets/openlist.env;
         key = "";
         format = "dotenv";
       };
@@ -117,6 +123,10 @@ route /komga/* {
         port = 5432;
         passFile = config.sops.secrets."freshrss_db_pass".path;
       };
+    };
+    openlist = {
+      enable = true;
+      envFile = config.sops.secrets.openlist.path;
     };
     postgresql = {
       enable = true;
