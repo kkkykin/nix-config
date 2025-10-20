@@ -8,5 +8,6 @@
   home.packages = with pkgs;[
     unstable.codex
     unstable.claude-code
+    unstable.claude-code-router
   ];
 }
