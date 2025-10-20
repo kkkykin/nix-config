@@ -11,12 +11,14 @@
   systemd.services.jellyfin.environment.LIBVA_DRIVER_NAME = "iHD";
   environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
 
-  hardware.graphics = {
-    enable = true;
+  specialisation.gpu.configuration = {
+    hardware.graphics = {
+      enable = true;
 
-    extraPackages = with pkgs; [
-      intel-ocl
-      intel-media-driver
-    ];
+      extraPackages = with pkgs; [
+        intel-ocl
+        intel-media-driver
+      ];
+    };
   };
 }
