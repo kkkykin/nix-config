@@ -46,6 +46,7 @@
           modules = [
             sops-nix.nixosModules.sops
             nixos-wsl.nixosModules.default
+            ./modules/profiles/wsl.nix
             ./hosts/legion-wsl
             ./users/${username}/nixos.nix
 
@@ -91,6 +92,7 @@
               };
             }
 
+            ./modules/profiles/server.nix
             ./hosts/asus
             ./users/${username}/nixos.nix
 

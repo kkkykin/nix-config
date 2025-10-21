@@ -24,8 +24,6 @@
       "flakes"
     ];
 
-    impure-env = impureEnvVars;
-
     substituters = [
       # cache mirror located in China
       # status: https://mirror.sjtu.edu.cn/

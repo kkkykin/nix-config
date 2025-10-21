@@ -7,9 +7,6 @@
   ...
 }: {
   imports = [
-    ../../modules/system.nix
-    ../../modules/server.nix
-    ../../modules/nixpkgs.nix
     ../../modules/sing-box.nix
     ../../modules/aria2.nix
     ../../modules/openlist.nix
