@@ -8,6 +8,7 @@ in {
   home.packages = with pkgs; [
     _7zz-rar
     python3Full
+    rclone
   ];
   programs = {
     uv = {
