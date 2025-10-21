@@ -8,7 +8,6 @@
     secrets.nixos_pass.neededForUsers = true;
   };
   users = {
-    mutableUsers = false;
     users.nixos = {
       hashedPasswordFile = config.sops.secrets.nixos_pass.path;
     };
