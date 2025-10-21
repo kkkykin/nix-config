@@ -56,7 +56,12 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 extraSpecialArgs = inputs // specialArgs;
-                users.${username} = import ./users/${username}/home.nix;
+                users.${username} = {
+                  imports = [
+                    ./users/${username}/home.nix
+                  ];
+                  home.stateVersion = "25.05";
+                };
               };
             }
           ];
@@ -102,7 +107,12 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 extraSpecialArgs = inputs // specialArgs;
-                users.${username} = import ./users/${username}/home.nix;
+                users.${username} = {
+                  imports = [
+                    ./users/${username}/home.nix
+                  ];
+                  home.stateVersion = "25.05";
+                };
               };
             }
           ];
