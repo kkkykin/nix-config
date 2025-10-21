@@ -3,26 +3,7 @@
   lib,
   username,
   ...
-}: let
-  lowerHttpProxy = builtins.getEnv "http_proxy";
-  upperHttpProxy = builtins.getEnv "HTTP_PROXY";
-  lowerHttpsProxy = builtins.getEnv "https_proxy";
-  upperHttpsProxy = builtins.getEnv "HTTPS_PROXY";
-  lowerAllProxy = builtins.getEnv "all_proxy";
-  upperAllProxy = builtins.getEnv "ALL_PROXY";
-  lowerNoProxy = builtins.getEnv "no_proxy";
-  upperNoProxy = builtins.getEnv "NO_PROXY";
-  mkVar = name: value: lib.optional (value != "") "${name}=${value}";
-  impureEnvVars =
-    mkVar "http_proxy" lowerHttpProxy
-    ++ mkVar "https_proxy" lowerHttpsProxy
-    ++ mkVar "all_proxy" lowerAllProxy
-    ++ mkVar "no_proxy" lowerNoProxy
-    ++ mkVar "HTTP_PROXY" upperHttpProxy
-    ++ mkVar "HTTPS_PROXY" upperHttpsProxy
-    ++ mkVar "ALL_PROXY" upperAllProxy
-    ++ mkVar "NO_PROXY" upperNoProxy;
-in {
+}: {
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${username} = {
     isNormalUser = true;
@@ -41,7 +22,6 @@ in {
     experimental-features = [
       "nix-command"
       "flakes"
-      "configurable-impure-env"
     ];
 
     impure-env = impureEnvVars;
