@@ -60,6 +60,7 @@
   environment.systemPackages = with pkgs; [
     neovim
     curl
+    gnupg
     git
   ];
 }
