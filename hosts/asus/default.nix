@@ -72,6 +72,10 @@ ${builtins.readFile ./caddy/sub/rsshub.Caddyfile}
               reverse_proxy 127.0.0.1:8096
             }
 
+handle_path /calibre/* {
+  reverse_proxy 127.0.0.1:8080
+}
+
     # 1. 处理 /fdroid/archive/ 前缀
     handle_path /fdroid/archive/* {
         root * /var/www/fdroid/archive
@@ -108,6 +112,21 @@ route /komga/* {
       };
     };
 
+    calibre-server = {
+      enable = true;
+      auth = {
+        enable = true;
+        mode = "basic";
+        userDb = "/mnt/mediadata/calibre/users.sqlite";
+      };
+      extraFlags = [
+        "--url-prefix" "/calibre"
+      ];
+      libraries = [
+        "/mnt/mediadata/calibre/books/"
+        "/mnt/mediadata/calibre/comic/"
+      ];
+    };
     freshrss = {
       enable = true;
       package = pkgs.unstable.freshrss;
@@ -129,6 +148,12 @@ route /komga/* {
     openlist = {
       enable = true;
       envFile = config.sops.secrets.openlist.path;
+    };
+    openssh = {
+      settings = {
+        X11Forwarding = true;
+        X11UseLocalhost = true;
+      };
     };
     postgresql = {
       enable = true;
@@ -158,8 +183,15 @@ route /komga/* {
   };
   
   environment.systemPackages = with pkgs; [
+    calibre
     p7zip
   ];
+
+  fonts = {
+    packages = with pkgs; [
+      lxgw-wenkai
+    ];
+  };
 
   networking = {
     firewall = {
@@ -167,6 +199,7 @@ route /komga/* {
       allowedTCPPorts = [
         80
         5244
+        9089
       ];
     };
     wireless = {
