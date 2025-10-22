@@ -13,15 +13,6 @@ in {
   programs = {
     uv = {
       enable = true;
-      settings = {
-        python-downloads = "never";
-        python-preference = "only-system";
-        index = {
-          url = pypi-mirror;
-          default = true;
-        };
-        pip.index-url = pypi-mirror;
-      };
     };
   };
 }
