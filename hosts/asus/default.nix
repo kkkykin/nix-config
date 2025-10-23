@@ -12,6 +12,7 @@
     ../../modules/openlist.nix
     ../../modules/jellyfin.nix
     ../../modules/tcpdump.nix
+    ../../modules/cloudflared.nix
     ./hardware-configuration.nix
   ];
   sops = {
