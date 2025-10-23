@@ -11,6 +11,7 @@
     ../../modules/aria2.nix
     ../../modules/openlist.nix
     ../../modules/jellyfin.nix
+    ../../modules/tcpdump.nix
     ./hardware-configuration.nix
   ];
   sops = {
