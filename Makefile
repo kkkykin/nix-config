@@ -4,7 +4,7 @@ INPUTS ?=
 ifeq ($(PROXY_OFF),1)
   MAYBE_PROXY :=
 else
-  MAYBE_PROXY := all_proxy=socks5h://127.0.0.1:10807
+  MAYBE_PROXY := $(if $(all_proxy),,all_proxy=socks5h://127.0.0.1:10807)
 endif
 
 # 自动定位本 Makefile 所在的目录
