@@ -22,6 +22,10 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-secrets = {
+      url = "github:kkkykin/nixos-secrets-empty";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -32,6 +36,7 @@
     nixos-hardware,
     sops-nix,
     home-manager,
+    nix-secrets,
     ...
   }: {
     nixosConfigurations = {

@@ -21,10 +21,19 @@ HOSTNAME := $(shell \
 
 FLAKE_REF := $(shell printf '%s#%s' '$(FLAKE_DIR)' '$(HOSTNAME)')
 
+# 如果 ../nix-secrets 目录存在，则追加 --override-input 参数
+SECRETS_DIR := $(realpath $(FLAKE_DIR)/../nix-secrets)
+ifneq ($(wildcard $(SECRETS_DIR)),)
+  OVERRIDE_INPUTS := --override-input nix-secrets $(SECRETS_DIR)
+else
+  OVERRIDE_INPUTS :=
+endif
+
 # 默认目标
 .PHONY: switch
 switch:
-	sudo $(MAYBE_PROXY) nixos-rebuild --flake $(FLAKE_REF) switch $(if $(SPEC),--specialisation $(SPEC))
+	$(MAKE) update-secrets
+	sudo $(MAYBE_PROXY) nixos-rebuild --flake $(FLAKE_REF) switch $(if $(SPEC),--specialisation $(SPEC)) $(OVERRIDE_INPUTS)
 
 # 列出所有 generations
 .PHONY: list
@@ -34,11 +43,16 @@ list:
 # 其他常用 nixos-rebuild 动作
 .PHONY: build test boot dry-run
 build test boot dry-run:
-	$(MAYBE_PROXY) nixos-rebuild --flake $(FLAKE_REF) $@
+	$(MAKE) update-secrets
+	$(MAYBE_PROXY) nixos-rebuild --flake $(FLAKE_REF) $@ $(OVERRIDE_INPUTS)
 
 .PHONY: update
 update:
 	$(MAYBE_PROXY) nix flake update $(INPUTS) --flake $(FLAKE_DIR)
+
+.PHONY: update-secrets
+update-secrets:
+    $(MAKE) update INPUTS=nix-secrets
 
 # 清理旧系统代 generations（可选）
 .PHONY: gc
