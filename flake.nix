@@ -74,7 +74,10 @@
       asus = let
         username = "kkky";
         dotfileDir = "/home/${username}/dotfiles";
-        specialArgs = inputs // {inherit username dotfileDir;};
+        specialArgs = inputs // {
+          inherit username dotfileDir;
+          secrets = import nix-secrets;
+        };
       in
         nixpkgs.lib.nixosSystem {
           inherit specialArgs;
@@ -92,7 +95,7 @@
                 intelgpu.vaapiDriver = "intel-media-driver";
               };
             }
-            sops-nix.nixosModules.sops
+            nix-secrets.nixosModules.asus
             {
               sops = {
                 gnupg = {

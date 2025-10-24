@@ -1,5 +1,6 @@
 {
   pkgs,
+  secrets,
   ...
 }: {
   services.jellyfin.enable = true;
@@ -10,6 +11,12 @@
   ];
   systemd.services.jellyfin.environment.LIBVA_DRIVER_NAME = "iHD";
   environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
+
+  services.cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
+    ingress = {
+      "jellyfin.${secrets.cloudflared.asus.domain}" = "http://127.0.0.1:8096";
+    };
+  };
 
   specialisation.gpu.configuration = {
     hardware.graphics = {
