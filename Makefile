@@ -48,7 +48,7 @@ build test boot dry-run:
 
 .PHONY: update
 update:
-	$(MAYBE_PROXY) nix flake update $(INPUTS) --flake $(FLAKE_DIR)
+	$(MAYBE_PROXY) nix flake update $(INPUTS) --flake $(FLAKE_DIR) $(OVERRIDE_INPUTS)
 
 .PHONY: update-secrets
 update-secrets:
