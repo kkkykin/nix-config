@@ -52,7 +52,7 @@ update:
 
 .PHONY: update-secrets
 update-secrets:
-    $(MAKE) update INPUTS=nix-secrets
+	$(MAKE) update INPUTS=nix-secrets
 
 # 清理旧系统代 generations（可选）
 .PHONY: gc
