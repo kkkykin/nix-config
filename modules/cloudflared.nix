@@ -4,10 +4,8 @@
   ...
 }:let
   cloudflared-service = {
-    serviceConfig = {
-      Environment = [
-        "TUNNEL_TRANSPORT_PROTOCOL=http2"
-      ];        
+    environment = {
+      "TUNNEL_TRANSPORT_PROTOCOL" = "http2";
     };
   };
 in  {
