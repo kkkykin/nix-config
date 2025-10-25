@@ -49,7 +49,7 @@
           "github.com/abiosoft/caddy-exec=github.com/kkkykin/caddy-exec@v0.0.0-20250930150303-c92bd5346ec8"
           "github.com/kkkykin/caddy-aria2@v1.0.0"
         ];
-        hash = "sha256-rwcUojIoSUI5ljzfbGrcdkRvPkPUTHYpHOKj1I5ltF4=";
+        hash = "sha256-nyRcL1tko6fY1umnqTLuxFvFzhPs8IkTj8A+W6CJhuM=";
       };
       globalConfig = ''
 ${builtins.readFile ./caddy/global/misc.Caddyfile}
