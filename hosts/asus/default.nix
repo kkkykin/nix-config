@@ -11,6 +11,7 @@
     ../../modules/aria2.nix
     ../../modules/openlist.nix
     ../../modules/jellyfin.nix
+    ../../modules/kavita.nix
     ../../modules/tcpdump.nix
     ../../modules/cloudflared.nix
     ./hardware-configuration.nix
@@ -46,10 +47,11 @@
       package = pkgs.unstable.caddy.withPlugins {
         plugins = [
           "github.com/mholt/caddy-l4@v0.0.0-20251001194302-2e3e6cf60b25"
+          "github.com/caddyserver/replace-response@v0.0.0-20250618171559-80962887e4c6"
           "github.com/abiosoft/caddy-exec=github.com/kkkykin/caddy-exec@v0.0.0-20250930150303-c92bd5346ec8"
           "github.com/kkkykin/caddy-aria2@v1.0.0"
         ];
-        hash = "sha256-nyRcL1tko6fY1umnqTLuxFvFzhPs8IkTj8A+W6CJhuM=";
+        hash = "sha256-bWtwL339DbF272I7eFrLTWJJOvqIRp/H3AdGOBFKJrU=";
       };
       globalConfig = ''
 ${builtins.readFile ./caddy/global/misc.Caddyfile}
