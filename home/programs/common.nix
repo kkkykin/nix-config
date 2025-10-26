@@ -7,6 +7,7 @@
 in {
   home.packages = with pkgs; [
     _7zz-rar
+    android-tools
     python3Full
     rclone
   ];
