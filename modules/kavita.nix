@@ -15,6 +15,12 @@
     };
   };
 
+  services.caddy.virtualHosts.":80".extraConfig = ''
+handle /api/opds/* {
+  reverse_proxy http://127.0.0.1:5000
+} 
+'';
+
   services.caddy.virtualHosts."http://kavita.asus.local" = {
     extraConfig = ''
 reverse_proxy http://127.0.0.1:5000 {

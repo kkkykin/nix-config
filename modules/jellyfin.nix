@@ -11,6 +11,12 @@
   ];
   systemd.services.jellyfin.environment.LIBVA_DRIVER_NAME = "iHD";
   environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
+  
+  services.caddy.virtualHosts.":80".extraConfig = ''
+handle /opds/* {
+  reverse_proxy http://127.0.0.1:8096
+} 
+'';
 
   services.cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
     ingress = {
