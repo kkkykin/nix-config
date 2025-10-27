@@ -4,7 +4,7 @@ INPUTS ?=
 ifeq ($(PROXY_OFF),1)
   MAYBE_PROXY :=
 else
-  MAYBE_PROXY := $(if $(all_proxy),,all_proxy=socks5h://127.0.0.1:10807)
+  MAYBE_PROXY := $(if $(all_proxy),all_proxy=$(all_proxy),all_proxy=socks5h://127.0.0.1:10807)
 endif
 
 # 自动定位本 Makefile 所在的目录
@@ -25,14 +25,16 @@ FLAKE_REF := $(shell printf '%s#%s' '$(FLAKE_DIR)' '$(HOSTNAME)')
 SECRETS_DIR := $(realpath $(FLAKE_DIR)/../nix-secrets)
 ifneq ($(wildcard $(SECRETS_DIR)),)
   OVERRIDE_INPUTS := --override-input nix-secrets $(SECRETS_DIR)
+  UPDATE_SECRETS_CMD  ?= $(MAKE) update-secrets
 else
   OVERRIDE_INPUTS :=
+  UPDATE_SECRETS_CMD  ?= true
 endif
 
 # 默认目标
 .PHONY: switch
 switch:
-	$(MAKE) update-secrets
+	$(UPDATE_SECRETS_CMD)
 	sudo $(MAYBE_PROXY) nixos-rebuild --flake $(FLAKE_REF) switch $(if $(SPEC),--specialisation $(SPEC)) $(OVERRIDE_INPUTS)
 
 # 列出所有 generations
@@ -43,16 +45,18 @@ list:
 # 其他常用 nixos-rebuild 动作
 .PHONY: build test boot dry-run
 build test boot dry-run:
-	$(MAKE) update-secrets
+	$(UPDATE_SECRETS_CMD)
 	$(MAYBE_PROXY) nixos-rebuild --flake $(FLAKE_REF) $@ $(OVERRIDE_INPUTS)
 
 .PHONY: update
 update:
 	$(MAYBE_PROXY) nix flake update $(INPUTS) --flake $(FLAKE_DIR) $(OVERRIDE_INPUTS)
 
+ifneq ($(wildcard $(SECRETS_DIR)),)
 .PHONY: update-secrets
 update-secrets:
 	$(MAKE) update INPUTS=nix-secrets
+endif
 
 # 清理旧系统代 generations（可选）
 .PHONY: gc
