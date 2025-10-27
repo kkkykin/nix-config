@@ -7,6 +7,7 @@
   ];
   home.packages = with pkgs; [
     torsocks
+    koreader
   ];
 
   programs.bash = {
