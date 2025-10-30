@@ -7,7 +7,7 @@
   ];
   home.packages = with pkgs; [
     torsocks
-    koreader
+    unstable.koreader
   ];
 
   programs.bash = {
