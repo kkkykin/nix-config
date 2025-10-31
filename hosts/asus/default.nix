@@ -12,6 +12,7 @@
     ../../modules/openlist.nix
     ../../modules/jellyfin.nix
     ../../modules/kavita.nix
+    ../../modules/komga.nix
     ../../modules/tcpdump.nix
     ../../modules/cloudflared.nix
     ./hardware-configuration.nix
@@ -91,22 +92,6 @@ ${builtins.readFile ./caddy/sub/rsshub.Caddyfile}
     }
 
 reverse_proxy /dav/public/* 127.0.0.1:5244
-
-route /komga/* {
-    # 匹配 KOReader 同步请求
-    @koreaderSync {
-        header Content-Type "application/vnd.koreader.v1+json"
-        path /komga/koreader/syncs/progress/*
-    }
-
-    # 匹配到的：先代理，再改响应头
-    handle @koreaderSync {
-        reverse_proxy 127.0.0.1:5001 {
-            header_down Content-Type application/json
-        }
-    }
-    reverse_proxy 127.0.0.1:5001
-}
           '';
         };
       };
