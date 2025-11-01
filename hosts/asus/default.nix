@@ -11,7 +11,6 @@
     ../../modules/aria2.nix
     ../../modules/openlist.nix
     ../../modules/jellyfin.nix
-    ../../modules/kavita.nix
     ../../modules/komga.nix
     ../../modules/tcpdump.nix
     ../../modules/cloudflared.nix
