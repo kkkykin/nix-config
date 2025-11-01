@@ -54,6 +54,7 @@
         hash = "sha256-bWtwL339DbF272I7eFrLTWJJOvqIRp/H3AdGOBFKJrU=";
       };
       globalConfig = ''
+${builtins.readFile ./caddy/global/servers.Caddyfile}
 ${builtins.readFile ./caddy/global/misc.Caddyfile}
       '';
       extraConfig = ''

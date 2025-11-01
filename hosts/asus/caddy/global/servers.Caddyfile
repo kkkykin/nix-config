@@ -1,0 +1,6 @@
+# [[file:../../../20251001T004952--caddy__server.org::#87e8d3b9-696c-4dc0-b041-6ab479876b29][global:2]]
+servers {
+    trusted_proxies static private_ranges
+    trusted_proxies_strict
+}
+# global:2 ends here
