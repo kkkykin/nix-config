@@ -28,4 +28,11 @@
       package = pkgs.unstable.sing-box;
     };
   };
+  networking = {
+    firewall = {
+      allowedTCPPorts = [
+        10807
+      ];
+    };
+  };
 }

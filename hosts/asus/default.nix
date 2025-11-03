@@ -8,6 +8,7 @@
 }: {
   imports = [
     ../../modules/sing-box.nix
+    ../../modules/libvirt.nix
     ../../modules/aria2.nix
     ../../modules/openlist.nix
     ../../modules/jellyfin.nix
