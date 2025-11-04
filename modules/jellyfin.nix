@@ -1,8 +1,12 @@
 {
   pkgs,
   secrets,
+  username,
   ...
 }: {
+  users.users.${username} = {
+    extraGroups = ["jellyfin"];
+  };
   services.jellyfin.enable = true;
   environment.systemPackages = with pkgs; [
     jellyfin
