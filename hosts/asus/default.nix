@@ -4,6 +4,7 @@
 {
   config,
   pkgs,
+  username,
   ...
 }: {
   imports = [
@@ -17,6 +18,10 @@
     ../../modules/cloudflared.nix
     ./hardware-configuration.nix
   ];
+  users.users.${username} = {
+    extraGroups = ["openlist"];
+  };
+
   sops = {
     defaultSopsFile = ../../secrets/asus.yaml;
     secrets = {

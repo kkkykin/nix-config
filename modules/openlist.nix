@@ -52,6 +52,7 @@ in {
         ExecStart        = "${cfg.package}/bin/OpenList server --data ${cfg.dataDir}";
         Restart          = "on-failure";
         EnvironmentFile  = mkIf (cfg.envFile != null) cfg.envFile;
+        UMask            = "0002";
       };
     };
   };
