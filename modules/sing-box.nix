@@ -6,6 +6,10 @@
   config,
   ...
 }: {
+  boot.kernel.sysctl = {
+    "net.ipv4.conf.all.forwarding" = true;
+    "net.ipv6.conf.all.forwarding" = true;
+  };
   systemd.services.sing-box = {
     serviceConfig = {
       User = username;
@@ -29,6 +33,9 @@
     };
   };
   networking = {
+    nftables = {
+      enable = true;
+    };
     firewall = {
       allowedTCPPorts = [
         10807
