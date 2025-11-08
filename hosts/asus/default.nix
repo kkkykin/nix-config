@@ -14,37 +14,13 @@
     ../../modules/openlist.nix
     ../../modules/jellyfin.nix
     ../../modules/komga.nix
+    ../../modules/freshrss.nix
     ../../modules/tcpdump.nix
     ../../modules/cloudflared.nix
     ./hardware-configuration.nix
   ];
   users.users.${username} = {
     extraGroups = ["openlist"];
-  };
-
-  sops = {
-    defaultSopsFile = ../../secrets/asus.yaml;
-    secrets = {
-      "freshrss_user_pass" = {
-        owner = "freshrss";
-      };
-      "freshrss_db_pass" = {
-        owner = "freshrss";
-      };
-      "postgresql_init_script" = {
-        owner = "postgres";
-      };
-      wireless = {
-        sopsFile = ../../secrets/wireless.env;
-        key = "";
-        format = "dotenv";
-      };
-      openlist = {
-        sopsFile = ../../secrets/openlist.env;
-        key = "";
-        format = "dotenv";
-      };
-    };
   };
 
   services = {
@@ -102,25 +78,6 @@ reverse_proxy /dav/public/* 127.0.0.1:5244
         };
       };
     };
-
-    freshrss = {
-      enable = true;
-      package = pkgs.unstable.freshrss;
-      webserver = "caddy";
-      defaultUser = "kkky";
-      passwordFile = config.sops.secrets."freshrss_user_pass".path;
-      baseUrl = "http://127.0.0.1";
-      virtualHost = ":80";
-      language = "en";
-      database = {
-        type = "pgsql";
-        name = "freshrss";
-        user = "freshrss";
-        host = "127.0.0.1";
-        port = 5432;
-        passFile = config.sops.secrets."freshrss_db_pass".path;
-      };
-    };
     openlist = {
       enable = true;
       envFile = config.sops.secrets.openlist.path;
@@ -154,7 +111,6 @@ reverse_proxy /dav/public/* 127.0.0.1:5244
       extensions = ps: with ps; [
         plpython3
       ];
-      initialScript = config.sops.secrets."postgresql_init_script".path;
     };
   };
   

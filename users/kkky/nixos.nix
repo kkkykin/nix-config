@@ -3,12 +3,6 @@
   lib,
   ...
 }: {
-  sops = {
-    secrets.kkky_pass = {
-      neededForUsers = true;
-      sopsFile = ../../secrets/users.yaml;
-    };
-  }; 
   users = {
     users.kkky = {
       openssh.authorizedKeys.keys = [

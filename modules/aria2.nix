@@ -4,13 +4,6 @@
   username,
   ...
 }: {
-  sops = {
-    secrets.aria2_rpc_secret= {
-      owner = "aria2";
-      sopsFile = ../secrets/aria2.json;
-      restartUnits = [ "aria2.service" ];
-    };
-  };
   users.users.${username} = {
     extraGroups = ["aria2"];
   };
