@@ -1,6 +1,11 @@
 # 如需全局禁用代理，命令行 make PROXY_OFF=1 ...
 PROXY_OFF ?= 0
-INPUTS ?=
+# 如需禁用 mirror 只用官方缓存，命令行 make NO_MIRROR=1 ...
+NO_MIRROR ?= 0
+
+# 生成 Nix 选项参数
+NIX_OPTIONS := $(if $(filter 1,$(NO_MIRROR)),--option substituters "https://cache.nixos.org",)
+
 ifeq ($(PROXY_OFF),1)
   MAYBE_PROXY :=
 else
@@ -35,7 +40,7 @@ endif
 .PHONY: switch
 switch:
 	$(UPDATE_SECRETS_CMD)
-	sudo $(MAYBE_PROXY) nixos-rebuild --flake $(FLAKE_REF) switch $(if $(SPEC),--specialisation $(SPEC)) $(OVERRIDE_INPUTS)
+	sudo $(MAYBE_PROXY) nixos-rebuild --flake $(FLAKE_REF) switch $(if $(SPEC),--specialisation $(SPEC)) $(OVERRIDE_INPUTS) $(NIX_OPTIONS)
 
 # 列出所有 generations
 .PHONY: list
@@ -46,7 +51,7 @@ list:
 .PHONY: build test boot dry-run
 build test boot dry-run:
 	$(UPDATE_SECRETS_CMD)
-	$(MAYBE_PROXY) nixos-rebuild --flake $(FLAKE_REF) $@ $(OVERRIDE_INPUTS)
+	$(MAYBE_PROXY) nixos-rebuild --flake $(FLAKE_REF) $@ $(OVERRIDE_INPUTS) $(NIX_OPTIONS)
 
 .PHONY: update
 update:
@@ -66,7 +71,7 @@ gc:
 # 帮助
 .PHONY: help
 help:
-	@echo "Usage: make [PROXY_OFF=1] <target>"
+	@echo "Usage: make [PROXY_OFF=1] [NO_MIRROR=1] <target>"
 	@echo
 	@echo "target:"
 	@echo "  switch   (默认) 切换到新配置并激活，可设置 SPEC"
@@ -78,3 +83,4 @@ help:
 	@echo
 	@echo "环境变量:"
 	@echo "  PROXY_OFF=1  禁用默认的 SOCKS5 代理"
+	@echo "  NO_MIRROR=1  禁用配置文件中的 mirror，只用官方 cache.nixos.org"
