@@ -26,14 +26,12 @@ reverse_proxy /opds/* http://127.0.0.1:8096
     };
   };
 
-  specialisation.gpu.configuration = {
-    hardware.graphics = {
-      enable = true;
+  hardware.graphics = {
+    enable = true;
 
-      extraPackages = with pkgs; [
-        intel-ocl
-        intel-media-driver
-      ];
-    };
+    extraPackages = with pkgs; [
+      intel-ocl
+      intel-media-driver
+    ];
   };
 }
