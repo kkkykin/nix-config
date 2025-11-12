@@ -14,6 +14,7 @@
     ../../modules/openlist.nix
     ../../modules/jellyfin.nix
     ../../modules/komga.nix
+    ../../modules/fdroid.nix
     ../../modules/freshrss.nix
     ../../modules/tcpdump.nix
     ../../modules/cloudflared.nix
