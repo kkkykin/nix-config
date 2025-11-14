@@ -34,7 +34,7 @@
           "github.com/abiosoft/caddy-exec=github.com/kkkykin/caddy-exec@v0.0.0-20250930150303-c92bd5346ec8"
           "github.com/kkkykin/caddy-aria2@v1.0.0"
         ];
-        hash = "sha256-bWtwL339DbF272I7eFrLTWJJOvqIRp/H3AdGOBFKJrU=";
+        hash = "sha256-wQqy4OZG0I/m0DwfXhz8OXt/uXYW/DVoEkbxWJDcP+0=";
       };
       globalConfig = ''
 ${builtins.readFile ./caddy/global/servers.Caddyfile}
