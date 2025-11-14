@@ -38,11 +38,27 @@
     home-manager,
     nix-secrets,
     ...
-  }: {
+  }: let
+    inherit (self) outputs;
+    # Supported systems for your flake packages, shell, etc.
+    systems = [
+      "aarch64-linux"
+      "i686-linux"
+      "x86_64-linux"
+      "aarch64-darwin"
+      "x86_64-darwin"
+    ];
+    # This is a function that generates an attribute by calling a function you
+    # pass to it, with each system as an argument
+    forAllSystems = nixpkgs.lib.genAttrs systems;
+  in {
+    packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
+    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+    overlays = import ./overlays {inherit inputs;};
     nixosConfigurations = {
       legion-wsl = let
         username = "nixos";
-        specialArgs = inputs // {inherit username;};
+        specialArgs = inputs // {inherit outputs username;};
       in
         nixpkgs.lib.nixosSystem {
           inherit specialArgs;
@@ -75,7 +91,7 @@
         username = "kkky";
         dotfileDir = "/home/${username}/dotfiles";
         specialArgs = inputs // {
-          inherit username dotfileDir;
+          inherit outputs username dotfileDir;
           secrets = import nix-secrets;
         };
       in
@@ -146,7 +162,7 @@
         sopsCreateGPGHome = true;
 
         shellHook = ''
-      export GPG_TTY=$(tty)
+          export GPG_TTY=$(tty)
       gpgconf -R gpg-agent
       echo "🔐 sops-nix GPG import shell ready."
       echo "📁 Keys loaded from: keys/hosts and keys/users"

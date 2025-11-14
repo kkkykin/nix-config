@@ -1,19 +1,14 @@
 {
-  nixpkgs-unstable,
+  outputs,
   ...
 }: {
   nixpkgs = {
     config.allowUnfree = true;
     overlays = [
-      (final: prev: let
-        unstable = import nixpkgs-unstable {
-          inherit (final) system config;
-        };
-      in {
-        unstable = unstable;
-        
-        komga = unstable.komga;
-      })
+      # Add overlays your own flake exports (from overlays and pkgs dir):
+      outputs.overlays.additions
+      outputs.overlays.modifications
+      outputs.overlays.unstable-packages
     ];
   };
 }
