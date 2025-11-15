@@ -12,7 +12,8 @@
     outputs.nixosModules.all-services
     outputs.nixosModules.sing-box
     outputs.nixosModules.openlist
-    outputs.nixosModules.axonhub
+    # outputs.nixosModules.axonhub
+    outputs.nixosModules.gpt-load
     outputs.nixosModules.libvirt
     outputs.nixosModules.aria2
     outputs.nixosModules.jellyfin
@@ -92,17 +93,23 @@ reverse_proxy /dav/public/* 127.0.0.1:5244
       enable = true;
       authentication = ''
         host axonhub axonhub 127.0.0.1/32 scram-sha-256
+        host gpt-load gpt-load 127.0.0.1/32 scram-sha-256
         host openlist openlist 127.0.0.1/32 scram-sha-256
         host freshrss freshrss 127.0.0.1/32 scram-sha-256
       '';
       ensureDatabases = [
         "axonhub"
+        "gpt-load"
         "openlist"
         "freshrss"
       ];
       ensureUsers = [
         {
           name = "axonhub";
+          ensureDBOwnership = true;
+        }
+        {
+          name = "gpt-load";
           ensureDBOwnership = true;
         }
         {
