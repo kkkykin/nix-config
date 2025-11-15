@@ -33,6 +33,7 @@ stdenv.mkDerivation {
   src = fetchzip {
     url = "https://github.com/looplj/axonhub/releases/download/v${version}/axonhub_${version}_${platform}.zip";
     sha256 = hashes.${stdenv.system} or (throw "Unsupported system: ${stdenv.system}");
+    stripRoot = false;
   };
 
   # No build phase needed - binary is pre-compiled

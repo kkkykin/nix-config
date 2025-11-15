@@ -5,19 +5,20 @@
   config,
   pkgs,
   username,
+  outputs,
   ...
 }: {
   imports = [
-    ../../modules/sing-box.nix
-    ../../modules/libvirt.nix
-    ../../modules/aria2.nix
-    ../../modules/openlist.nix
-    ../../modules/jellyfin.nix
-    ../../modules/komga.nix
-    ../../modules/fdroid.nix
-    ../../modules/freshrss.nix
-    ../../modules/tcpdump.nix
-    ../../modules/cloudflared.nix
+    outputs.nixosModules.all-services
+    outputs.nixosModules.sing-box
+    outputs.nixosModules.libvirt
+    outputs.nixosModules.aria2
+    outputs.nixosModules.jellyfin
+    outputs.nixosModules.komga
+    outputs.nixosModules.fdroid
+    outputs.nixosModules.freshrss
+    outputs.nixosModules.tcpdump
+    outputs.nixosModules.cloudflared
     ./hardware-configuration.nix
   ];
   users.users.${username} = {
@@ -25,6 +26,9 @@
   };
 
   services = {
+    axonhub = {
+      enable = true;
+    };
     caddy = {
       enable = true;
       package = pkgs.unstable.caddy.withPlugins {

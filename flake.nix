@@ -52,9 +52,12 @@
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
+    # steal from https://github.com/Misterio77/nix-starter-configs/blob/main/standard/flake.nix
     packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
     overlays = import ./overlays {inherit inputs;};
+    nixosModules = import ./modules/nixos;
+    homeManagerModules = import ./modules/home-manager;
     nixosConfigurations = {
       legion-wsl = let
         username = "nixos";
@@ -67,7 +70,7 @@
           modules = [
             sops-nix.nixosModules.sops
             nixos-wsl.nixosModules.default
-            ./modules/profiles/wsl.nix
+            ./modules/nixos/profiles/wsl.nix
             ./hosts/legion-wsl
             ./users/${username}/nixos.nix
 
@@ -121,7 +124,7 @@
               };
             }
 
-            ./modules/profiles/server.nix
+            ./modules/nixos/profiles/server.nix
             ./hosts/asus
             ./users/${username}/nixos.nix
 
