@@ -1,6 +1,7 @@
 {
   all-services = import ./all-services.nix;
   aria2 = import ./aria2.nix;
+  axonhub = import ./axonhub.nix;
   cloudflared = import ./cloudflared.nix;
   fdroid = import ./fdroid.nix;
   freshrss = import ./freshrss.nix;
@@ -9,6 +10,7 @@
   komga = import ./komga.nix;
   libvirt = import ./libvirt.nix;
   nixpkgs = import ./nixpkgs.nix;
+  openlist = import ./openlist.nix;
   server = import ./server.nix;
   sing-box = import ./sing-box.nix;
   system = import ./system.nix;

@@ -11,6 +11,8 @@
   imports = [
     outputs.nixosModules.all-services
     outputs.nixosModules.sing-box
+    outputs.nixosModules.openlist
+    outputs.nixosModules.axonhub
     outputs.nixosModules.libvirt
     outputs.nixosModules.aria2
     outputs.nixosModules.jellyfin
@@ -26,9 +28,6 @@
   };
 
   services = {
-    axonhub = {
-      enable = true;
-    };
     caddy = {
       enable = true;
       package = pkgs.unstable.caddy.withPlugins {
@@ -83,10 +82,6 @@ reverse_proxy /dav/public/* 127.0.0.1:5244
         };
       };
     };
-    openlist = {
-      enable = true;
-      envFile = config.sops.secrets.openlist.path;
-    };
     openssh = {
       settings = {
         X11Forwarding = true;
@@ -96,14 +91,20 @@ reverse_proxy /dav/public/* 127.0.0.1:5244
     postgresql = {
       enable = true;
       authentication = ''
+        host axonhub axonhub 127.0.0.1/32 scram-sha-256
         host openlist openlist 127.0.0.1/32 scram-sha-256
         host freshrss freshrss 127.0.0.1/32 scram-sha-256
       '';
       ensureDatabases = [
+        "axonhub"
         "openlist"
         "freshrss"
       ];
       ensureUsers = [
+        {
+          name = "axonhub";
+          ensureDBOwnership = true;
+        }
         {
           name = "openlist";
           ensureDBOwnership = true;
