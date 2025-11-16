@@ -21,5 +21,6 @@
   in {  
     unstable = unstable;  
     komga = unstable.komga;  
+    sillytavern = unstable.sillytavern;  
   };
 }

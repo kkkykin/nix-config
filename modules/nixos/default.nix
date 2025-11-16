@@ -13,6 +13,7 @@
   nixpkgs = import ./nixpkgs.nix;
   openlist = import ./openlist.nix;
   server = import ./server.nix;
+  sillytavern = import ./sillytavern.nix;
   sing-box = import ./sing-box.nix;
   system = import ./system.nix;
   tcpdump = import ./tcpdump.nix;

@@ -11,6 +11,7 @@
   imports = [
     outputs.nixosModules.all-services
     outputs.nixosModules.sing-box
+    outputs.nixosModules.sillytavern
     outputs.nixosModules.openlist
     # outputs.nixosModules.axonhub
     outputs.nixosModules.gpt-load
