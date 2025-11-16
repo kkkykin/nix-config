@@ -130,7 +130,6 @@ reverse_proxy /dav/public/* 127.0.0.1:5244
   
   environment.systemPackages = with pkgs; [
     calibre
-    p7zip
   ];
 
   fonts = {
