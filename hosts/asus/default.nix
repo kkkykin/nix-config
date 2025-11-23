@@ -16,6 +16,7 @@
     # outputs.nixosModules.axonhub
     outputs.nixosModules.gpt-load
     outputs.nixosModules.libvirt
+    outputs.nixosModules.music-sync
     outputs.nixosModules.aria2
     outputs.nixosModules.jellyfin
     outputs.nixosModules.komga

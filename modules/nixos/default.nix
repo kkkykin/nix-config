@@ -10,6 +10,7 @@
   kavita = import ./kavita.nix;
   komga = import ./komga.nix;
   libvirt = import ./libvirt.nix;
+  music-sync = import ./music-sync.nix;
   nixpkgs = import ./nixpkgs.nix;
   openlist = import ./openlist.nix;
   server = import ./server.nix;
