@@ -3,9 +3,11 @@
   nixConfig = {
     extra-substituters = [
       "https://nix-community.cachix.org"
+      "https://nur--m.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "nur--m.cachix.org-1:3B+L0JdIdbhI4u3eC5WTYDpIMiYDoe/BmvCQjMeSrBM="
     ];
   };
 
@@ -26,6 +28,7 @@
       url = "github:kkkykin/nixos-secrets-empty";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    kkkykin.url = "github:kkkykin/nur-packages/master";
   };
 
   outputs = inputs @ {
@@ -37,6 +40,7 @@
     sops-nix,
     home-manager,
     nix-secrets,
+    kkkykin,
     ...
   }: let
     inherit (self) outputs;

@@ -13,12 +13,16 @@
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
   # be accessible through 'pkgs.unstable'
-  unstable-packages = final: _prev: let  
-    unstable = import inputs.nixpkgs-unstable {  
-      system = final.system;  
-      config.allowUnfree = true;  
-    };  
-  in {  
-    unstable = unstable;  
+  unstable-packages = final: _prev: let
+    unstable = import inputs.nixpkgs-unstable {
+      system = final.system;
+      config.allowUnfree = true;
+    };
+    kkkykin = import inputs.kkkykin {
+      pkgs = final.pkgs;
+    };
+  in {
+    unstable = unstable;
+    kkkykin = kkkykin;
   };
 }
