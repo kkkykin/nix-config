@@ -4,7 +4,11 @@
 }: {
   programs.git = {
     enable = true;
-    extraConfig = {
+    settings = {
+      user = {
+        email = "kkkykin@foxmail.com";
+        name = "kkky";
+      };
       init = {
         defaultBranch = "main";
       };
@@ -20,5 +24,8 @@
         ff = "only";
       };
     };
+    attributes = [
+      "*.gpg diff=gpg"
+    ];
   };
 }

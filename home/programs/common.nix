@@ -11,7 +11,7 @@ in {
       buildInputs = oldAttrs.buildInputs ++ [ lz4 ];
     }))
     android-tools
-    python3Full
+    python3
     rclone
   ];
   programs = {

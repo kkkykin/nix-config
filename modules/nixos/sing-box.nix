@@ -12,7 +12,7 @@
   };
   systemd.services.sing-box = {
     serviceConfig = {
-      User = username;
+      User = lib.mkForce username;
       AmbientCapabilities = [
         "CAP_NET_BIND_SERVICE"
         "CAP_NET_ADMIN"
@@ -22,14 +22,14 @@
       ];
       ExecStart = [
         ""
-        "${pkgs.unstable.sing-box}/bin/sing-box -c \"${dotfileDir}/sing-box/_tangle/client/500-tun.json\" run"
+        "${pkgs.sing-box}/bin/sing-box -c \"${dotfileDir}/sing-box/_tangle/client/500-tun.json\" run"
       ];
     };
   };
   services = {
     sing-box = {
       enable = true;
-      package = pkgs.unstable.sing-box;
+      package = pkgs.sing-box;
     };
   };
   networking = {

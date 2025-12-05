@@ -7,7 +7,7 @@
   ];
   home.packages = with pkgs; [
     torsocks
-    unstable.koreader
+    koreader
   ];
 
   programs.bash = {
@@ -16,8 +16,4 @@ export all_proxy="socks5h://$(ip route show | grep -i default | cut -d' ' -f3):1
 '';
   };
 
-  programs.git = {
-    userName = "kkky";
-    userEmail = "kkkykin@foxmail.com";
-  };
 }

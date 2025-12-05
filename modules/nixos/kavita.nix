@@ -44,7 +44,7 @@ ${kosync-fix}
   };
   services.kavita = {
     enable = true;
-    package = pkgs.unstable.kavita;
+    package = pkgs.kavita;
     tokenKeyFile = config.sops.secrets.kavita.path;
   };
 }

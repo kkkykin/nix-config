@@ -33,14 +33,14 @@
   services = {
     caddy = {
       enable = true;
-      package = pkgs.unstable.caddy.withPlugins {
+      package = pkgs.caddy.withPlugins {
         plugins = [
           "github.com/mholt/caddy-l4@v0.0.0-20251001194302-2e3e6cf60b25"
           "github.com/caddyserver/replace-response@v0.0.0-20250618171559-80962887e4c6"
           "github.com/abiosoft/caddy-exec=github.com/kkkykin/caddy-exec@v0.0.0-20250930150303-c92bd5346ec8"
           "github.com/kkkykin/caddy-aria2@v1.0.0"
         ];
-        hash = "sha256-wQqy4OZG0I/m0DwfXhz8OXt/uXYW/DVoEkbxWJDcP+0=";
+        hash = "sha256-8uU9WdSSGG6NevhflkpN0SkIr9dg4d+eVnzaKPGNHUA=";
       };
       globalConfig = ''
 ${builtins.readFile ./caddy/global/servers.Caddyfile}

@@ -8,7 +8,7 @@ in {
 
     package = mkOption {
       type = types.package;
-      default = pkgs.unstable.openlist;
+      default = pkgs.openlist;
       description = "openlist binary package";
     };
 

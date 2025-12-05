@@ -1,5 +1,4 @@
 {
-  nixpkgs-unstable,
   config,
   secrets,
   pkgs,
@@ -8,14 +7,11 @@
   port = 8045;
   url = "http://127.0.0.1:${toString config.services.sillytavern.port}";
 in {
-  imports = [
-    "${nixpkgs-unstable}/nixos/modules/services/web-apps/sillytavern.nix"
-  ];
   services = {
     sillytavern = {
       enable = true;
       whitelist = true;
-      package = pkgs.unstable.sillytavern;
+      package = pkgs.sillytavern;
       port = port;
       configFile = config.sops.secrets.sillytavern.path;
     };

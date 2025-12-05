@@ -10,7 +10,7 @@ in {
 
   services.freshrss = {
     enable = true;
-    package = pkgs.unstable.freshrss;
+    package = pkgs.freshrss;
     webserver = "caddy";
     defaultUser = username;
     passwordFile = config.sops.secrets."freshrss_user_pass".path;

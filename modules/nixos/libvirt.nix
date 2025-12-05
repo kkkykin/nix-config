@@ -3,6 +3,7 @@
   pkgs,
   ...
 }: {
+  boot.extraModprobeConfig = "options kvm_intel nested=1";
   environment.systemPackages = with pkgs; [
     virtiofsd
   ];
@@ -16,13 +17,6 @@
       vhostUserPackages = with pkgs; [
         virtiofsd
       ];
-      ovmf = {
-        enable = true;
-        packages = [(pkgs.OVMF.override {
-          secureBoot = true;
-          tpmSupport = true;
-        }).fd];
-      };
     };
   };
 
