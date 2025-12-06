@@ -18,5 +18,6 @@
   sing-box = import ./sing-box.nix;
   system = import ./system.nix;
   tcpdump = import ./tcpdump.nix;
+  uni-api = import ./uni-api.nix;
   wsl = import ./wsl.nix;
 }

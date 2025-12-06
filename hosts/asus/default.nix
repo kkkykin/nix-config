@@ -6,6 +6,7 @@
   pkgs,
   username,
   outputs,
+  secrets,
   ...
 }: {
   imports = [
@@ -15,6 +16,7 @@
     outputs.nixosModules.openlist
     # outputs.nixosModules.axonhub
     outputs.nixosModules.gpt-load
+    outputs.nixosModules.uni-api
     outputs.nixosModules.libvirt
     outputs.nixosModules.music-sync
     outputs.nixosModules.aria2
@@ -29,6 +31,10 @@
   users.users.${username} = {
     extraGroups = ["openlist"];
   };
+
+  systemd.tmpfiles.rules = [
+    "d ${secrets.private-www.dir} 0750 ${username} caddy -"
+  ];
 
   services = {
     caddy = {
@@ -51,6 +57,13 @@ ${builtins.readFile ./caddy/snippets/cors.Caddyfile}
 ${builtins.readFile ./caddy/snippets/lb.Caddyfile}
 '';
       virtualHosts = {
+        "http://${secrets.private-www.host}:${toString secrets.private-www.port}" = {
+          extraConfig = ''
+file_server {
+  root ${secrets.private-www.dir}
+}
+'';
+        };
         ":80" = {
           extraConfig = ''
             encode gzip zstd
@@ -96,12 +109,14 @@ reverse_proxy /dav/public/* 127.0.0.1:5244
       authentication = ''
         host axonhub axonhub 127.0.0.1/32 scram-sha-256
         host gpt-load gpt-load 127.0.0.1/32 scram-sha-256
+        host uni-api uni-api 127.0.0.1/32 scram-sha-256
         host openlist openlist 127.0.0.1/32 scram-sha-256
         host freshrss freshrss 127.0.0.1/32 scram-sha-256
       '';
       ensureDatabases = [
         "axonhub"
         "gpt-load"
+        "uni-api"
         "openlist"
         "freshrss"
       ];
@@ -112,6 +127,10 @@ reverse_proxy /dav/public/* 127.0.0.1:5244
         }
         {
           name = "gpt-load";
+          ensureDBOwnership = true;
+        }
+        {
+          name = "uni-api";
           ensureDBOwnership = true;
         }
         {
