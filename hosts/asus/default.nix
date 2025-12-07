@@ -16,7 +16,7 @@
     outputs.nixosModules.openlist
     outputs.nixosModules.axonhub
     outputs.nixosModules.gpt-load
-    outputs.nixosModules.uni-api
+    # outputs.nixosModules.uni-api
     outputs.nixosModules.libvirt
     outputs.nixosModules.music-sync
     outputs.nixosModules.aria2
