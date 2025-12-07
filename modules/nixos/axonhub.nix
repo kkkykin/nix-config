@@ -7,6 +7,9 @@
     axonhub = {
       enable = true;
       environmentFile = config.sops.secrets.axonhub.path;
+      extraConfig = {
+        server.trace.claude_code_trace_enabled = true;
+      };
     };
   };
 
@@ -24,7 +27,9 @@
   services.caddy.virtualHosts = {
     "http://axonhub.asus.local" = {
       extraConfig = ''
-reverse_proxy http://127.0.0.1:${toString config.services.axonhub.port}
+reverse_proxy http://127.0.0.1:${toString config.services.axonhub.port} {
+  import remove-forward-headers
+}
 '';
     };
   };

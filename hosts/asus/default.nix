@@ -14,7 +14,7 @@
     outputs.nixosModules.sing-box
     outputs.nixosModules.sillytavern
     outputs.nixosModules.openlist
-    # outputs.nixosModules.axonhub
+    outputs.nixosModules.axonhub
     outputs.nixosModules.gpt-load
     outputs.nixosModules.uni-api
     outputs.nixosModules.libvirt
@@ -55,6 +55,7 @@ ${builtins.readFile ./caddy/global/misc.Caddyfile}
       extraConfig = ''
 ${builtins.readFile ./caddy/snippets/cors.Caddyfile}
 ${builtins.readFile ./caddy/snippets/lb.Caddyfile}
+${builtins.readFile ./caddy/snippets/remove-forward-headers.Caddyfile}
 '';
       virtualHosts = {
         "http://${secrets.private-www.host}:${toString secrets.private-www.port}" = {

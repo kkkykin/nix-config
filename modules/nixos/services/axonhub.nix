@@ -225,13 +225,8 @@ in
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
 
-      preStart = ''
-        # Ensure config file exists (copy on first run only)
-        if [[ ! -f ${cfg.dataDir}/config.yml ]]; then
-          cp ${configFile} ${cfg.dataDir}/config.yml
-          chown ${cfg.user}:${cfg.group} ${cfg.dataDir}/config.yml
-        fi
-      '';
+      # preStart removed: config now managed declaratively via Nix store
+      # No need to copy config file - using ${configFile} directly
 
       unitConfig = {
         StartLimitIntervalSec = 60;   # ✅ 注意：systemd 也建议用 ...Sec 后缀
@@ -243,7 +238,7 @@ in
         User = cfg.user;
         Group = cfg.group;
         WorkingDirectory = cfg.dataDir;
-        ExecStart = "${cfg.package}/bin/axonhub --config ${cfg.dataDir}/config.yml";
+        ExecStart = "${cfg.package}/bin/axonhub --config ${configFile}";
 
         Restart = "on-failure";
         RestartSec = 5;

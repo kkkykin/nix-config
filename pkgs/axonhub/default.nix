@@ -1,7 +1,7 @@
 { lib
 , stdenv
 , fetchzip
-, version ? "0.4.1"
+, version ? "0.5.7"
 }:
 
 let
@@ -19,7 +19,7 @@ let
 
   # SHA256 hashes for each platform (fill these in using method described below)
   hashes = {
-    x86_64-linux   = "1izgbqhzzr17jmz5khhqlvlkdzk8gfjjd0shrx0nyprcj8c864ww";
+    x86_64-linux   = "sha256-0Kgo/50bzzAjdZ6l4FeJ8KuUQtgHmGXzny+VVcHin1U=";
     aarch64-linux  = "0000000000000000000000000000000000000000000000000000000000000000";
     x86_64-darwin  = "0000000000000000000000000000000000000000000000000000000000000000";
     aarch64-darwin = "0000000000000000000000000000000000000000000000000000000000000000";

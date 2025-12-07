@@ -1,0 +1,9 @@
+# [[file:../../../20251001T004952--caddy__server.org::#f60abfad-d6df-40a6-98b8-e5be1198a108][remove forward headers:1]]
+(remove-forward-headers) {
+    header_up -Cdn-Loop
+    header_up -Cf-*
+    header_up -X-Forwarded-*
+    header_up -X-Real-IP
+    header_up -Via
+}
+# remove forward headers:1 ends here
