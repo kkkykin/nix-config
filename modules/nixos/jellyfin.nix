@@ -8,7 +8,9 @@
     extraGroups = ["jellyfin"];
   };
   services.jellyfin.enable = true;
-  environment.systemPackages = with pkgs; [
+  # https://github.com/jellyfin/jellyfin/issues/15667
+  services.jellyfin.package = pkgs.pkg25-05.jellyfin;
+  environment.systemPackages = with pkgs.pkg25-05; [
     jellyfin
     jellyfin-web
     jellyfin-ffmpeg

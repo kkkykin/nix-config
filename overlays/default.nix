@@ -18,11 +18,16 @@
       system = final.system;
       config.allowUnfree = true;
     };
+    pkg25-05 = import inputs.nixpkgs-25-05 {
+      system = final.system;
+      config.allowUnfree = true;
+    };
     kkkykin = import inputs.kkkykin {
       pkgs = final.pkgs;
     };
   in {
     unstable = unstable;
+    pkg25-05 = pkg25-05;
     kkkykin = kkkykin;
   };
 }
