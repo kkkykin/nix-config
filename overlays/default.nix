@@ -15,11 +15,11 @@
   # be accessible through 'pkgs.unstable'
   unstable-packages = final: _prev: let
     unstable = import inputs.nixpkgs-unstable {
-      system = final.system;
+      system = final.stdenv.hostPlatform.system;
       config.allowUnfree = true;
     };
     pkg25-05 = import inputs.nixpkgs-25-05 {
-      system = final.system;
+      system = final.stdenv.hostPlatform.system;
       config.allowUnfree = true;
     };
     kkkykin = import inputs.kkkykin {
