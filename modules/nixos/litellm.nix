@@ -5,13 +5,26 @@
   pkgs,
   lib,
   ...
-}: {
+}: let
+
+  litellm-otel = pkgs.python3.withPackages (ps: with ps; [
+    (ps.litellm.overridePythonAttrs (old: {
+      propagatedBuildInputs =
+        (old.propagatedBuildInputs or [])
+        ++ (old.optional-dependencies.proxy or []);
+    }))
+    ps.opentelemetry-api
+    ps.opentelemetry-sdk
+    ps.opentelemetry-exporter-otlp
+  ]);
+
+in {
   systemd.tmpfiles.rules = [
     "d /etc/litellm 0750 ${username} litellm -"
   ];
   systemd.services.litellm = {
     serviceConfig.ExecStart =
-      lib.mkForce "${pkgs.litellm}/bin/litellm --host \"${config.services.litellm.host}\" --port ${toString config.services.litellm.port} --config \"/etc/litellm/config.json\"";
+      lib.mkForce "${litellm-otel}/bin/litellm --host \"${config.services.litellm.host}\" --port ${toString config.services.litellm.port} --config \"/etc/litellm/config.json\"";
   };
 
   services = {
@@ -19,6 +32,7 @@
       enable = true;
       port = 4000;
       environment = {
+        # https://github.com/NixOS/nixpkgs/issues/432925
         DISABLE_ADMIN_UI = "True";
       };
       environmentFile = config.sops.secrets.litellm.path;
