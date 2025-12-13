@@ -11,6 +11,7 @@
 }: {
   imports = [
     outputs.nixosModules.all-services
+    outputs.nixosModules.cli-proxy-api
     outputs.nixosModules.sing-box
     outputs.nixosModules.sillytavern
     outputs.nixosModules.openlist

@@ -2,6 +2,7 @@
   all-services = import ./all-services.nix;
   aria2 = import ./aria2.nix;
   axonhub = import ./axonhub.nix;
+  cli-proxy-api = import ./cli-proxy-api.nix;
   cloudflared = import ./cloudflared.nix;
   fdroid = import ./fdroid.nix;
   freshrss = import ./freshrss.nix;
