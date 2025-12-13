@@ -11,7 +11,8 @@
     (ps.litellm.overridePythonAttrs (old: {
       propagatedBuildInputs =
         (old.propagatedBuildInputs or [])
-        ++ (old.optional-dependencies.proxy or []);
+        ++ (old.optional-dependencies.proxy or [])
+        ++ (old.optional-dependencies.extra_proxy or []);
     }))
     ps.opentelemetry-api
     ps.opentelemetry-sdk

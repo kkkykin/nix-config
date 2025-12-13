@@ -17,7 +17,7 @@
     cli-proxy-api = {
       enable = true;
       configFile = "${config.services.cli-proxy-api.homeDir}/config.yaml";
-      environmentFile = config.sops.secrets.cli-proxy-api.path;
+      # environmentFile = config.sops.secrets.cli-proxy-api.path;
     };
     postgresql = {
       ensureDatabases = [
