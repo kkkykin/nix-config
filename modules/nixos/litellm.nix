@@ -19,6 +19,8 @@
     ps.opentelemetry-exporter-otlp
   ]);
 
+  url = "http://127.0.0.1:${toString config.services.litellm.port}";
+
 in {
   systemd.tmpfiles.rules = [
     "d /etc/litellm 0750 ${username} litellm -"
@@ -54,7 +56,36 @@ in {
   services.caddy.virtualHosts = {
     "http://litellm.asus.local" = {
       extraConfig = ''
-        reverse_proxy http://127.0.0.1:${toString config.services.litellm.port}
+
+    map {header.Authorization} {api_cred} {
+        ~^Bearer\s+(.+)$ "${"\${1}"}"
+        default ""
+    }
+
+    map {api_cred} {api_cred} {
+        "" "{header.X-API-Key}"
+        default "{api_cred}"
+    }
+
+    map {api_cred}               {litellm_tags} {
+        ""                       "invalid"
+        "{$LITELLM_GENERAL}"     "general"
+        "{$LITELLM_CC}"          "cc"
+        "{$LITELLM_CX}"          "cx"
+        "{$LITELLM_TAVERN}"      "tavern"
+        "{$LITELLM_SNOW}"        "snow"
+        default                  "invalid"
+    }
+
+    @invalid expression {litellm_tags} == "invalid"
+    handle @invalid {
+        respond 403
+    }
+
+    reverse_proxy ${url} {
+        header_up Authorization "Bearer {$LITELLM_MASTER_KEY}"
+        header_up X-Litellm-Tags "{litellm_tags}"
+    }
       '';
     };
   };

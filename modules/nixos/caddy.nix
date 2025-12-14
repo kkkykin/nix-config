@@ -10,6 +10,12 @@
     "d ${secrets.private-www.dir} 0750 ${username} caddy -"
   ];
 
+  systemd.services.caddy = {
+    serviceConfig = {
+      EnvironmentFile = config.sops.secrets.caddy.path;
+    };
+  };
+
   services.caddy = {
     enable = true;
     package = pkgs.caddy.withPlugins {
