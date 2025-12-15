@@ -18,6 +18,7 @@ in  {
     enable = true;
     tunnels = {
       "${secrets.cloudflared.asus.uuid}" = {
+        edgeIPVersion = "auto";
         credentialsFile = config.sops.secrets."cloudflared/asus".path;
         default = "http_status:404";
       };
