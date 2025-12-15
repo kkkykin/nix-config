@@ -6,7 +6,7 @@
   pypi-mirror = "https://pypi.mirrors.ustc.edu.cn/simple";
 in {
   home.packages = with pkgs; [
-    kkkykin.c7zip-unfree
+    _7zz-rar
     android-tools
     python3
     rclone
