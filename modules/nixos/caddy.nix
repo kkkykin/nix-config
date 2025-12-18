@@ -12,6 +12,12 @@
 
   systemd.services.caddy = {
     serviceConfig = {
+      CapabilityBoundingSet = [
+        "CAP_NET_BIND_SERVICE"
+      ];
+      AmbientCapabilities = [
+        "CAP_NET_BIND_SERVICE"
+      ];
       EnvironmentFile = config.sops.secrets.caddy.path;
     };
   };
