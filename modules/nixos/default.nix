@@ -22,5 +22,6 @@
   system = import ./system.nix;
   tcpdump = import ./tcpdump.nix;
   uni-api = import ./uni-api.nix;
+  wallpaper = import ./wallpaper.nix;
   wsl = import ./wsl.nix;
 }

@@ -22,6 +22,7 @@
     outputs.nixosModules.libvirt
     outputs.nixosModules.litellm
     outputs.nixosModules.music-sync
+    outputs.nixosModules.wallpaper
     outputs.nixosModules.aria2
     outputs.nixosModules.jellyfin
     outputs.nixosModules.komga
