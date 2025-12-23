@@ -7,9 +7,9 @@
   ];
   home.packages = with pkgs;[
     ripgrep
-    kkkykin.snow-ai
-    codex
-    claude-code
-    claude-code-router
+    # kkkykin.snow-ai
+    # codex
+    # claude-code
+    # claude-code-router
   ];
 }
