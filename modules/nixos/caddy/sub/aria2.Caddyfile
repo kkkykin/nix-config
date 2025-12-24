@@ -1,11 +1,22 @@
-# [[file:../../20251001T004952--caddy__server.org::#c88e06a5-88ea-4ebf-934a-9a9b5be4e002][aria2:1]]
-handle_path /aria2-jsonrpc {
-    aria2_middleware {
-        upstream http://127.0.0.1:6800/jsonrpc
-        transform_uri ^https://pixeldrain\.com/(.*) "$0" "https://habitica-assets.kkky.eu.org/$0"
-        add_server_option ^https?://[^/]+\.baidu(?:pcs)?\.com/file/ max-connection-per-server 2
-        add_server_option ^https://[^/]+\.mypikpak\.com/ max-connection-per-server 2
-        add_server_option ^https://pixeldrain\.com/ max-connection-per-server 1
+# [[file:../../../20251001T004952--caddy__server.org::#c88e06a5-88ea-4ebf-934a-9a9b5be4e002][aria2:1]]
+handle_path /aria2-jsonrpc/* {
+    @json header content-type application/json
+    json_parse @json {
+      # Transform aria2.addUri params whether or not a secret token is present.
+      # URIs can be at params.0 (no token) or params.1 (with token).
+      transform_array params.0 ^https://pixeldrain\.com/(.*) "$0" "https://habitica-assets.kkky.eu.org/$0" when size({json.params}) == 2
+      transform_array params.1 ^https://pixeldrain\.com/(.*) "$0" "https://habitica-assets.kkky.eu.org/$0" when size({json.params}) == 3
+
+      # Add per-server options based on URI patterns.
+      merge_if_match params.0 ^https?://[^/]+\.baidu(?:pcs)?\.com/file/ params.1 {"max-connection-per-server":"2"} when size({json.params}) == 2
+      merge_if_match params.1 ^https?://[^/]+\.baidu(?:pcs)?\.com/file/ params.2 {"max-connection-per-server":"2"} when size({json.params}) == 3
+
+      merge_if_match params.0 ^https://[^/]+\.mypikpak\.com/ params.1 {"max-connection-per-server":"2"} when size({json.params}) == 2
+      merge_if_match params.1 ^https://[^/]+\.mypikpak\.com/ params.2 {"max-connection-per-server":"2"} when size({json.params}) == 3
+
+      merge_if_match params.0 ^https://pixeldrain\.com/ params.1 {"max-connection-per-server":"1"} when size({json.params}) == 2
+      merge_if_match params.1 ^https://pixeldrain\.com/ params.2 {"max-connection-per-server":"1"} when size({json.params}) == 3
     }
+    reverse_proxy http://127.0.0.1:6800
 }
 # aria2:1 ends here
