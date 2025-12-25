@@ -21,6 +21,12 @@
   services.caddy.virtualHosts = {
     "http://openlist.asus.local" = {
       extraConfig = ''
+@noStorePath path_regexp (?i)(\\.shrink_media_state\\.jsonl|\\.shrink_media_locks/.*|\\.__tmp__[^/]*$)
+@noStoreMethod method PUT DELETE MOVE MKCOL PROPFIND
+
+header @noStorePath Cache-Control "no-store, no-cache, must-revalidate"
+header @noStoreMethod Cache-Control "no-store, no-cache, must-revalidate"
+
 reverse_proxy /dav/onedrive/* http://127.0.0.1:5244
 '';
     };
