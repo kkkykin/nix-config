@@ -1,5 +1,6 @@
 # [[file:../../../20251001T004952--caddy__server.org::#c88e06a5-88ea-4ebf-934a-9a9b5be4e002][aria2:1]]
-handle_path /aria2-jsonrpc/* {
+handle_path /aria2-jsonrpc {
+    rewrite * /jsonrpc
     @json header content-type application/json
     json_parse @json {
       # Transform aria2.addUri params whether or not a secret token is present.
