@@ -7,6 +7,7 @@
   ];
   home.packages = with pkgs;[
     ripgrep
+    unstable.codex-acp
     # kkkykin.snow-ai
     # codex
     # claude-code

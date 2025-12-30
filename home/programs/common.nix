@@ -8,6 +8,7 @@ in {
   home.packages = with pkgs; [
     _7zz-rar
     android-tools
+    gopass
     python3
     rclone
   ];
