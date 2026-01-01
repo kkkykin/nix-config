@@ -31,7 +31,22 @@
     };
     caddy.virtualHosts = {
       "http://cpa.asus.local" = {
+        # https://github.com/aftely1337/amp-free-proxy
         extraConfig = ''
+@freeSearch {
+    path /api/internal
+    expression `{query}.contains("webSearch2") || {query}.contains("extractWebPageContent")`
+}
+
+handle @freeSearch {
+    json_parse {
+        set isFreeTierRequest true
+    }
+    reverse_proxy https://ampcode.com {
+        header_up Host {upstream_hostport}
+        import remove-forward-headers
+    }
+}
 reverse_proxy http://127.0.0.1:8317
         '';
       };
