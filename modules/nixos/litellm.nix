@@ -6,9 +6,24 @@
   lib,
   ...
 }: let
+  version = "1.80.8";
 
-  litellm-otel = pkgs.python3.withPackages (ps: with ps; [
+  litellm-otel = pkgs.unstable.python3.withPackages (ps: with ps.unstable; [
     (ps.litellm.overridePythonAttrs (old: {
+      version = version;
+      src = pkgs.fetchFromGitHub {
+        owner = "BerriAI";
+        repo = "litellm";
+        tag = "v${version}-stable.1";
+        hash = "sha256-oEw18DAAJw0+zD36gp52M+1QbP5IKbAbsOKKTtBC3HQ=";
+      };
+      nativeBuildInputs =
+        (old.nativeBuildInputs or [])
+        ++ [ pkgs.python3Packages.pythonRelaxDepsHook ];
+      pythonRelaxDeps =
+        (old.pythonRelaxDeps or [])
+        ++ [ "grpcio" ];
+
       propagatedBuildInputs =
         (old.propagatedBuildInputs or [])
         ++ (old.optional-dependencies.proxy or [])
