@@ -6,6 +6,11 @@
   # You can change versions, add patches, set compilation flags, anything really.
   # https://nixos.wiki/wiki/Overlays
   modifications = final: prev: {
+    sillytavern = final.unstable.sillytavern.overrideAttrs (old: {
+      patches = (old.patches or []) ++ [
+        ./patches/sillytavern/0001-openai-reverse-proxy-image-video.patch
+      ];
+    });
     # example = prev.example.overrideAttrs (oldAttrs: rec {
     # ...
     # });

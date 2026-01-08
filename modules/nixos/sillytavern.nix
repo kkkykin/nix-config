@@ -24,7 +24,9 @@ in {
   services.caddy.virtualHosts = {
     "http://sillytavern.asus.local" = {
       extraConfig = ''
-reverse_proxy ${url}
+reverse_proxy ${url} {
+  flush_interval -1
+}
 '';
     };
   };
