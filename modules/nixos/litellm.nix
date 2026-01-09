@@ -1,6 +1,6 @@
 { config, secrets, username, pkgs, lib, ... }:
 let
-  version = "1.80.8";
+  version = "1.80.10";
 
   prismaEngines = pkgs.prisma-engines;
   prismaCli = pkgs.prisma;
@@ -17,7 +17,6 @@ let
 
   litellm-otel = py.withPackages (ps: with ps.unstable; [
     prismaPatched
-    ps.tomlkit
     ps.opentelemetry-api
     ps.opentelemetry-sdk
     ps.opentelemetry-exporter-otlp
@@ -27,8 +26,8 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "BerriAI";
         repo = "litellm";
-        rev = "v${version}-stable.1";
-        hash = "sha256-oEw18DAAJw0+zD36gp52M+1QbP5IKbAbsOKKTtBC3HQ=";
+        rev = "v${version}.rc.5";
+        hash = "sha256-lVNRjDgG+yZR4HfEUnmY1nO1WiukR9aYSBpn0M1JHBc=";
       };
 
       patches = (old.patches or []) ++ [
