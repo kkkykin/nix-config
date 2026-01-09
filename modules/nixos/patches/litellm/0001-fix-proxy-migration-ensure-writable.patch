@@ -1,0 +1,87 @@
+From ba3adc641da3ddbb42f27dedccb40790a92a4b3a Mon Sep 17 00:00:00 2001
+From: kkky <kkkykin@foxmail.com>
+Date: Fri, 9 Jan 2026 09:09:19 +0800
+Subject: [PATCH] fix(proxy): migration ensure writable
+
+---
+ .../litellm_proxy_extras/utils.py             | 42 +++++++++++++++++--
+ 1 file changed, 39 insertions(+), 3 deletions(-)
+
+diff --git a/litellm-proxy-extras/litellm_proxy_extras/utils.py b/litellm-proxy-extras/litellm_proxy_extras/utils.py
+index 96e1a51..aac510d 100644
+--- a/litellm-proxy-extras/litellm_proxy_extras/utils.py
++++ b/litellm-proxy-extras/litellm_proxy_extras/utils.py
+@@ -3,6 +3,7 @@ import os
+ import random
+ import re
+ import shutil
++import stat
+ import subprocess
+ import time
+ from datetime import datetime
+@@ -19,6 +20,28 @@ def str_to_bool(value: Optional[str]) -> bool:
+ 
+ 
+ class ProxyExtrasDBManager:
++    @staticmethod
++    def _ensure_writable(path: str) -> None:
++        if not os.path.exists(path):
++            return
++        for root, dirs, files in os.walk(path):
++            for d in dirs:
++                p = os.path.join(root, d)
++                try:
++                    os.chmod(p, os.stat(p).st_mode | stat.S_IWUSR | stat.S_IXUSR)
++                except OSError:
++                    pass
++            for f in files:
++                p = os.path.join(root, f)
++                try:
++                    os.chmod(p, os.stat(p).st_mode | stat.S_IWUSR)
++                except OSError:
++                    pass
++        try:
++            os.chmod(path, os.stat(path).st_mode | stat.S_IWUSR | stat.S_IXUSR)
++        except OSError:
++            pass
++    
+     @staticmethod
+     def _get_prisma_dir() -> str:
+         """
+@@ -31,17 +54,30 @@ class ProxyExtrasDBManager:
+         if custom_migrations_dir:
+             # If migrations_dir exists, copy contents
+             if os.path.exists(custom_migrations_dir):
++                # Make sure we can overwrite existing files (Nix often makes them 0444)
++                ProxyExtrasDBManager._ensure_writable(custom_migrations_dir)
+                 # Copy contents instead of directory itself
+                 for item in os.listdir(pkg_migrations_dir):
+                     src_path = os.path.join(pkg_migrations_dir, item)
+                     dst_path = os.path.join(custom_migrations_dir, item)
+                     if os.path.isdir(src_path):
+-                        shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
++                        shutil.copytree(
++                            src_path,
++                            dst_path,
++                            dirs_exist_ok=True,
++                            copy_function=shutil.copyfile,
++                        )
+                     else:
+-                        shutil.copy2(src_path, dst_path)
++                        shutil.copyfile(src_path, dst_path)
++                ProxyExtrasDBManager._ensure_writable(custom_migrations_dir)
+             else:
+                 # If directory doesn't exist, create it and copy everything
+-                shutil.copytree(pkg_migrations_dir, custom_migrations_dir)
++                shutil.copytree(
++                    pkg_migrations_dir,
++                    custom_migrations_dir,
++                    copy_function=shutil.copyfile,
++                )
++                ProxyExtrasDBManager._ensure_writable(custom_migrations_dir)
+             return custom_migrations_dir
+ 
+         return pkg_migrations_dir
+-- 
+2.51.2
+
