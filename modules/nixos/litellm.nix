@@ -128,6 +128,8 @@ in
       HOME = "/var/lib/litellm";
       PRISMA_HOME_DIR = "/var/lib/litellm";
       LITELLM_MIGRATION_DIR = "/var/lib/litellm/migrations";
+      DOCS_URL = "/docs";
+      ROOT_REDIRECT_URL = "/ui";
 
       PRISMA_VERSION = "6.18.0";
       PRISMA_EXPECTED_ENGINE_VERSION = "34b5a692b7bd79939a9a2c3ef97d816e749cda2f";
