@@ -1,69 +1,17 @@
-From 0fa46bcef045e0258983a5b29d059cc000933f8d Mon Sep 17 00:00:00 2001
+From 4689694f47444525ee86e828c655d49105c028a5 Mon Sep 17 00:00:00 2001
 From: kkky <kkkykin@foxmail.com>
-Date: Thu, 8 Jan 2026 14:41:57 +0800
-Subject: [PATCH] openai-reverse-proxy-image-video
+Date: Fri, 9 Jan 2026 21:00:44 +0800
+Subject: [PATCH] openai reverse proxy image video
 
 ---
- .../extensions/stable-diffusion/index.js      | 12 ++++-
- src/endpoints/openai.js                       | 54 +++++++++++++------
- 2 files changed, 50 insertions(+), 16 deletions(-)
+ src/endpoints/openai.js | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/public/scripts/extensions/stable-diffusion/index.js b/public/scripts/extensions/stable-diffusion/index.js
-index 0fbc867..c8b32c7 100644
---- a/public/scripts/extensions/stable-diffusion/index.js
-+++ b/public/scripts/extensions/stable-diffusion/index.js
-@@ -35,6 +35,7 @@ import {
-     getBase64Async,
-     getCharaFilename,
-     initScrollHeight,
-+    isValidUrl,
-     isFalseBoolean,
-     isTrueBoolean,
-     resetScrollHeight,
-@@ -3737,6 +3738,11 @@ async function generateOpenAiImage(prompt, signal) {
-         height = 512;
-     }
- 
-+    const reverseProxyRaw = String(oai_settings.reverse_proxy || '').trim();
-+    const useReverseProxy = reverseProxyRaw && isValidUrl(reverseProxyRaw);
-+    const reverseProxy = useReverseProxy ? reverseProxyRaw : undefined;
-+    const proxyPassword = useReverseProxy ? oai_settings.proxy_password : undefined;
-+
-     if (isSora2) {
-         width = aspectRatio >= 1 ? 1280 : 720;
-         height = aspectRatio >= 1 ? 720 : 1280;
-@@ -3750,6 +3756,8 @@ async function generateOpenAiImage(prompt, signal) {
-                 model: extension_settings.sd.model,
-                 size: `${width}x${height}`,
-                 seconds: extension_settings.sd.openai_duration,
-+                reverse_proxy: reverseProxy,
-+                proxy_password: proxyPassword,
-             }),
-         });
- 
-@@ -3774,6 +3782,8 @@ async function generateOpenAiImage(prompt, signal) {
-             style: isDalle3 ? extension_settings.sd.openai_style : undefined,
-             response_format: isDalle2 || isDalle3 ? 'b64_json' : undefined,
-             moderation: isGptImg ? 'low' : undefined,
-+            reverse_proxy: reverseProxy,
-+            proxy_password: proxyPassword,
-         }),
-     });
- 
-@@ -4582,7 +4592,7 @@ function isValidState() {
-         case sources.novel:
-             return secret_state[SECRET_KEYS.NOVEL];
-         case sources.openai:
--            return secret_state[SECRET_KEYS.OPENAI];
-+            return secret_state[SECRET_KEYS.OPENAI] || isValidUrl(String(oai_settings.reverse_proxy || '').trim());
-         case sources.aimlapi:
-             return secret_state[SECRET_KEYS.AIMLAPI];
-         case sources.comfy:
 diff --git a/src/endpoints/openai.js b/src/endpoints/openai.js
-index c4b54a7..6cc4ecf 100644
+index c4b54a7..157b7e5 100644
 --- a/src/endpoints/openai.js
 +++ b/src/endpoints/openai.js
-@@ -488,22 +488,34 @@ router.post('/chutes/models/embedding', async (request, response) => {
+@@ -488,7 +488,10 @@ router.post('/chutes/models/embedding', async (request, response) => {
  
  router.post('/generate-image', async (request, response) => {
      try {
@@ -73,38 +21,30 @@ index c4b54a7..6cc4ecf 100644
 +        const baseUrl = useReverseProxy ? reverseProxy : 'https://api.openai.com/v1';
 +        const key = useReverseProxy ? (proxyPassword || readSecret(request.user.directories, SECRET_KEYS.OPENAI)) : readSecret(request.user.directories, SECRET_KEYS.OPENAI);
  
--        if (!key) {
-+        if (!key && !useReverseProxy) {
+         if (!key) {
              console.warn('No OpenAI key found');
-             return response.sendStatus(400);
+@@ -496,14 +499,18 @@ router.post('/generate-image', async (request, response) => {
          }
  
--        console.debug('OpenAI request', request.body);
+         console.debug('OpenAI request', request.body);
 +        const apiUrl = `${baseUrl}/images/generations`;
- 
--        const result = await fetch('https://api.openai.com/v1/images/generations', {
++
 +        const headers = {};
 +        setAdditionalHeaders(request, { headers }, apiUrl);
-+
-+        console.debug('OpenAI image generation request', {
-+            model: requestBody.model,
-+            size: requestBody.size,
-+        });
-+
+ 
+-        const result = await fetch('https://api.openai.com/v1/images/generations', {
 +        const result = await fetch(apiUrl, {
              method: 'POST',
              headers: {
                  'Content-Type': 'application/json',
--                Authorization: `Bearer ${key}`,
-+                ...(key ? { Authorization: `Bearer ${key}` } : {}),
-+                ...headers,
+                 Authorization: `Bearer ${key}`,
              },
 -            body: JSON.stringify(request.body),
 +            body: JSON.stringify(requestBody),
          });
  
          if (!result.ok) {
-@@ -528,20 +540,30 @@ router.post('/generate-video', async (request, response) => {
+@@ -528,7 +535,9 @@ router.post('/generate-video', async (request, response) => {
              controller.abort();
          });
  
@@ -113,34 +53,21 @@ index c4b54a7..6cc4ecf 100644
 +        const baseUrl = useReverseProxy ? request.body.reverse_proxy : 'https://api.openai.com/v1';
 +        const key = useReverseProxy ? (request.body?.proxy_password || readSecret(request.user.directories, SECRET_KEYS.OPENAI)) : readSecret(request.user.directories, SECRET_KEYS.OPENAI);
  
--        if (!key) {
-+        if (!key && !useReverseProxy) {
+         if (!key) {
              console.warn('No OpenAI key found');
-             return response.sendStatus(400);
+@@ -536,8 +545,10 @@ router.post('/generate-video', async (request, response) => {
          }
  
--        console.debug('OpenAI video generation request', request.body);
+         console.debug('OpenAI video generation request', request.body);
 +        const headers = {};
 +        setAdditionalHeaders(request, { headers }, baseUrl);
-+
-+        console.debug('OpenAI video generation request', {
-+            model: request.body?.model,
-+            size: request.body?.size,
-+            seconds: request.body?.seconds,
-+        });
  
 -        const videoJobResponse = await fetch('https://api.openai.com/v1/videos', {
 +        const videoJobResponse = await fetch(`${baseUrl}/videos`, {
              method: 'POST',
              headers: {
                  'Content-Type': 'application/json',
--                'Authorization': `Bearer ${key}`,
-+                ...(key ? { 'Authorization': `Bearer ${key}` } : {}),
-+                ...headers,
-             },
-             body: JSON.stringify({
-                 prompt: request.body.prompt,
-@@ -575,10 +597,11 @@ router.post('/generate-video', async (request, response) => {
+@@ -575,7 +586,7 @@ router.post('/generate-video', async (request, response) => {
              await delay(5000 + attempt * 1000);
              console.debug(`Polling OpenAI video job ${videoJob.id}, attempt ${attempt + 1}`);
  
@@ -148,13 +75,8 @@ index c4b54a7..6cc4ecf 100644
 +            const pollResponse = await fetch(`${baseUrl}/videos/${videoJob.id}`, {
                  method: 'GET',
                  headers: {
--                    'Authorization': `Bearer ${key}`,
-+                    ...(key ? { 'Authorization': `Bearer ${key}` } : {}),
-+                    ...headers,
-                 },
-             });
- 
-@@ -598,10 +621,11 @@ router.post('/generate-video', async (request, response) => {
+                     'Authorization': `Bearer ${key}`,
+@@ -598,7 +609,7 @@ router.post('/generate-video', async (request, response) => {
              }
  
              if (pollResult.status === 'completed') {
@@ -162,12 +84,7 @@ index c4b54a7..6cc4ecf 100644
 +                const contentResponse = await fetch(`${baseUrl}/videos/${videoJob.id}/content`, {
                      method: 'GET',
                      headers: {
--                        'Authorization': `Bearer ${key}`,
-+                        ...(key ? { 'Authorization': `Bearer ${key}` } : {}),
-+                        ...headers,
-                     },
-                 });
- 
+                         'Authorization': `Bearer ${key}`,
 -- 
 2.51.2
 
