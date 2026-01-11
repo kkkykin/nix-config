@@ -36,6 +36,10 @@
     extraGroups = ["openlist"];
   };
 
+  security.pki.certificateFiles = [
+    ./mitmproxy-ca-cert.cer
+  ];
+
   services = {
     openssh = {
       settings = {

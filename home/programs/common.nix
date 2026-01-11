@@ -9,6 +9,7 @@ in {
     _7zz-rar
     android-tools
     gopass
+    mitmproxy
     python3
     rclone
   ];
