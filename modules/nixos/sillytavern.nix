@@ -18,7 +18,12 @@ in {
   };
   services.cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
     ingress = {
-      "sillytavern.${secrets.cloudflared.asus.domain}" = url;
+      "sillytavern.${secrets.cloudflared.asus.domain}" = {
+        service = "http://127.0.0.1";
+        originRequest = {
+          httpHostHeader = "sillytavern.asus.local";
+        };
+      };
     };
   };
   services.caddy.virtualHosts = {
