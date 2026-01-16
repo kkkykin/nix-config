@@ -33,6 +33,13 @@
       "http://cpa.asus.local" = {
         # https://github.com/aftely1337/amp-free-proxy
         extraConfig = ''
+@claude-code-count-token {
+  path /v1/messages/count_tokens
+  header User-Agent claude-cli/*
+}
+
+respond @claude-code-count-token 404
+
 @freeSearch {
     path /api/internal
     expression `{query}.contains("webSearch2") || {query}.contains("extractWebPageContent")`
