@@ -149,7 +149,9 @@ in
 
   services.caddy.virtualHosts."http://litellm.asus.local" = {
     extraConfig = ''
-      reverse_proxy ${url}
+reverse_proxy ${url} {
+  flush_interval -1
+}
     '';
   };
 }

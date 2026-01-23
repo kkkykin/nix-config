@@ -54,7 +54,9 @@ handle @freeSearch {
         import remove-forward-headers
     }
 }
-reverse_proxy http://127.0.0.1:8317
+reverse_proxy http://127.0.0.1:8317 {
+  flush_interval -1
+}
         '';
       };
     };
