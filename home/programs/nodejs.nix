@@ -4,6 +4,6 @@
 }: {
   home.packages = with pkgs;[
     nodejs
-    nodePackages.pnpm
+    bun
   ];
 }
