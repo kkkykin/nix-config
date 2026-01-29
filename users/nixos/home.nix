@@ -8,6 +8,7 @@
   home.packages = with pkgs; [
     torsocks
     koreader
+    boohu
   ];
 
   programs.bash = {
