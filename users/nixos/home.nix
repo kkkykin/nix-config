@@ -8,7 +8,9 @@
   home.packages = with pkgs; [
     torsocks
     koreader
-    boohu
+    nethack
+    kkkykin.cataclysm-dda-ncurses
+    angband
   ];
 
   programs.bash = {
