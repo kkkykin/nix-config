@@ -10,12 +10,6 @@ in {
     android-tools
     gopass
     mitmproxy
-    python3
     rclone
   ];
-  programs = {
-    uv = {
-      enable = true;
-    };
-  };
 }
