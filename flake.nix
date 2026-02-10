@@ -65,6 +65,25 @@
     nixosModules = import ./modules/nixos;
     homeManagerModules = import ./modules/home-manager;
     nixosConfigurations = {
+      cone-vps = let
+        username = "cone";
+        specialArgs = inputs // {
+          inherit outputs username;
+          secrets = import nix-secrets;
+        };
+      in
+        nixpkgs.lib.nixosSystem {
+          inherit specialArgs;
+          system = "x86_64-linux";
+
+          modules = [
+            nix-secrets.nixosModules.cone
+            ./hosts/cone-vps
+            ./users/${username}/nixos.nix
+
+            ./modules/nixos/profiles/server.nix
+          ];
+        };
       legion-wsl = let
         username = "nixos";
         specialArgs = inputs // {inherit outputs username;};

@@ -1,4 +1,5 @@
 {
+  secrets,
   ...
 }: {
   services = {
@@ -8,4 +9,9 @@
       openFirewall = true;
     };
   };
+
+  users.users.root.openssh.authorizedKeys.keys = [
+    secrets.openssh.defaultKey
+  ];
+
 }

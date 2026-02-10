@@ -36,22 +36,39 @@ else
   UPDATE_SECRETS_CMD  ?= true
 endif
 
+# -------------------------------
+# 远程构建支持
+# -------------------------------
+# 用法：
+#   make switch REMOTE=host
+#   make switch REMOTE=user@host
+#
+# 自动补全 user@host
+REMOTE ?=
+ifeq ($(REMOTE),)
+  TARGET_CMD := sudo $(MAYBE_PROXY) nixos-rebuild
+else
+  # 如果 REMOTE 中没有 @，自动补全当前用户
+  # REMOTE_USER := $(shell echo "$(REMOTE)" | grep -q '@' || echo "$(USER)@$(REMOTE)" || echo "$(REMOTE)")
+  TARGET_CMD := $(MAYBE_PROXY) nixos-rebuild --target-host $(REMOTE) --sudo
+endif
+
 # 默认目标
 .PHONY: switch
 switch:
 	$(UPDATE_SECRETS_CMD)
-	sudo $(MAYBE_PROXY) nixos-rebuild --flake $(FLAKE_REF) switch $(if $(SPEC),--specialisation $(SPEC)) $(OVERRIDE_INPUTS) $(NIX_OPTIONS)
+	$(TARGET_CMD) --flake $(FLAKE_REF) switch $(if $(SPEC),--specialisation $(SPEC)) $(OVERRIDE_INPUTS) $(NIX_OPTIONS)
 
 # 列出所有 generations
 .PHONY: list
 list:
-	$(MAYBE_PROXY) nixos-rebuild --flake $(FLAKE_REF) list-generations
+	$(TARGET_CMD) --flake $(FLAKE_REF) list-generations
 
 # 其他常用 nixos-rebuild 动作
 .PHONY: build test boot dry-run
 build test boot dry-run:
 	$(UPDATE_SECRETS_CMD)
-	$(MAYBE_PROXY) nixos-rebuild --flake $(FLAKE_REF) $@ $(OVERRIDE_INPUTS) $(NIX_OPTIONS)
+	$(TARGET_CMD) --flake $(FLAKE_REF) $@ $(OVERRIDE_INPUTS) $(NIX_OPTIONS)
 
 .PHONY: update
 update:
@@ -66,21 +83,23 @@ endif
 # 清理旧系统代 generations（可选）
 .PHONY: gc
 gc:
-	$(MAYBE_PROXY) nix-collect-garbage -d
+	$(TARGET_CMD) nix-collect-garbage -d
 
 # 帮助
 .PHONY: help
 help:
-	@echo "Usage: make [PROXY_OFF=1] [NO_MIRROR=1] <target>"
+	@echo "Usage: make [PROXY_OFF=1] [NO_MIRROR=1] [REMOTE=host] <target>"
 	@echo
 	@echo "target:"
 	@echo "  switch   (默认) 切换到新配置并激活，可设置 SPEC"
-	@echo "  build    仅构建，不激活"
-	@echo "  test     构建并进入临时测试环境"
-	@echo "  boot     构建并设置下次启动项，不立即切换"
+	@echo "  build	仅构建，不激活"
+	@echo "  test	 构建并进入临时测试环境"
+	@echo "  boot	 构建并设置下次启动项，不立即切换"
 	@echo "  dry-run  仅评估，不构建"
-	@echo "  gc       清理旧 generations 和 store"
+	@echo "  list	 列出 generations"
+	@echo "  gc	   清理旧 generations 和 store"
 	@echo
 	@echo "环境变量:"
 	@echo "  PROXY_OFF=1  禁用默认的 SOCKS5 代理"
-	@echo "  NO_MIRROR=1  禁用配置文件中的 mirror，只用官方 cache.nixos.org"
+	@echo "  NO_MIRROR=1  禁用 mirror，只用官方 cache.nixos.org"
+	@echo "  REMOTE=host 或 user@host  在远程主机上 rebuild"

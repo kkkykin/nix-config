@@ -11,6 +11,8 @@
     extraGroups = ["wheel"];
   };
 
+  networking.firewall.enable = true;
+
   # given the users in this list the right to specify additional substituters via:
   #    1. `nixConfig.substituers` in `flake.nix`
   #    2. command line args `--options substituers http://xxx`
@@ -62,5 +64,7 @@
     curl
     gnupg
     git
+    uv
+    python3
   ];
 }
