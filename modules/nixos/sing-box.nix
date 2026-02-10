@@ -1,18 +1,23 @@
 {
   username,
-  dotfileDir,
   pkgs,
   lib,
   config,
   ...
-}: {
-  boot.kernel.sysctl = {
-    "net.ipv4.conf.all.forwarding" = true;
-    "net.ipv6.conf.all.forwarding" = true;
+}: let
+  conf-dir = "/etc/sing-box/";
+in{
+
+  systemd.tmpfiles.rules = [
+    "d ${conf-dir} 0770 ${username} sing-box -"
+  ];
+
+  users.users.${username} = {
+    extraGroups = ["sing-box"];
   };
+
   systemd.services.sing-box = {
     serviceConfig = {
-      User = lib.mkForce username;
       AmbientCapabilities = [
         "CAP_NET_BIND_SERVICE"
         "CAP_NET_ADMIN"
@@ -22,7 +27,7 @@
       ];
       ExecStart = [
         ""
-        "${pkgs.sing-box}/bin/sing-box -c \"${dotfileDir}/sing-box/_tangle/client/500-tun.json\" run"
+        "${pkgs.sing-box}/bin/sing-box -c \"${conf-dir}/client/500-tun.json\" run"
       ];
     };
   };
@@ -30,16 +35,6 @@
     sing-box = {
       enable = true;
       package = pkgs.sing-box;
-    };
-  };
-  networking = {
-    nftables = {
-      enable = true;
-    };
-    firewall = {
-      allowedTCPPorts = [
-        10807
-      ];
     };
   };
 }
