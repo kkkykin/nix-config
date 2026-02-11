@@ -11,6 +11,7 @@
 }: {
   imports = [
     outputs.nixosModules.all-services
+    outputs.nixosModules.sing-box
     ./hardware-configuration.nix
   ];
 
@@ -25,7 +26,8 @@
   boot.loader.grub.device = "/dev/vda";
   swapDevices = [{ device = "/swapfile"; size = 1076; }];
   boot.kernelParams = [ "console=ttyS0,115200n8" "console=tty0" ];
-  networking = secrets.network.cone;
+  networking = secrets.network.cone.networking;
+  systemd.network = secrets.network.cone.systemd;
   ###################################################
 
 
