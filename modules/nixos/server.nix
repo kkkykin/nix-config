@@ -2,6 +2,8 @@
   secrets,
   ...
 }: {
+  networking.nftables.enable = true;
+
   services = {
     openssh = {
       enable = true;
