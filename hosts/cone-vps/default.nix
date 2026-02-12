@@ -12,8 +12,51 @@
   imports = [
     outputs.nixosModules.all-services
     outputs.nixosModules.sing-box
+    outputs.nixosModules.caddy
     ./hardware-configuration.nix
   ];
+
+  systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.caddy.path;
+  services = let
+    srs-dir = "/var/lib/srs-decompile/";
+  in {
+    caddy = {
+      globalConfig = ''
+acme_dns cloudflare {env.CF_API_TOKEN}
+https_port 7777
+layer4 {
+    tcp/:443 {
+        @hub {
+            remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
+            tls sni hub.${secrets.domain.cone}
+        }
+        route @hub {
+            proxy 127.0.0.1:7777
+        }
+    }
+}
+      '';
+      virtualHosts = {
+        "hub.${secrets.domain.cone}" = {
+          serverAliases = [
+          ];
+          extraConfig = ''
+@hub host hub.${secrets.domain.cone}
+reverse_proxy @hub http://127.0.0.1:5000
+'';
+        };
+      };
+    };
+    srsDecompile = {
+      enable = true;
+      outputDir = srs-dir;
+      urls = [
+        "https://github.com/SagerNet/sing-geoip/raw/refs/heads/rule-set/geoip-cn.srs"
+        "https://github.com/Chocolate4U/Iran-sing-box-rules/raw/refs/heads/rule-set/geoip-cloudflare.srs"
+      ];
+    };
+    hubproxy.enable = true;
+  };
 
   boot = {
     loader = {
