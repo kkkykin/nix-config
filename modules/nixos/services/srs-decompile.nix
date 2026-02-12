@@ -3,7 +3,7 @@
 let
   cfg = config.services.srsDecompile;
 
-  # 运行脚本（放在 Nix store，天然不可篡改）
+  # 运行脚本（位于 Nix store，不可被运行用户篡改）
   runner = pkgs.writeShellScript "srs-decompile-run" ''
     set -euo pipefail
     umask 077
@@ -13,8 +13,9 @@ let
 
     url_basename() {
       local url="$1"
-      url="${url%%\?*}"
-      printf '%s' "${url##*/}"
+      # 去掉 query string
+      url="''${url%%\?*}"
+      printf '%s' "''${url##*/}"
     }
 
     for url in ${lib.concatStringsSep " " (map lib.escapeShellArg cfg.urls)}; do
@@ -128,7 +129,7 @@ in
         Group = cfg.group;
         UMask = "0077";
 
-        # 让 systemd 确保 /var/lib/srs-decompile 存在且权限正确
+        # 让 systemd 管理/创建 state 目录：/var/lib/srs-decompile
         StateDirectory = "srs-decompile";
         StateDirectoryMode = "0750";
 
