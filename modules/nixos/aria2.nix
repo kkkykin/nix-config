@@ -13,6 +13,7 @@
     };
   };
   services = {
+    caddy.virtualHosts.":80".extraConfig = "${builtins.readFile ./caddy/sub/aria2.Caddyfile}";
     aria2 = {
       enable = true;
       rpcSecretFile = config.sops.secrets.aria2_rpc_secret.path;
