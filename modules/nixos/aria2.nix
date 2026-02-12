@@ -7,6 +7,11 @@
   users.users.${username} = {
     extraGroups = ["aria2"];
   };
+  systemd.services.aria2 = {
+    serviceConfig = {
+      WorkingDirectory = "/var/lib/aria2";
+    };
+  };
   services = {
     aria2 = {
       enable = true;
