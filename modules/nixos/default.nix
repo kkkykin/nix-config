@@ -7,6 +7,7 @@
   cloudflared = import ./cloudflared.nix;
   fdroid = import ./fdroid.nix;
   freshrss = import ./freshrss.nix;
+  rsshub = import ./rsshub.nix;
   gpt-load = import ./gpt-load.nix;
   jellyfin = import ./jellyfin.nix;
   kavita = import ./kavita.nix;

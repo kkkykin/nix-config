@@ -40,7 +40,13 @@
     ./mitmproxy-ca-cert.cer
   ];
 
+  systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.caddy.path;
   services = {
+    caddy.virtualHosts.":80".extraConfig = ''
+handle_path /jellyfin/* {
+  reverse_proxy 127.0.0.1:8096
+}
+    '';
     openssh = {
       settings = {
         X11Forwarding = true;
