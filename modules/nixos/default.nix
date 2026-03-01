@@ -8,6 +8,7 @@
   fdroid = import ./fdroid.nix;
   freshrss = import ./freshrss.nix;
   rsshub = import ./rsshub.nix;
+  gitolite = import ./gitolite.nix;
   gpt-load = import ./gpt-load.nix;
   jellyfin = import ./jellyfin.nix;
   kavita = import ./kavita.nix;

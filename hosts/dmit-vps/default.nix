@@ -12,6 +12,7 @@
   imports = [
     outputs.nixosModules.all-services
     outputs.nixosModules.sing-box
+    outputs.nixosModules.gitolite
     outputs.nixosModules.caddy
     ./hardware-configuration.nix
   ];
