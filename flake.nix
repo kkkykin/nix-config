@@ -84,6 +84,25 @@
             ./modules/nixos/profiles/server.nix
           ];
         };
+      dmit-vps = let
+        username = "dmit";
+        specialArgs = inputs // {
+          inherit outputs username;
+          secrets = import nix-secrets;
+        };
+      in
+        nixpkgs.lib.nixosSystem {
+          inherit specialArgs;
+          system = "x86_64-linux";
+
+          modules = [
+            nix-secrets.nixosModules.dmit
+            ./hosts/dmit-vps
+            ./users/${username}/nixos.nix
+
+            ./modules/nixos/profiles/server.nix
+          ];
+        };
       legion-wsl = let
         username = "nixos";
         specialArgs = inputs // {inherit outputs username;};
