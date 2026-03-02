@@ -13,6 +13,7 @@
     outputs.nixosModules.all-services
     outputs.nixosModules.sing-box
     outputs.nixosModules.gitolite
+    outputs.nixosModules.dictd
     outputs.nixosModules.caddy
     ./hardware-configuration.nix
   ];
@@ -25,6 +26,19 @@
       globalConfig = ''
 acme_dns cloudflare {env.CF_API_TOKEN}
 https_port 7777
+layer4 {
+    tcp/:12628 {
+        @cn remote_ip_list ${srs-dir}/geoip-cn.cidr.txt
+        route @cn {
+            proxy {
+                upstream {
+                    dial tcp/127.0.0.1:2628
+                    # max_connections 5
+                }
+            }
+        }
+    }
+}
       '';
     };
     cloudflare-warp.enable = true;

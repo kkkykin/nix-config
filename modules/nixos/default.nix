@@ -5,6 +5,7 @@
   caddy = import ./caddy.nix;
   cli-proxy-api = import ./cli-proxy-api.nix;
   cloudflared = import ./cloudflared.nix;
+  dictd = import ./dictd.nix;
   fdroid = import ./fdroid.nix;
   freshrss = import ./freshrss.nix;
   rsshub = import ./rsshub.nix;
