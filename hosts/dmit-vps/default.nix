@@ -43,6 +43,7 @@ https_port 7777
       grub.enable = true;
       efi.canTouchEfiVariables = true;
     };
+    kernel.sysctl."net.ipv4.ip_forward" = 1;
   };
 
   ############### Add by reinstall.sh ###############
