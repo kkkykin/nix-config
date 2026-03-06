@@ -64,11 +64,11 @@
         "sops-nix": "sops-nix"
       },
       "locked": {
-        "lastModified": 1772428391,
-        "narHash": "sha256-OzBagzM9HYta4amBqTRJ3vrU9YOrhWmuFeTsnXaYfOA=",
+        "lastModified": 1772677850,
+        "narHash": "sha256-p3ly/6WYGOrlcl4F7g1l0vVzJMMcEN4eO8L4auGsGJY=",
         "ref": "refs/heads/main",
-        "rev": "907dc8643e510cdd0c735a89e8598e8eb933adf8",
-        "revCount": 25,
+        "rev": "cce51d55593d045f7ea3a12efe0f2ef762e4bc76",
+        "revCount": 26,
         "type": "git",
         "url": "file:///home/kkky/nix-secrets"
       },
@@ -215,11 +215,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1772401007,
-        "narHash": "sha256-YHykQg0h9hrlZGpMcywnaFzQ1Kn/5YNCCOSaaAl6z7Q=",
+        "lastModified": 1772495394,
+        "narHash": "sha256-hmIvE/slLKEFKNEJz27IZ8BKlAaZDcjIHmkZ7GCEjfw=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "d8be5ea4cd3bc363492ab5bc6e874ccdc5465fe4",
+        "rev": "1d9b98a29a45abe9c4d3174bd36de9f28755e3ff",
         "type": "github"
       },
       "original": {

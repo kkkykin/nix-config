@@ -41,7 +41,10 @@ layer4 {
           serverAliases = [
           ];
           extraConfig = ''
-@hub host hub.${secrets.domain.cone}
+@hub {
+  host hub.${secrets.domain.cone}
+  header User-Agent Dart/*
+}
 reverse_proxy @hub http://127.0.0.1:5000
 '';
         };
