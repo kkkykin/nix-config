@@ -16,6 +16,7 @@
   komga = import ./komga.nix;
   libvirt = import ./libvirt.nix;
   litellm = import ./litellm.nix;
+  matrix-continuwuity = import ./matrix-continuwuity.nix;
   music-sync = import ./music-sync.nix;
   nixpkgs = import ./nixpkgs.nix;
   openlist = import ./openlist.nix;

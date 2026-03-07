@@ -13,6 +13,7 @@
     outputs.nixosModules.all-services
     outputs.nixosModules.sing-box
     outputs.nixosModules.gitolite
+    outputs.nixosModules.matrix-continuwuity
     outputs.nixosModules.dictd
     outputs.nixosModules.caddy
     ./hardware-configuration.nix
@@ -38,8 +39,34 @@ layer4 {
             }
         }
     }
+    tcp/:443 {
+        @conty {
+            remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
+            tls sni conty.${secrets.domain.dmit}
+        }
+        route @conty {
+            proxy 127.0.0.1:7777
+        }
+    }
 }
       '';
+      virtualHosts = {
+        "conty.${secrets.domain.cone}" = {
+          serverAliases = [
+          ];
+          extraConfig = ''
+# handle server {
+#     header Content-Type application/json
+#     respond `{"m.server":"conty.${secrets.domain.dmit}:443"}`
+# }
+@matrix {
+    path /_matrix/*
+    path /.well-known/matrix/*
+}
+reverse_proxy @matrix unix/${config.services.matrix-continuwuity.settings.global.unix_socket_path}
+          '';
+        };
+      };
     };
     cloudflare-warp.enable = true;
     srsDecompile = {
