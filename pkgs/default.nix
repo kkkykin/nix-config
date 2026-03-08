@@ -5,4 +5,5 @@ pkgs: {
   snow-ai = pkgs.callPackage ./snow-ai { };
   cli-proxy-api = pkgs.callPackage ./cli-proxy-api { };
   hubproxy = pkgs.callPackage ./hubproxy { };
+  picoclaw = pkgs.callPackage ./picoclaw { };
 }
