@@ -6,6 +6,7 @@
     ./services/gpt-load.nix
     ./services/uni-api.nix
     ./services/hubproxy.nix
+    ./services/nullclaw.nix
     ./services/srs-decompile.nix
   ];
 }

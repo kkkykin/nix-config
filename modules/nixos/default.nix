@@ -19,6 +19,7 @@
   matrix-continuwuity = import ./matrix-continuwuity.nix;
   music-sync = import ./music-sync.nix;
   nixpkgs = import ./nixpkgs.nix;
+  nullclaw = import ./nullclaw.nix;
   openlist = import ./openlist.nix;
   server = import ./server.nix;
   sillytavern = import ./sillytavern.nix;
