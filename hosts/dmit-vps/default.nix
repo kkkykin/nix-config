@@ -16,7 +16,6 @@
     outputs.nixosModules.matrix-continuwuity
     outputs.nixosModules.dictd
     outputs.nixosModules.caddy
-    outputs.nixosModules.nullclaw
     ./hardware-configuration.nix
   ];
 

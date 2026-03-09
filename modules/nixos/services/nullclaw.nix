@@ -17,6 +17,13 @@ in {
       description = "The nullclaw package to use.";
     };
 
+    extraPackages = mkOption {
+      type = types.listOf types.package;
+      default = [];
+      example = literalExpression "[ pkgs.jq ]";
+      description = "Extra packages to add to the nullclaw service environment PATH.";
+    };
+
     configFile = mkOption {
       type = types.nullOr types.path;
       default = null;
@@ -103,6 +110,12 @@ in {
       after = [ "network.target" ];
       wants = [ "network-online.target" ];
 
+      path = [
+        pkgs.curl
+        pkgs.git
+        pkgs.coreutils
+      ] ++ cfg.extraPackages;
+
       serviceConfig = {
         Type = "simple";
         User = cfg.user;
@@ -123,16 +136,6 @@ in {
         ProtectHome = true;
         ReadWritePaths = [cfg.dataDir];
       };
-
-      # Pre-start script only when using generated config
-      preStart = ''
-        if [ ! -f "${cfg.dataDir}/.nullclaw/config.json" ]; then
-          mkdir -p "${cfg.dataDir}/.nullclaw/"
-          cp ${configFile} "${cfg.dataDir}/.nullclaw/config.json"
-          chown ${cfg.user}:${cfg.group} "${cfg.dataDir}/.nullclaw/config.json"
-          chmod 640 "${cfg.dataDir}/.nullclaw/config.json"
-        fi
-      '';
     };
   };
 }
