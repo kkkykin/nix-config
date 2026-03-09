@@ -7,6 +7,7 @@
     ./services/uni-api.nix
     ./services/hubproxy.nix
     ./services/nullclaw.nix
+    ./services/picoclaw.nix
     ./services/srs-decompile.nix
   ];
 }
