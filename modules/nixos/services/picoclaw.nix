@@ -23,6 +23,14 @@ in {
       example = lib.literalExpression "[ pkgs.jq ]";
       description = "Extra packages to add to the nullclaw service environment PATH.";
     };
+
+    environmentFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to an environment file.
+      '';
+    };
  
     user = lib.mkOption {
       type = lib.types.str;
@@ -82,10 +90,12 @@ in {
       after = [ "network.target" ];
 
       path = with pkgs; [
+        _7zz
         curl
         git
         python3
         uv
+        nodejs
         jq
         bash
         file
@@ -101,6 +111,7 @@ in {
         User = cfg.user;
         Group = cfg.group;
         WorkingDirectory = cfg.homeDir;
+        EnvironmentFile = lib.mkIf (cfg.environmentFile != null) [ cfg.environmentFile ];
         
         Restart = "on-failure";
         RestartSec = "5s";

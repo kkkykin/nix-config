@@ -69,6 +69,11 @@ reverse_proxy @matrix unix/${config.services.matrix-continuwuity.settings.global
       };
     };
     cloudflare-warp.enable = true;
+    picoclaw = {
+      enable = true;
+      configFile = config.sops.secrets.picoclawConfig.path;
+      environmentFile = config.sops.secrets.picoclawEnv.path;
+    };
     srsDecompile = {
       enable = true;
       outputDir = srs-dir;
