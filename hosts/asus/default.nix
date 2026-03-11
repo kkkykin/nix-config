@@ -47,10 +47,10 @@ handle_path /jellyfin/* {
   reverse_proxy 127.0.0.1:8096
 }
     '';
-    picoclaw = {
-      enable = true;
-      configFile = config.sops.secrets.picoclaw.path;
-    };
+    # picoclaw = {
+    #   enable = true;
+    #   configFile = config.sops.secrets.picoclaw.path;
+    # };
     openssh = {
       settings = {
         X11Forwarding = true;
