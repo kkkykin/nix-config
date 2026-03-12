@@ -16,9 +16,9 @@ replace @koreaderProgress {
 }
 '';
 in {
-  services.cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
+  services.cloudflared.tunnels."${secrets.cloudflared.uuid}" = {
     ingress = {
-      "kavita.${secrets.cloudflared.asus.domain}" = {
+      "kavita.${secrets.cloudflared.domain}" = {
         service = "http://127.0.0.1";
         originRequest = {
           httpHostHeader = "kavita.asus.local";

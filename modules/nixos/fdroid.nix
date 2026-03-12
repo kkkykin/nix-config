@@ -9,9 +9,9 @@
     jdk
   ];
 
-  services.cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
+  services.cloudflared.tunnels."${secrets.cloudflared.uuid}" = {
     ingress = {
-      "fdroid.${secrets.cloudflared.asus.domain}" = {
+      "fdroid.${secrets.cloudflared.domain}" = {
         service = "http://127.0.0.1";
         originRequest = {
           httpHostHeader = "fdroid.asus.local";

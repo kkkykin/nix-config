@@ -13,9 +13,9 @@
     };
   };
 
-  services.cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
+  services.cloudflared.tunnels."${secrets.cloudflared.uuid}" = {
     ingress = {
-      "axonhub.${secrets.cloudflared.asus.domain}" = {
+      "axonhub.${secrets.cloudflared.domain}" = {
         service = "http://127.0.0.1";
         originRequest = {
           httpHostHeader = "axonhub.asus.local";

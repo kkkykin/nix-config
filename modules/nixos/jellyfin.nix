@@ -22,9 +22,9 @@
 reverse_proxy /opds/* http://127.0.0.1:8096
 '';
 
-  services.cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
+  services.cloudflared.tunnels."${secrets.cloudflared.uuid}" = {
     ingress = {
-      "jellyfin.${secrets.cloudflared.asus.domain}" = "http://127.0.0.1:8096";
+      "jellyfin.${secrets.cloudflared.domain}" = "http://127.0.0.1:8096";
     };
   };
 

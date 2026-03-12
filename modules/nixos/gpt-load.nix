@@ -10,9 +10,9 @@
     };
   };
 
-  services.cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
+  services.cloudflared.tunnels."${secrets.cloudflared.uuid}" = {
     ingress = {
-      "gpt-load.${secrets.cloudflared.asus.domain}" = {
+      "gpt-load.${secrets.cloudflared.domain}" = {
         service = "http://127.0.0.1";
         originRequest = {
           httpHostHeader = "gpt-load.asus.local";

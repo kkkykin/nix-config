@@ -143,8 +143,8 @@ in
   };
 
   # cloudflared
-  services.cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
-    ingress."litellm.${secrets.cloudflared.asus.domain}".service = "http://127.0.0.1:4000";
+  services.cloudflared.tunnels."${secrets.cloudflared.uuid}" = {
+    ingress."litellm.${secrets.cloudflared.domain}".service = "http://127.0.0.1:4000";
   };
 
   services.caddy.virtualHosts."http://litellm.asus.local" = {

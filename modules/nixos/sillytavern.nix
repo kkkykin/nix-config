@@ -16,9 +16,9 @@ in {
       configFile = config.sops.secrets.sillytavern.path;
     };
   };
-  services.cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
+  services.cloudflared.tunnels."${secrets.cloudflared.uuid}" = {
     ingress = {
-      "sillytavern.${secrets.cloudflared.asus.domain}" = {
+      "sillytavern.${secrets.cloudflared.domain}" = {
         service = "http://127.0.0.1";
         originRequest = {
           httpHostHeader = "sillytavern.asus.local";

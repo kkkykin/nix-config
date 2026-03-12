@@ -20,9 +20,9 @@ in
     };
   };
 
-  services.cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
+  services.cloudflared.tunnels."${secrets.cloudflared.uuid}" = {
     ingress = {
-      "uni-api.${secrets.cloudflared.asus.domain}" = {
+      "uni-api.${secrets.cloudflared.domain}" = {
         service = "http://127.0.0.1";
         originRequest = {
           httpHostHeader = "uni-api.asus.local";

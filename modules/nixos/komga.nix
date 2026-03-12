@@ -17,9 +17,9 @@ reverse_proxy @koreaderSync ${backend} {
 }
 '';
 in {
-  services.cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
+  services.cloudflared.tunnels."${secrets.cloudflared.uuid}" = {
     ingress = {
-      "komga.${secrets.cloudflared.asus.domain}" = {
+      "komga.${secrets.cloudflared.domain}" = {
         service = "http://127.0.0.1";
         originRequest = {
           httpHostHeader = "komga.asus.local";

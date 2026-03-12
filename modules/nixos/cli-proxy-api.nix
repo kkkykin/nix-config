@@ -19,9 +19,9 @@
       configFile = "${config.services.cli-proxy-api.homeDir}/config.yaml";
       # environmentFile = config.sops.secrets.cli-proxy-api.path;
     };
-    cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
+    cloudflared.tunnels."${secrets.cloudflared.uuid}" = {
       ingress = {
-        "cpa.${secrets.cloudflared.asus.domain}" = {
+        "cpa.${secrets.cloudflared.domain}" = {
           service = "http://127.0.0.1";
           originRequest = {
             httpHostHeader = "cpa.asus.local";

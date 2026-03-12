@@ -139,7 +139,7 @@
         dotfileDir = "/home/${username}/dotfiles";
         specialArgs = inputs // {
           inherit outputs username dotfileDir;
-          secrets = import nix-secrets;
+          secrets = (import nix-secrets).asus;
         };
       in
         nixpkgs.lib.nixosSystem {

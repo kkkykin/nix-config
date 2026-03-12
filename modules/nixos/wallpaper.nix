@@ -68,9 +68,9 @@ handle_path /all/ {
     };
   };
 
-  services.cloudflared.tunnels."${secrets.cloudflared.asus.uuid}" = {
+  services.cloudflared.tunnels."${secrets.cloudflared.uuid}" = {
     ingress = {
-      "wallpaper.${secrets.cloudflared.asus.domain}" = {
+      "wallpaper.${secrets.cloudflared.domain}" = {
         service = "http://127.0.0.1";
         originRequest = {
           httpHostHeader = "wallpaper.asus.local";

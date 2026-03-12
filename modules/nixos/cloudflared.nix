@@ -11,15 +11,15 @@
 in  {
   systemd = {
     services = {
-      "cloudflared-tunnel-${secrets.cloudflared.asus.uuid}" = cloudflared-service;
+      "cloudflared-tunnel-${secrets.cloudflared.uuid}" = cloudflared-service;
     };
   };
   services.cloudflared = {
     enable = true;
     tunnels = {
-      "${secrets.cloudflared.asus.uuid}" = {
+      "${secrets.cloudflared.uuid}" = {
         edgeIPVersion = "auto";
-        credentialsFile = config.sops.secrets."cloudflared/asus".path;
+        credentialsFile = config.sops.secrets."cloudflared".path;
         default = "http_status:404";
       };
     };
