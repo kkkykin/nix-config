@@ -42,7 +42,7 @@ layer4 {
     tcp/:443 {
         @conty {
             remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
-            tls sni conty.${secrets.domain.dmit}
+            tls sni conty.${secrets.domain}
         }
         route @conty {
             proxy 127.0.0.1:7777
@@ -51,13 +51,13 @@ layer4 {
 }
       '';
       virtualHosts = {
-        "conty.${secrets.domain.cone}" = {
+        "conty.${secrets.domain}" = {
           serverAliases = [
           ];
           extraConfig = ''
 # handle server {
 #     header Content-Type application/json
-#     respond `{"m.server":"conty.${secrets.domain.dmit}:443"}`
+#     respond `{"m.server":"conty.${secrets.domain}:443"}`
 # }
 @matrix {
     path /_matrix/*
@@ -70,7 +70,7 @@ reverse_proxy @matrix unix/${config.services.matrix-continuwuity.settings.global
     };
     cloudflare-warp.enable = true;
     picoclaw = {
-      enable = true;
+      enable = false;
       configFile = config.sops.secrets.picoclawConfig.path;
       environmentFile = config.sops.secrets.picoclawEnv.path;
     };
@@ -96,8 +96,8 @@ reverse_proxy @matrix unix/${config.services.matrix-continuwuity.settings.global
   boot.loader.grub.device = "/dev/vda";
   swapDevices = [{ device = "/swapfile"; size = 1076; }];
   boot.kernelParams = [ "console=ttyS0,115200n8" "console=tty0" ];
-  networking = secrets.network.dmit.networking;
-  systemd.network = secrets.network.dmit.systemd;
+  networking = secrets.networking;
+  systemd.network = secrets.network;
   ###################################################
 
 

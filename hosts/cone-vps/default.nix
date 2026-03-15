@@ -28,7 +28,7 @@ layer4 {
     tcp/:443 {
         @hub {
             remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
-            tls sni hub.${secrets.domain.cone}
+            tls sni hub.${secrets.domain}
         }
         route @hub {
             proxy 127.0.0.1:7777
@@ -37,12 +37,12 @@ layer4 {
 }
       '';
       virtualHosts = {
-        "hub.${secrets.domain.cone}" = {
+        "hub.${secrets.domain}" = {
           serverAliases = [
           ];
           extraConfig = ''
 @hub {
-  host hub.${secrets.domain.cone}
+  host hub.${secrets.domain}
   header User-Agent Dart/*
 }
 reverse_proxy @hub http://127.0.0.1:5000
@@ -73,8 +73,8 @@ reverse_proxy @hub http://127.0.0.1:5000
   boot.loader.grub.device = "/dev/vda";
   swapDevices = [{ device = "/swapfile"; size = 1076; }];
   boot.kernelParams = [ "console=ttyS0,115200n8" "console=tty0" ];
-  networking = secrets.network.cone.networking;
-  systemd.network = secrets.network.cone.systemd;
+  networking = secrets.networking;
+  systemd.network = secrets.network;
   ###################################################
 
 

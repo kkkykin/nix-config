@@ -69,7 +69,7 @@
         username = "cone";
         specialArgs = inputs // {
           inherit outputs username;
-          secrets = import nix-secrets;
+          secrets = (import nix-secrets).cone;
         };
       in
         nixpkgs.lib.nixosSystem {
@@ -88,7 +88,7 @@
         username = "dmit";
         specialArgs = inputs // {
           inherit outputs username;
-          secrets = import nix-secrets;
+          secrets = (import nix-secrets).dmit;
         };
       in
         nixpkgs.lib.nixosSystem {
