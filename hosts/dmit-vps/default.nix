@@ -48,18 +48,30 @@ layer4 {
             proxy 127.0.0.1:7777
         }
     }
+    tcp/:853 {
+        @dot {
+            remote_ip_list ${srs-dir}/geoip-cn.cidr.txt
+            tls sni singt.${secrets.domain}
+        }
+        route @dot {
+            tls {
+                connection_policy {
+                    alpn dot
+                }
+            }
+            proxy tcp/127.0.0.1:53
+        }
+    }
 }
       '';
       virtualHosts = {
         "conty.${secrets.domain}" = {
           serverAliases = [
+            "singt.${secrets.domain}"
           ];
           extraConfig = ''
-# handle server {
-#     header Content-Type application/json
-#     respond `{"m.server":"conty.${secrets.domain}:443"}`
-# }
 @matrix {
+    host conty.${secrets.domain}
     path /_matrix/*
     path /.well-known/matrix/*
 }
