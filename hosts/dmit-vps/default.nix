@@ -22,6 +22,7 @@
   systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.caddy.path;
   services = let
     srs-dir = "/var/lib/srs-decompile/";
+    dot-domain = "sting.${secrets.domain}";
   in {
     caddy = {
       globalConfig = ''
@@ -51,7 +52,7 @@ layer4 {
     tcp/:853 {
         @dot {
             remote_ip_list ${srs-dir}/geoip-cn.cidr.txt
-            tls sni singt.${secrets.domain}
+            tls sni ${dot-domain}
         }
         route @dot {
             tls {
@@ -67,7 +68,7 @@ layer4 {
       virtualHosts = {
         "conty.${secrets.domain}" = {
           serverAliases = [
-            "singt.${secrets.domain}"
+            "${dot-domain}"
           ];
           extraConfig = ''
 @matrix {
