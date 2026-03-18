@@ -7,6 +7,7 @@
   ];
   home.packages = with pkgs; [
     sing-box
+    kkkykin.montecarlo-ip-searcher
   ];
 
   programs.bash = {
