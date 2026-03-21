@@ -7,6 +7,7 @@
   username,
   outputs,
   secrets,
+  lib,
   ...
 }: {
   imports = [
@@ -41,12 +42,17 @@ layer4 {
         }
     }
     tcp/:443 {
-        @conty {
-            remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
-            tls sni conty.${secrets.domain}
-        }
+        @conty tls sni conty.${secrets.domain}
         route @conty {
-            proxy 127.0.0.1:7777
+            subroute {
+                @cf remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
+                @cone remote_ip ${lib.strings.concatStringsSep " " secrets.ips.cone}
+                @dmit remote_ip ${lib.strings.concatStringsSep " " secrets.ips.dmit}
+                @nerd remote_ip ${lib.strings.concatStringsSep " " secrets.ips.nerd}
+                route @cf @cone @dmit @nerd {
+                    proxy 127.0.0.1:7777
+                }
+            }
         }
     }
     tcp/:853 {

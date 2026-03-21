@@ -64,11 +64,11 @@
         "sops-nix": "sops-nix"
       },
       "locked": {
-        "lastModified": 1773568486,
-        "narHash": "sha256-3AxNfisIQpeo5Z4B+xNkVm+YTX+MXUq6YlvFYlJWtng=",
+        "lastModified": 1774091663,
+        "narHash": "sha256-t7fJJhtuh4SeQBjhTPoHxjdScLY5bba/QZBs8Cs24OE=",
         "ref": "refs/heads/main",
-        "rev": "3be6b45b9519beeec2fe4d6f6f8072331207fdb4",
-        "revCount": 36,
+        "rev": "25cb08cde5b254c54f3a3e6fd1d7f7f9e3904b0e",
+        "revCount": 37,
         "type": "git",
         "url": "file:///home/kkky/nix-secrets"
       },
