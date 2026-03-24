@@ -42,11 +42,14 @@
 
   systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.caddy.path;
   services = {
-    caddy.virtualHosts.":80".extraConfig = ''
+    caddy = {
+      virtualHosts.":80".extraConfig = ''
+${builtins.readFile ../../modules/nixos/caddy/sub/rsshub.Caddyfile}
 handle_path /jellyfin/* {
   reverse_proxy 127.0.0.1:8096
 }
     '';
+     }; 
     # picoclaw = {
     #   enable = true;
     #   configFile = config.sops.secrets.picoclaw.path;
