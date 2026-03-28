@@ -20,7 +20,7 @@
     # outputs.nixosModules.gpt-load
     # outputs.nixosModules.uni-api
     outputs.nixosModules.libvirt
-    outputs.nixosModules.litellm
+    # outputs.nixosModules.litellm
     outputs.nixosModules.music-sync
     outputs.nixosModules.wallpaper
     outputs.nixosModules.aria2
