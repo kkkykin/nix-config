@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation rec {
   pname = "picoclaw";
-  version = "0.2.3";
+  version = "0.2.5";
 
   src = fetchTarball {
     url = "https://github.com/sipeed/picoclaw/releases/download/v${version}/picoclaw_Linux_x86_64.tar.gz";
-    sha256 = "sha256:0l0yp27k1f9s3n3b4p45rz4683xgcwcj2qj2ba1v0pkd5nkv17a7";
+    sha256 = "sha256:1ypgps0kyqpmsm5mx9aw4lagk7j3rmbyz1l0j585xaibb6hzz998";
   };
 
   installPhase = ''
