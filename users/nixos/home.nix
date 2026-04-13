@@ -5,13 +5,21 @@
     ../../home/programs/emacs.nix
     ../../home/programs/coding-agents.nix
   ];
-  home.packages = with pkgs; [
-    torsocks
-    koreader
-    nethack
-    kkkykin.cataclysm-dda-ncurses
-    angband
-  ];
+  home = {
+    shellAliases = {
+      tome2 = "tome-gcu";        # tome2
+    };
+    packages = with pkgs; [
+      torsocks
+
+      boohu
+      cataclysmDDA.stable.curses
+      (pkgs.narsil.override {
+        enableSdl2 = false;
+      })
+      tome2
+    ];
+  };
 
   programs.bash = {
     bashrcExtra = ''
