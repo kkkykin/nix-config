@@ -21,6 +21,7 @@
   nixpkgs = import ./nixpkgs.nix;
   nullclaw = import ./nullclaw.nix;
   openlist = import ./openlist.nix;
+  podman = import ./podman.nix;
   server = import ./server.nix;
   sillytavern = import ./sillytavern.nix;
   sing-box = import ./sing-box.nix;
