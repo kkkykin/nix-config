@@ -16,6 +16,7 @@
     outputs.nixosModules.sing-box
     outputs.nixosModules.sillytavern
     outputs.nixosModules.openlist
+    outputs.nixosModules.podman
     # outputs.nixosModules.axonhub
     # outputs.nixosModules.gpt-load
     # outputs.nixosModules.uni-api
