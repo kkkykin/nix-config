@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation rec {
   pname = "cli-proxy-api";
-  version = "6.9.14";
+  version = "6.9.28";
 
   src = fetchTarball {
     url = "https://github.com/router-for-me/CLIProxyAPI/releases/download/v${version}/CLIProxyAPI_${version}_linux_amd64.tar.gz";
-    sha256 = "sha256:10pb127wdh6c8hsh3m70mg7dcx77hn7xlxhczxyk43vngi5bhgcd";
+    sha256 = "sha256:029afqdzymviv9hj8sn64w6kkaal96rjwdyhgm64ny0v50n1ikvp";
   };
 
   installPhase = ''
