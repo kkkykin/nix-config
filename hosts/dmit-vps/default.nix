@@ -48,8 +48,7 @@ layer4 {
                 @cf remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
                 @cone remote_ip ${lib.strings.concatStringsSep " " secrets.ips.cone}
                 @dmit remote_ip ${lib.strings.concatStringsSep " " secrets.ips.dmit}
-                @nerd remote_ip ${lib.strings.concatStringsSep " " secrets.ips.nerd}
-                route @cf @cone @dmit @nerd {
+                route @cf @cone @dmit {
                     proxy 127.0.0.1:7777
                 }
             }
@@ -88,7 +87,7 @@ reverse_proxy @matrix unix/${config.services.matrix-continuwuity.settings.global
       };
     };
     picoclaw = {
-      enable = true;
+      enable = false;
       configFile = config.sops.secrets.picoclawConfig.path;
       environmentFile = config.sops.secrets.picoclawEnv.path;
     };
