@@ -3,6 +3,9 @@
   secrets,
   ...
 }: {
+  users.users.${config.services.openlist.user} = {
+    extraGroups = ["aria2"];
+  };
   services.openlist = {
     enable = true;
     envFile = config.sops.secrets.openlist.path;
