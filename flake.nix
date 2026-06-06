@@ -25,6 +25,7 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hermes-agent.url = "github:NousResearch/hermes-agent";
     nix-secrets = {
       url = "github:kkkykin/nixos-secrets-empty";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -168,6 +169,7 @@
               };
             }
 
+            inputs.hermes-agent.nixosModules.default
             ./modules/nixos/profiles/server.nix
             ./hosts/asus
             ./users/${username}/nixos.nix
