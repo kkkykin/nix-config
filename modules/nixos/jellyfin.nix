@@ -9,8 +9,8 @@
   };
   services.jellyfin.enable = true;
   # https://github.com/jellyfin/jellyfin/issues/15667
-  services.jellyfin.package = pkgs.pkg25-05.jellyfin;
-  environment.systemPackages = with pkgs.pkg25-05; [
+  services.jellyfin.package = pkgs.jellyfin;
+  environment.systemPackages = with pkgs; [
     jellyfin
     jellyfin-web
     jellyfin-ffmpeg
