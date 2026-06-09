@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation rec {
   pname = "caddy-custom";
-  version = "2.10.2-2025-12-24-084427";
+  version = "2.11.4-2026-06-09-053700";
 
   src = fetchTarball {
     url = "https://github.com/kkkykin/custom-caddy/releases/download/v${version}/caddy-linux-amd64.tar.gz";
-    sha256 = "1fp3g1xpa536vw496zcwr5xbpvblza70m5nyl7s0n73jd9wqmm5v";
+    sha256 = "sha256:1wcbvrp3p7cjkx70wdnnk1y9nk05j71xi6hi7zp2df45mdfdyrkn";
   };
 
   installPhase = ''

@@ -54,8 +54,19 @@ handle @freeSearch {
         import remove-forward-headers
     }
 }
-reverse_proxy http://127.0.0.1:8317 {
-  flush_interval -1
+
+route /v1/* {
+    llm_privacy_filter {
+    	api auto
+    	gitleaks_toml https://raw.githubusercontent.com/gitleaks/gitleaks/refs/heads/master/config/gitleaks.toml
+    	gitleaks_toml_refresh_interval 1h
+    	max_body_size 8388608
+    	fail_open false
+    }
+    
+    reverse_proxy http://127.0.0.1:8317 {
+        flush_interval -1
+    }
 }
         '';
       };
