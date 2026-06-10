@@ -21,6 +21,7 @@
     # outputs.nixosModules.gpt-load
     # outputs.nixosModules.uni-api
     outputs.nixosModules.libvirt
+    outputs.nixosModules.hermes-agent
     # outputs.nixosModules.litellm
     outputs.nixosModules.music-sync
     outputs.nixosModules.wallpaper

@@ -20,6 +20,7 @@
   music-sync = import ./music-sync.nix;
   nixpkgs = import ./nixpkgs.nix;
   nullclaw = import ./nullclaw.nix;
+  hermes-agent = import ./hermes-agent.nix;
   openlist = import ./openlist.nix;
   podman = import ./podman.nix;
   server = import ./server.nix;
