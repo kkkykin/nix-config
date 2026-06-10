@@ -134,7 +134,7 @@ handle_path /jellyfin/* {
     };
     wireless = {
       enable = true;
-      userControlled.enable = true;
+      userControlled = true;
       secretsFile = config.sops.secrets.wireless.path;
       # generated with `wpa_passphrase ${ssid} ${password}`
       networks.ppptppo.pskRaw = "ext:psk_ppptppo";
