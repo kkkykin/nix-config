@@ -45,6 +45,10 @@ in {
         }
       ];
 
+      browser = {
+        cdp_url = secrets.hermes.cdp_url;
+      };
+
       platforms = {
         qqbot = {
           enabled = true;
