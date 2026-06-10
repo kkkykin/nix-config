@@ -121,17 +121,8 @@ handle_path /jellyfin/* {
       lxgw-wenkai
     ];
   };
-
-  networking = {
-    firewall = {
-      enable = true;
-      allowedTCPPorts = [
-        80
-        5244
-        9089
-        10807
-      ];
-    };
+  
+  networking = secrets.networking // {
     wireless = {
       enable = true;
       userControlled = true;
@@ -139,7 +130,6 @@ handle_path /jellyfin/* {
       # generated with `wpa_passphrase ${ssid} ${password}`
       networks.ppptppo.pskRaw = "ext:psk_ppptppo";
     };
-    hostName = "asus";
   };
 
   boot = {
