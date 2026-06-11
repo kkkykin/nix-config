@@ -6,6 +6,7 @@
   ...
 }:
 let
+  virt-win-ip = secrets.hermes.virt-win-ip;
   llm-gateway = "cpa.asus.local";
 in {
 
@@ -25,11 +26,12 @@ in {
     container = {
       enable = true;
       backend = "podman";
-      image = "ubuntu:24.04";
+      image = "localhost/hermes:latest";
       hostUsers = [ username ];
 
       extraOptions = [
         "--add-host=${llm-gateway}:host-gateway"
+        "--add-host=virt-win:${virt-win-ip}"
       ];
     };
 
@@ -46,7 +48,7 @@ in {
       ];
 
       browser = {
-        cdp_url = secrets.hermes.cdp_url;
+        cdp_url = "ws://${virt-win-ip}:9223";
       };
 
       platforms = {
