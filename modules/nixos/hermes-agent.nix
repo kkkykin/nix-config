@@ -26,7 +26,7 @@ in {
     container = {
       enable = true;
       backend = "podman";
-      image = "localhost/hermes:latest";
+      image = "ee2460ce3c66";
       hostUsers = [ username ];
 
       extraOptions = [
@@ -37,7 +37,11 @@ in {
 
     settings = {
       toolsets = [ "all" ];
-      terminal = { backend = "local"; timeout = 180; };
+      terminal = {
+        backend = "local";
+        cwd = "/data/workspace";
+        timeout = 180;
+      };
 
       custom_providers = [
         {
@@ -49,6 +53,15 @@ in {
 
       browser = {
         cdp_url = "ws://${virt-win-ip}:9223";
+      };
+
+      mcp_servers = {
+        tool-box = {
+          url = "https://mcp.${secrets.domain}/mcp";
+          headers = {
+            Authorization = "Bearer \${TOOLBOX_KEY}";
+          };
+        };
       };
 
       platforms = {
