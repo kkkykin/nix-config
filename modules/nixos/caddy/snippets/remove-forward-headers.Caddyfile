@@ -4,6 +4,7 @@
     header_up -Cf-*
     header_up -X-Forwarded-*
     header_up -X-Real-IP
+    header_up -X-Proxy-*
     header_up -Via
 }
 # remove forward headers:1 ends here

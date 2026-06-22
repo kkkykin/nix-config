@@ -1,0 +1,36 @@
+# [[file:../../../20251001T004952--caddy__server.org::#5e925cc0-b6ca-4e5c-b812-184f6fc32c99][trans-forward:1]]
+(trans-forward) {
+    @http header_regexp up X-Proxy-Upstream ^http://([^:/]+)(?::(\d+))?$
+    @https header_regexp up X-Proxy-Upstream ^https://([^:/]+)(?::(\d+))?$
+
+    handle @http {
+
+        map {http.regexp.up.2} {up_port} {
+            "" 80
+            default {http.regexp.up.2}
+        }
+
+        reverse_proxy {http.regexp.up.1}:{up_port} {
+            import remove-forward-headers
+        }
+    }
+
+    handle @https {
+
+        map {http.regexp.up.2} {up_port} {
+            "" 443
+            default {http.regexp.up.2}
+        }
+
+        reverse_proxy {http.regexp.up.1}:{up_port} {
+
+            transport http {
+                tls
+                tls_server_name {http.regexp.up.1}
+            }
+
+            import remove-forward-headers
+        }
+    }
+}
+# trans-forward:1 ends here

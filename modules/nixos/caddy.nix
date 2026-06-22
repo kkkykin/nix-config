@@ -40,6 +40,7 @@ ${builtins.readFile ./caddy/global/misc.Caddyfile}
 ${builtins.readFile ./caddy/snippets/cors.Caddyfile}
 ${builtins.readFile ./caddy/snippets/lb.Caddyfile}
 ${builtins.readFile ./caddy/snippets/remove-forward-headers.Caddyfile}
+${builtins.readFile ./caddy/snippets/trans-forward.Caddyfile}
 '';
   };
 }

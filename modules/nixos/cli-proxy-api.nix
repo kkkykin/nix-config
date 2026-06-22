@@ -4,7 +4,16 @@
   username,
   pkgs,
   ...
-}: {
+}:let llm-filter = ''
+llm_privacy_filter {
+	api auto
+	gitleaks_toml https://raw.githubusercontent.com/gitleaks/gitleaks/refs/heads/master/config/gitleaks.toml
+	gitleaks_toml_refresh_interval 1h
+	max_body_size 8388608
+	fail_open false
+}
+'';
+in {
   users.users.${username} = {
     extraGroups = ["cli-proxy-api"];
   };
@@ -33,38 +42,46 @@
       "http://cpa.asus.local" = {
         # https://github.com/aftely1337/amp-free-proxy
         extraConfig = ''
-@claude-code-count-token {
-  path /v1/messages/count_tokens
-  header User-Agent claude-cli/*
+# @claude-code-count-token {
+#   path /v1/messages/count_tokens
+#   header User-Agent claude-cli/*
+# }
+
+# respond @claude-code-count-token 404
+
+# @freeSearch {
+#     path /api/internal
+#     expression `{query}.contains("webSearch2") || {query}.contains("extractWebPageContent")`
+# }
+
+# handle @freeSearch {
+#     json_parse {
+#         set isFreeTierRequest true
+#     }
+#     reverse_proxy https://ampcode.com {
+#         header_up Host {upstream_hostport}
+#         import remove-forward-headers
+#     }
+# }
+
+@proxy {
+    header X-Proxy-Key "{$X_PROXY_KEY}"
+    header X-Proxy-Upstream http*
 }
 
-respond @claude-code-count-token 404
-
-@freeSearch {
-    path /api/internal
-    expression `{query}.contains("webSearch2") || {query}.contains("extractWebPageContent")`
-}
-
-handle @freeSearch {
-    json_parse {
-        set isFreeTierRequest true
-    }
-    reverse_proxy https://ampcode.com {
-        header_up Host {upstream_hostport}
-        import remove-forward-headers
+handle @proxy {
+    route /v1/* {
+        ${llm-filter}
+        
+        import trans-forward
     }
 }
 
 route /v1/* {
-    llm_privacy_filter {
-    	api auto
-    	gitleaks_toml https://raw.githubusercontent.com/gitleaks/gitleaks/refs/heads/master/config/gitleaks.toml
-    	gitleaks_toml_refresh_interval 1h
-    	max_body_size 8388608
-    	fail_open false
-    }
+    ${llm-filter}
     
     reverse_proxy http://127.0.0.1:8317 {
+        import remove-forward-headers
         flush_interval -1
     }
 }
