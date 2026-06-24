@@ -32,6 +32,7 @@
     outputs.nixosModules.freshrss
     outputs.nixosModules.tcpdump
     outputs.nixosModules.cloudflared
+    outputs.nixosModules.fingerprint-chromium
     ./hardware-configuration.nix
   ];
   users.users.${username} = {

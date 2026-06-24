@@ -26,7 +26,7 @@ in {
     container = {
       enable = true;
       backend = "podman";
-      image = "ee2460ce3c66";
+      image = "5390de32a1fb";
       hostUsers = [ username ];
 
       extraOptions = [
@@ -50,10 +50,6 @@ in {
           key_env = "CPA_API_KEY";
         }
       ];
-
-      browser = {
-        cdp_url = "ws://${virt-win-ip}:9223";
-      };
 
       mcp_servers = {
         tool-box = {

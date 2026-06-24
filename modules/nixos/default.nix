@@ -31,4 +31,5 @@
   uni-api = import ./uni-api.nix;
   wallpaper = import ./wallpaper.nix;
   wsl = import ./wsl.nix;
+  fingerprint-chromium = import ./fingerprint-chromium.nix;
 }
