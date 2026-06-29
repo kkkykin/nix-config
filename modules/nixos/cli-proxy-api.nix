@@ -19,7 +19,7 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
-    cli-proxy-api
+    nur.repos.xddxdd.cliproxyapi
   ];
 
   services = {

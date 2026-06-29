@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation rec {
   pname = "hubproxy";
-  version = "1.2.3";
+  version = "1.2.4";
 
   src = fetchTarball {
     url = "https://github.com/sky22333/hubproxy/releases/download/v${version}/hubproxy-v${version}-linux-amd64.tar.gz";
-    sha256 = "sha256:0vy2mf14h72nzfipa7v1r73qbqc5h0zax9snsjzzs3b0h0dbhnwj";
+    sha256 = "sha256:11khbnkxln522w6hc73h9xpfrpf5p3s2ahgl48apxgd3mks6lkc4";
   };
 
   installPhase = ''

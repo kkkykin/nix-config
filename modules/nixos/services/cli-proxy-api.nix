@@ -12,7 +12,7 @@ in
 
     package = mkOption {
       type = types.package;
-      default = pkgs.cli-proxy-api;
+      default = pkgs.nur.repos.xddxdd.cliproxyapi;
       description = "CLIProxyAPI package to run";
     };
 

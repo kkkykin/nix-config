@@ -4,10 +4,12 @@
     extra-substituters = [
       "https://nix-community.cachix.org"
       "https://nur--m.cachix.org"
+      "https://attic.xuyh0120.win/lantian"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "nur--m.cachix.org-1:3B+L0JdIdbhI4u3eC5WTYDpIMiYDoe/BmvCQjMeSrBM="
+      "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
     ];
   };
 
@@ -15,6 +17,10 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-25-05.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     home-manager = {
@@ -38,6 +44,7 @@
     nixpkgs,
     nixpkgs-25-05,
     nixpkgs-unstable,
+    nur,
     nixos-wsl,
     nixos-hardware,
     sops-nix,
@@ -153,6 +160,9 @@
             nixos-hardware.nixosModules.common-gpu-nvidia-disable
             nixos-hardware.nixosModules.common-pc-laptop-hdd
             nixos-hardware.nixosModules.common-pc-laptop-ssd
+
+            nur.modules.nixos.default
+
             {
               hardware = {
                 asus.battery.chargeUpto = 60;
