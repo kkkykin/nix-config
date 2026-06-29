@@ -26,7 +26,7 @@ in {
     container = {
       enable = true;
       backend = "podman";
-      image = "5390de32a1fb";
+      image = "c9bbd4a922b0";
       hostUsers = [ username ];
 
       extraOptions = [
