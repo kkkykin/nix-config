@@ -26,12 +26,19 @@ acme_dns cloudflare {env.CF_API_TOKEN}
 https_port 7777
 layer4 {
     tcp/:443 {
-        @hub {
-            remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
-            tls sni hub.${secrets.domain}
-        }
-        route @hub {
-            proxy 127.0.0.1:7777
+        @cf remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
+        route @cf {
+            subroute {
+                @hub tls sni hub.${secrets.domain}
+                route @hub {
+                    proxy 127.0.0.1:7777
+                }
+
+                @game tls sni game.${secrets.domain1}
+                route @game {
+                    proxy 127.0.0.1:7777
+                }
+            }
         }
     }
 }
@@ -46,6 +53,28 @@ layer4 {
   header User-Agent Dart/*
 }
 reverse_proxy @hub http://127.0.0.1:5000
+'';
+        };
+        "game.${secrets.domain1}" = {
+          serverAliases = [
+          ];
+          extraConfig = ''
+@game host game.${secrets.domain1}
+route @game {
+    basic_auth {
+		victory $2a$14$uE2zdHnW1DOMvsNn7UpSCu0SO0gb3M2xnTPjjhDSJedbTLJ7iRA96
+	}
+    handle /dol/* {
+        uri replace /dol/ /Degrees-of-Lewdity-Chinese-Localization/ 1
+        reverse_proxy {
+            to https://eltirosto.github.io
+            import remove-forward-headers
+        }
+    }
+    file_server /games/* browse {
+        root /var/lib/caddy
+    }
+}
 '';
         };
       };
