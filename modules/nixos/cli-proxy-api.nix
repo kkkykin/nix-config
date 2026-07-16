@@ -23,6 +23,13 @@ in {
   ];
 
   services = {
+    cpa-manager-plus = {
+      enable = true;
+      listenAddress = "127.0.0.1:18317";
+      dataDir = "/var/lib/cpa-manager-plus";
+      package = pkgs.kkkykin.cpa-manager-plus;
+      environmentFile = config.sops.secrets.cli-proxy-api.path;
+    };
     cli-proxy-api = {
       enable = true;
       configFile = "${config.services.cli-proxy-api.homeDir}/config.yaml";

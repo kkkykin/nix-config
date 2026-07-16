@@ -162,6 +162,7 @@
             nixos-hardware.nixosModules.common-pc-laptop-ssd
 
             nur.modules.nixos.default
+            kkkykin.nixosModules.default
 
             {
               hardware = {

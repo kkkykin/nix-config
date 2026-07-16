@@ -51,6 +51,11 @@ in {
         }
       ];
 
+      web = {
+        search_backend = "tavily";
+        extract_backend = "firecrawl";
+      };
+
       mcp_servers = {
         tool-box = {
           url = "https://mcp.${secrets.domain}/mcp";
@@ -65,8 +70,8 @@ in {
           enabled = true;
           extra = {
             markdown_support = false;
-            dm_policy = "open";
-            group_policy = "open";
+            dm_policy = "allowlist";
+            group_policy = "allowlist";
           };
         };
       };
