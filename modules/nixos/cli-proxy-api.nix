@@ -11,6 +11,7 @@ llm_privacy_filter {
 	gitleaks_toml_refresh_interval 1h
 	max_body_size 8388608
 	fail_open false
+	skip_regex sha256-[A-Za-z0-9+/]{43}=
 }
 '';
 in {
