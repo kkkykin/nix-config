@@ -18,6 +18,8 @@ in {
     }];
   }];
 
+  users.users.hermes.extraGroups = [ config.users.users.aria2.group ];
+
   services.hermes-agent = {
     enable = true;
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
@@ -26,8 +28,12 @@ in {
     container = {
       enable = true;
       backend = "podman";
-      image = "c9bbd4a922b0";
+      image = "438ce555cb1d";
       hostUsers = [ username ];
+
+      extraVolumes = [
+        "${config.services.aria2.settings.dir}:${config.services.aria2.settings.dir}:rw"
+      ];
 
       extraOptions = [
         "--add-host=${llm-gateway}:host-gateway"
