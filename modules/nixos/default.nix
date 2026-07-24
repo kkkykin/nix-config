@@ -29,6 +29,7 @@
   system = import ./system.nix;
   tcpdump = import ./tcpdump.nix;
   uni-api = import ./uni-api.nix;
+  romm = import ./romm.nix;
   wallpaper = import ./wallpaper.nix;
   wsl = import ./wsl.nix;
   fingerprint-chromium = import ./fingerprint-chromium.nix;

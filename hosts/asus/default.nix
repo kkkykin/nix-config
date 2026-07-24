@@ -12,6 +12,7 @@
   imports = [
     outputs.nixosModules.all-services
     outputs.nixosModules.caddy
+    outputs.nixosModules.romm
     outputs.nixosModules.cli-proxy-api
     outputs.nixosModules.sing-box
     outputs.nixosModules.sillytavern
@@ -65,6 +66,7 @@ handle_path /jellyfin/* {
     };
     postgresql = {
       enable = true;
+      enableTCPIP = true;
       authentication = ''
         host axonhub axonhub 127.0.0.1/32 scram-sha-256
         host gpt-load gpt-load 127.0.0.1/32 scram-sha-256
@@ -72,8 +74,10 @@ handle_path /jellyfin/* {
         host uni-api uni-api 127.0.0.1/32 scram-sha-256
         host openlist openlist 127.0.0.1/32 scram-sha-256
         host freshrss freshrss 127.0.0.1/32 scram-sha-256
+        host romm romm 10.88.0.0/16 scram-sha-256
       '';
       ensureDatabases = [
+        "romm"
         "axonhub"
         "gpt-load"
         "litellm"
@@ -82,6 +86,10 @@ handle_path /jellyfin/* {
         "freshrss"
       ];
       ensureUsers = [
+        {
+          name = "romm";
+          ensureDBOwnership = true;
+        }
         {
           name = "axonhub";
           ensureDBOwnership = true;
