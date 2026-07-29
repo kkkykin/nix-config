@@ -26,6 +26,7 @@
   server = import ./server.nix;
   sillytavern = import ./sillytavern.nix;
   sing-box = import ./sing-box.nix;
+  proxy-checker = import ./proxy-checker.nix;
   system = import ./system.nix;
   tcpdump = import ./tcpdump.nix;
   uni-api = import ./uni-api.nix;

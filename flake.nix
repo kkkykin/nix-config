@@ -86,6 +86,7 @@
 
           modules = [
             nix-secrets.nixosModules.cone
+            kkkykin.nixosModules.default
             ./hosts/cone-vps
             ./users/${username}/nixos.nix
 
