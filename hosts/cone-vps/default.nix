@@ -34,7 +34,7 @@ layer4 {
                     proxy 127.0.0.1:7777
                 }
 
-                @game tls sni game.${secrets.domain1}
+                @game tls sni_regexp game\d?.${secrets.domain1}
                 route @game {
                     proxy 127.0.0.1:7777
                 }
@@ -57,17 +57,16 @@ reverse_proxy @hub http://127.0.0.1:5000
         };
         "game.${secrets.domain1}" = {
           serverAliases = [
+            "game1.${secrets.domain1}"
           ];
           extraConfig = ''
-@game host game.${secrets.domain1}
-route @game {
+route {
     basic_auth {
 		victory $2a$14$uE2zdHnW1DOMvsNn7UpSCu0SO0gb3M2xnTPjjhDSJedbTLJ7iRA96
 	}
-    handle /dol/* {
-        uri replace /dol/ /Degrees-of-Lewdity-Chinese-Localization/ 1
+    handle_path /dol/* {
         reverse_proxy {
-            to https://eltirosto.github.io
+            to https://dol-lyra.github.io
             import remove-forward-headers
         }
     }
