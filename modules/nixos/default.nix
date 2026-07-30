@@ -27,6 +27,7 @@
   sillytavern = import ./sillytavern.nix;
   sing-box = import ./sing-box.nix;
   proxy-checker = import ./proxy-checker.nix;
+  resin = import ./resin.nix;
   system = import ./system.nix;
   tcpdump = import ./tcpdump.nix;
   uni-api = import ./uni-api.nix;

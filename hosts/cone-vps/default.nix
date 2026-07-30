@@ -13,7 +13,8 @@
     outputs.nixosModules.all-services
     outputs.nixosModules.sing-box
     outputs.nixosModules.caddy
-    outputs.nixosModules.proxy-checker
+    # outputs.nixosModules.proxy-checker
+    outputs.nixosModules.resin
     ./hardware-configuration.nix
   ];
 
