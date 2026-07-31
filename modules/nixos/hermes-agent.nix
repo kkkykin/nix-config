@@ -36,6 +36,7 @@ in {
       ];
 
       extraOptions = [
+        "-e" "TZ=Asia/Singapore"
         "--add-host=${llm-gateway}:host-gateway"
         "--add-host=virt-win:${virt-win-ip}"
       ];
@@ -47,6 +48,20 @@ in {
         backend = "local";
         cwd = "/data/workspace";
         timeout = 180;
+      };
+
+      skills = {
+        guard_agent_created = true;
+        write_approval = true;
+      };
+
+      memory = {
+        provider = "holographic";
+        write_approval = true;
+      };
+
+      plugins.hermes-memory-store = {
+        auto_extract = true;
       };
 
       custom_providers = [
