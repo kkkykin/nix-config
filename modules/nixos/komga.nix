@@ -5,17 +5,6 @@
   ...
 }: let
   backend = "http://127.0.0.1:25600";
-  kosync-fix = ''
-@koreaderSync {
-  method GET
-  header Accept "application/vnd.koreader.v1+json"
-  path /koreader/syncs/progress/*
-}
-
-reverse_proxy @koreaderSync ${backend} {
-  header_down Content-Type application/json
-}
-'';
 in {
   services.cloudflared.tunnels."${secrets.cloudflared.uuid}" = {
     ingress = {
@@ -31,12 +20,11 @@ in {
   services.caddy.virtualHosts = {
     ":80" = {
       extraConfig = ''
-reverse_proxy /opds/v1.2/* ${backend}
+reverse_proxy /opds/v2/* ${backend}
 '';
     };
     "http://komga.asus.local" = {
       extraConfig = ''
-${kosync-fix}
 reverse_proxy ${backend}
 '';
     };
