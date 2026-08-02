@@ -15,7 +15,7 @@
     outputs.nixosModules.romm
     outputs.nixosModules.cli-proxy-api
     outputs.nixosModules.sing-box
-    outputs.nixosModules.sillytavern
+    # outputs.nixosModules.sillytavern
     outputs.nixosModules.openlist
     outputs.nixosModules.podman
     # outputs.nixosModules.axonhub
@@ -25,7 +25,7 @@
     outputs.nixosModules.hermes-agent
     # outputs.nixosModules.litellm
     outputs.nixosModules.music-sync
-    outputs.nixosModules.wallpaper
+    # outputs.nixosModules.wallpaper
     outputs.nixosModules.aria2
     outputs.nixosModules.jellyfin
     outputs.nixosModules.komga
