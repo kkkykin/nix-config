@@ -25,6 +25,7 @@
   podman = import ./podman.nix;
   server = import ./server.nix;
   sillytavern = import ./sillytavern.nix;
+  matrix-pylon = import ./matrix-pylon.nix;
   sing-box = import ./sing-box.nix;
   proxy-checker = import ./proxy-checker.nix;
   resin = import ./resin.nix;

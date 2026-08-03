@@ -13,6 +13,7 @@
     outputs.nixosModules.all-services
     outputs.nixosModules.caddy
     outputs.nixosModules.romm
+    outputs.nixosModules.matrix-pylon
     outputs.nixosModules.cli-proxy-api
     outputs.nixosModules.sing-box
     # outputs.nixosModules.sillytavern
