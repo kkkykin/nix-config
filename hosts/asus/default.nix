@@ -122,9 +122,9 @@ handle_path /jellyfin/* {
     };
     upower = {
       enable = true;
-      percentageLow = 30;
-      percentageCritical = 20;
-      percentageAction = 10;
+      percentageLow = 40;
+      percentageCritical = 30;
+      percentageAction = 20;
     };
   };
   
