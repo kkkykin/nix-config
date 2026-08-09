@@ -20,6 +20,10 @@ in {
 
   users.users.hermes.extraGroups = [ config.users.users.aria2.group ];
 
+  systemd.services.hermes-agent.after = [
+    "sing-box.service"
+  ];
+
   services.hermes-agent = {
     enable = true;
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
@@ -28,7 +32,7 @@ in {
     container = {
       enable = true;
       backend = "podman";
-      image = "438ce555cb1d";
+      image = "31fcca46610248ea1728a6f3883c7a3ad013c0971307e1c8d2f18ef7e5d1e2b4";
       hostUsers = [ username ];
 
       extraVolumes = [
@@ -38,12 +42,24 @@ in {
       extraOptions = [
         "-e" "TZ=Asia/Singapore"
         "--add-host=${llm-gateway}:host-gateway"
-        "--add-host=virt-win:${virt-win-ip}"
       ];
     };
 
     settings = {
-      toolsets = [ "all" ];
+
+      agent = {
+        disabled_toolsets = [
+          "bfl"
+          "computer_use"
+          "image_gen"
+          "tts"
+        ];
+      };
+
+      checkpoints = {
+        enabled = true;
+      };
+
       terminal = {
         backend = "local";
         cwd = "/data/workspace";
@@ -58,6 +74,16 @@ in {
       memory = {
         provider = "holographic";
         write_approval = true;
+      };
+
+      privacy = {
+        redact_pii = true;
+      };
+
+      security = {
+        redact_secrets = true;
+        tirith_enabled = true;
+        tirith_fail_open = false;
       };
 
       plugins.hermes-memory-store = {
@@ -100,6 +126,33 @@ in {
       model = {
         default = "hermes/default";
         provider = "custom:cpa";
+      };
+
+      auxiliary = {
+        vision = {
+          provider = "custom:cpa";
+          model = "hermes/vision";
+        };
+        web_extract = {
+          provider = "custom:cpa";
+          model = "hermes/web_extract";
+        };
+        compression = {
+          provider = "custom:cpa";
+          model = "hermes/compression";
+        };
+      };
+
+      fallback_providers = [
+        {
+          provider = "custom:cpa";
+          model = "hermes/fallback";
+        }
+      ];
+
+      display = {
+        personality = "kawaii";
+        skin = "daylight";
       };
 
       # https://github.com/NousResearch/hermes-agent/blob/main/cli-config.yaml.example
