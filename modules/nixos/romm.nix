@@ -12,7 +12,7 @@ in {
     enable = true;
 
     backend = "podman";
-    image = "rommapp/romm:5.1.0";
+    image = "rommapp/romm:5.2.0";
 
     user = "romm";
     group = "romm";
