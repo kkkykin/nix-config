@@ -16,7 +16,7 @@
     outputs.nixosModules.matrix-pylon
     outputs.nixosModules.cli-proxy-api
     outputs.nixosModules.sing-box
-    # outputs.nixosModules.sillytavern
+    outputs.nixosModules.sillytavern
     outputs.nixosModules.openlist
     outputs.nixosModules.podman
     # outputs.nixosModules.axonhub
