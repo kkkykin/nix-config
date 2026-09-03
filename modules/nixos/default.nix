@@ -36,4 +36,5 @@
   wallpaper = import ./wallpaper.nix;
   wsl = import ./wsl.nix;
   fingerprint-chromium = import ./fingerprint-chromium.nix;
+  ungoogled-chromium = import ./ungoogled-chromium.nix;
 }
