@@ -16,6 +16,7 @@
     outputs.nixosModules.gitolite
     outputs.nixosModules.matrix-continuwuity
     outputs.nixosModules.dictd
+    outputs.nixosModules.mediamtx
     outputs.nixosModules.caddy
     ./hardware-configuration.nix
   ];
@@ -53,6 +54,13 @@ layer4 {
                 }
             }
         }
+        @mtx {
+          tls sni mtx.${secrets.domain}
+          remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
+        }
+        route @mtx {
+          proxy 127.0.0.1:7777
+        }
     }
     tcp/:853 {
         @dot {
@@ -71,10 +79,7 @@ layer4 {
 }
       '';
       virtualHosts = {
-        "conty.${secrets.domain}" = {
-          serverAliases = [
-            "${dot-domain}"
-          ];
+        "*.${secrets.domain}" = {
           extraConfig = ''
 @matrix {
     host conty.${secrets.domain}
@@ -82,6 +87,9 @@ layer4 {
     path /.well-known/matrix/*
 }
 reverse_proxy @matrix unix/${config.services.matrix-continuwuity.settings.global.unix_socket_path}
+
+@mtx host mtx.${secrets.domain}
+reverse_proxy @mtx 127.0.0.1:8889
           '';
         };
       };

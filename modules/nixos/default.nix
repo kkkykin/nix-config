@@ -34,6 +34,7 @@
   uni-api = import ./uni-api.nix;
   romm = import ./romm.nix;
   wallpaper = import ./wallpaper.nix;
+  mediamtx = import ./mediamtx.nix;
   wsl = import ./wsl.nix;
   fingerprint-chromium = import ./fingerprint-chromium.nix;
   ungoogled-chromium = import ./ungoogled-chromium.nix;
