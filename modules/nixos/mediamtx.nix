@@ -1,10 +1,15 @@
 {
   pkgs,
   secrets,
+  config,
   ...
 }: let
   hls-addr = "127.0.0.1:8888";
+  trusted-proxies = [ "127.0.0.1" ];
 in {
+  systemd.services.mediamtx.serviceConfig = {
+    EnvironmentFile = config.sops.secrets.mediamtx.path;
+  };
   services.mediamtx = {
     enable = true;
 
@@ -47,15 +52,18 @@ in {
       # srtPublishPassphrase = "argon2:$argon2id$v=19$m=4096,t=3,p=1$c2FsdEl0V2l0aFNhbHQ$zc8vgQegKhFcXV8agd70bsSAU604NpUzj+BPVY2itAg";
       # srtReadPassphrase = "argon2:$argon2id$v=19$m=4096,t=3,p=1$c2FsdEl0V2l0aFNhbHQ$MVN0UUlchGPaaCWfdUbJxpXOPViZeJsdingP6pD6BxI";
 
-      hls = false;
+      hls = true;
       hlsAddress = hls-addr;
-      hlsVariant = "lowLatency";
+      hlsVariant = "fmp4";
+      hlsAllowOrigins = [ "https://hls.${secrets.domain}" ];
+      hlsTrustedProxies = trusted-proxies;
+      hlsAlwaysRemux = false;
 
       webrtc = true;
       webrtcAddress = "127.0.0.1:8889";
       webrtcEncryption = false;
       webrtcAllowOrigins = [ "https://mtx.${secrets.domain}" ];
-      webrtcTrustedProxies = [ "127.0.0.1" ];
+      webrtcTrustedProxies = trusted-proxies;
       webrtcLocalUDPAddress = ":8189";
       webrtcLocalTCPAddress = ":8189";
       webrtcIPsFromInterfaces = false;

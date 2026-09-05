@@ -54,12 +54,16 @@ layer4 {
                 }
             }
         }
-        @mtx {
-          tls sni mtx.${secrets.domain}
-          remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
-        }
-        route @mtx {
-          proxy 127.0.0.1:7777
+
+        @cf remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
+        route @cf {
+            subroute {
+                @mtx tls sni mtx.${secrets.domain}
+                @mtx-hls tls sni mtx-hls.${secrets.domain}
+                route @mtx @mtx-hls {
+                  proxy 127.0.0.1:7777
+                }
+            }
         }
     }
     tcp/:853 {
@@ -88,6 +92,8 @@ layer4 {
 }
 reverse_proxy @matrix unix/${config.services.matrix-continuwuity.settings.global.unix_socket_path}
 
+@mtx-hls host mtx-hls.${secrets.domain}
+reverse_proxy @mtx-hls 127.0.0.1:8888
 @mtx host mtx.${secrets.domain}
 reverse_proxy @mtx 127.0.0.1:8889
           '';
