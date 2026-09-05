@@ -7,7 +7,7 @@
 }:
 let
   virt-win-ip = secrets.hermes.virt-win-ip;
-  llm-gateway = "cpa.asus.local";
+  llm-gateway = "cpa.opencode.ai";
 in {
 
   security.sudo.extraRules = [{
@@ -286,8 +286,9 @@ in {
       custom_providers = [
         {
           name = "cpa";
-          base_url = "http://${llm-gateway}/v1";
+          base_url = "http://${llm-gateway}";
           key_env = "CPA_API_KEY";
+          api_mode = "anthropic_messages";
         }
       ];
 

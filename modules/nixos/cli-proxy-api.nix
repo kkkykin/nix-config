@@ -47,6 +47,9 @@ in {
     };
     caddy.virtualHosts = {
       "http://cpa.asus.local" = {
+        serverAliases = [
+          "http://cpa.opencode.ai"
+        ];
         # https://github.com/aftely1337/amp-free-proxy
         extraConfig = ''
 # @claude-code-count-token {
@@ -94,17 +97,6 @@ route /v1/* {
 }
         '';
       };
-    };
-    postgresql = {
-      ensureDatabases = [
-        "cli-proxy-api"
-      ];
-      ensureUsers = [
-        {
-          name = "cli-proxy-api";
-          ensureDBOwnership = true;
-        }
-      ];
     };
   };
 }
