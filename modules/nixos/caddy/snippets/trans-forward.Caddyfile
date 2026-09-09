@@ -11,6 +11,9 @@
         }
 
         reverse_proxy {http.regexp.up.1}:{up_port} {
+
+            header_up Host {http.regexp.up.1}
+
             import remove-forward-headers
         }
     }
@@ -28,6 +31,8 @@
                 tls
                 tls_server_name {http.regexp.up.1}
             }
+
+            header_up Host {http.regexp.up.1}
 
             import remove-forward-headers
         }
