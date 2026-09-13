@@ -6,6 +6,7 @@
     ../../home/programs/coding-agents.nix
   ];
   home.packages = with pkgs; [
+    czkawka
     sing-box
     kkkykin.montecarlo-ip-searcher
   ];

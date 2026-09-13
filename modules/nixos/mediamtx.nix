@@ -45,12 +45,11 @@ in {
       ];
 
       rtsp = false;
+      rtmp = false;
       # rtspAddress = "127.0.0.1:8554";
 
-      srt = false;
-      # srtAddress = ":8890";
-      # srtPublishPassphrase = "argon2:$argon2id$v=19$m=4096,t=3,p=1$c2FsdEl0V2l0aFNhbHQ$zc8vgQegKhFcXV8agd70bsSAU604NpUzj+BPVY2itAg";
-      # srtReadPassphrase = "argon2:$argon2id$v=19$m=4096,t=3,p=1$c2FsdEl0V2l0aFNhbHQ$MVN0UUlchGPaaCWfdUbJxpXOPViZeJsdingP6pD6BxI";
+      srt = true;
+      srtAddress = ":8890";
 
       hls = true;
       hlsAddress = hls-addr;

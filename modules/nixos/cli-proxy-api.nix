@@ -13,6 +13,16 @@ llm_privacy_filter {
 	fail_open false
 }
 '';
+  reverse-proxy-cpa = ''
+request_header @claude x-opencode-session {header.X-Claude-Code-Session-Id}
+request_header @codex x-opencode-session {header.session-id}
+request_header @dsh x-opencode-session {header.x-deepseek-harness-session-id}
+
+reverse_proxy http://127.0.0.1:8317 {
+    import remove-forward-headers
+    flush_interval -1
+}
+'';
 in {
   users.users.${username} = {
     extraGroups = ["cli-proxy-api"];
@@ -52,28 +62,6 @@ in {
         ];
         # https://github.com/aftely1337/amp-free-proxy
         extraConfig = ''
-# @claude-code-count-token {
-#   path /v1/messages/count_tokens
-#   header User-Agent claude-cli/*
-# }
-
-# respond @claude-code-count-token 404
-
-# @freeSearch {
-#     path /api/internal
-#     expression `{query}.contains("webSearch2") || {query}.contains("extractWebPageContent")`
-# }
-
-# handle @freeSearch {
-#     json_parse {
-#         set isFreeTierRequest true
-#     }
-#     reverse_proxy https://ampcode.com {
-#         header_up Host {upstream_hostport}
-#         import remove-forward-headers
-#     }
-# }
-
 @proxy {
     header X-Proxy-Key "{$X_PROXY_KEY}"
     header X-Proxy-Upstream http*
@@ -82,18 +70,24 @@ in {
 handle @proxy {
     route /v1/* {
         ${llm-filter}
-        
+        import trans-forward
+    }
+    handle_path /raw/* {
         import trans-forward
     }
 }
 
+@codex header session-id *
+@claude header X-Claude-Code-Session-Id *
+@dsh header x-deepseek-harness-session-id *
+
 route /v1/* {
-    ${llm-filter}
-    
-    reverse_proxy http://127.0.0.1:8317 {
-        import remove-forward-headers
-        flush_interval -1
-    }
+    ${reverse-proxy-cpa}
+}
+
+handle_path /raw/* {
+    request_header x-vibeguard-skip true
+    ${reverse-proxy-cpa}
 }
         '';
       };
