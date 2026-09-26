@@ -3,6 +3,7 @@
   secrets,
   pkgs,
   username,
+  lib,
   ...
 }:
 let
@@ -27,12 +28,27 @@ in {
   services.hermes-agent = {
     enable = true;
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
+    environment = {
+      PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:"
+      + lib.makeBinPath [
+        pkgs.fdroidserver
+        pkgs.emacs-nox
+        pkgs.rclone
+        pkgs.nix
+        pkgs.jq
+        pkgs.gitleaks
+        pkgs.neovim
+        pkgs.czkawka
+        pkgs.lua
+        pkgs.stylua
+      ];
+    };
     addToSystemPackages = true;
 
     container = {
       enable = true;
       backend = "podman";
-      image = "aaa71b3f59ad988f6b8696a0a730db1301ab70a6c03043ae748aaf92ee224ac4";
+      image = "e17c1ace92aa1395e419047c80a6bd9b684a3c42fac3421abb6896108b2e5ab9";
       hostUsers = [ username ];
 
       extraVolumes = [
@@ -40,7 +56,6 @@ in {
       ];
 
       extraOptions = [
-        "-e" "${pkgs.nix}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
         "-e" "TZ=Asia/Singapore"
         "--add-host=${llm-gateway}:host-gateway"
       ];
