@@ -50,7 +50,7 @@ in {
   services.napcat = {
     enable = true;
     backend = "podman";
-    image = "mlikiowa/napcat-docker:v4.18.13";
+    image = "mlikiowa/napcat-docker:v4.18.28";
     environmentFile = config.sops.secrets.napcat.path;
     extraOptions = [ "--ip=10.89.1.129" ];
   };
