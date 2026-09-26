@@ -24,8 +24,5 @@
         ff = "only";
       };
     };
-    attributes = [
-      "*.gpg diff=gpg"
-    ];
   };
 }
