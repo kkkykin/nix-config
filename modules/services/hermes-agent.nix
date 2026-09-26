@@ -14,6 +14,8 @@ let
     pkgs.emacs-nox
     pkgs.rclone
     pkgs.nix
+    pkgs.git
+    pkgs.less
     pkgs.jq
     pkgs.gitleaks
     pkgs.neovim
@@ -307,9 +309,9 @@ in {
       custom_providers = [
         {
           name = "cpa";
-          base_url = "http://${llm-gateway}";
+          base_url = "http://${llm-gateway}/v1";
           key_env = "CPA_API_KEY";
-          api_mode = "anthropic_messages";
+          api_mode = "codex_responses";
         }
       ];
 
