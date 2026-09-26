@@ -4,6 +4,7 @@
   pkgs,
   username,
   lib,
+  inputs,
   ...
 }:
 let
@@ -46,6 +47,16 @@ in {
 
   services.hermes-agent = {
     enable = true;
+    # 即 minimal.override { extraDependencyGroups = [...]; }，由模块来 override。
+    # 若直接写 package = minimal.override {...}，以后设置 extraPythonPackages 时模块会再
+    # override 一次，把 groups 重置为 []
+    package = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.minimal;
+    extraDependencyGroups = [
+      "matrix"
+      "messaging"
+      "firecrawl"
+      "voice"
+    ];
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
     environment = {
       CONTAINER_PATH = container-path;  # for container shell
