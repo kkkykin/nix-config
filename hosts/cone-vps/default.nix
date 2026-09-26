@@ -46,23 +46,20 @@ layer4 {
 }
       '';
       virtualHosts = {
-        "hub.${secrets.domain}" = {
+        "*.${secrets.domain}" = {
           serverAliases = [
+            "*.${secrets.domain1}"
           ];
           extraConfig = ''
-@hub {
-  host hub.${secrets.domain}
-  header User-Agent Dart/*
-}
+@hub host hub.${secrets.domain}
 reverse_proxy @hub http://127.0.0.1:5000
-'';
-        };
-        "game.${secrets.domain1}" = {
-          serverAliases = [
-            "game1.${secrets.domain1}"
-          ];
-          extraConfig = ''
-route {
+
+@game {
+  host game.${secrets.domain1}
+  host game1.${secrets.domain1}
+}
+
+route @game {
     basic_auth {
 		victory $2a$14$uE2zdHnW1DOMvsNn7UpSCu0SO0gb3M2xnTPjjhDSJedbTLJ7iRA96
 	}
