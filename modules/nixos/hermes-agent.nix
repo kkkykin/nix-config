@@ -9,7 +9,22 @@
 let
   virt-win-ip = secrets.hermes.virt-win-ip;
   llm-gateway = "cpa.opencode.ai";
+  extra-pkgs = [
+    pkgs.fdroidserver
+    pkgs.emacs-nox
+    pkgs.rclone
+    pkgs.nix
+    pkgs.jq
+    pkgs.gitleaks
+    pkgs.neovim
+    pkgs.czkawka
+    pkgs.lua
+    pkgs.stylua
+    pkgs.ripgrep
+    pkgs.tmux
+  ];
 in {
+  environment.systemPackages = extra-pkgs;
 
   security.sudo.extraRules = [{
     users = [ username ];
@@ -30,18 +45,7 @@ in {
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
     environment = {
       PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:"
-      + lib.makeBinPath [
-        pkgs.fdroidserver
-        pkgs.emacs-nox
-        pkgs.rclone
-        pkgs.nix
-        pkgs.jq
-        pkgs.gitleaks
-        pkgs.neovim
-        pkgs.czkawka
-        pkgs.lua
-        pkgs.stylua
-      ];
+      + lib.makeBinPath extra-pkgs;
     };
     addToSystemPackages = true;
 

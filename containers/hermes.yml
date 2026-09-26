@@ -1,0 +1,5 @@
+services:
+  hermes:
+    build:
+      context: ./hermes
+    image: localhost/hermes:latest
