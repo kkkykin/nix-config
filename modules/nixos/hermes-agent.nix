@@ -23,6 +23,8 @@ let
     pkgs.ripgrep
     pkgs.tmux
   ];
+  container-path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:"
+    + lib.makeBinPath extra-pkgs;
 in {
   environment.systemPackages = extra-pkgs;
 
@@ -44,15 +46,14 @@ in {
     enable = true;
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
     environment = {
-      PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:"
-      + lib.makeBinPath extra-pkgs;
+      CONTAINER_PATH = container-path;  # for container shell
     };
     addToSystemPackages = true;
 
     container = {
       enable = true;
       backend = "podman";
-      image = "e17c1ace92aa1395e419047c80a6bd9b684a3c42fac3421abb6896108b2e5ab9";
+      image = "70b4e6fe8f87b259f958def5d6c7b7bf94a73060ab67335881ea9ac8522e1626";
       hostUsers = [ username ];
 
       extraVolumes = [
@@ -60,6 +61,7 @@ in {
       ];
 
       extraOptions = [
+        "-e" "PATH=${container-path}" # for hermes
         "-e" "TZ=Asia/Singapore"
         "--add-host=${llm-gateway}:host-gateway"
       ];
