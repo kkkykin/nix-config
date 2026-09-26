@@ -15,7 +15,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
-    nixpkgs-25-05.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur = {
       url = "github:nix-community/NUR";
@@ -23,214 +22,76 @@
     };
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    home-manager = {
-      url = "github:nix-community/home-manager/release-26.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     hermes-agent.url = "github:NousResearch/hermes-agent";
+    # 真实仓库通过 Makefile 的 --override-input 指向 ../nix-secrets
     nix-secrets = {
       url = "github:kkkykin/nixos-secrets-empty";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # 自定义包与服务模块，本地开发时由 Makefile 指向 ../nur-packages
     kkkykin.url = "github:kkkykin/nur-packages/master";
   };
 
   outputs = inputs @ {
     self,
     nixpkgs,
-    nixpkgs-25-05,
-    nixpkgs-unstable,
-    nur,
-    nixos-wsl,
-    nixos-hardware,
-    sops-nix,
-    home-manager,
     nix-secrets,
-    kkkykin,
     ...
   }: let
-    inherit (self) outputs;
-    # Supported systems for your flake packages, shell, etc.
-    systems = [
-      "aarch64-linux"
-      "i686-linux"
-      "x86_64-linux"
-      "aarch64-darwin"
-      "x86_64-darwin"
-    ];
-    # This is a function that generates an attribute by calling a function you
-    # pass to it, with each system as an argument
-    forAllSystems = nixpkgs.lib.genAttrs systems;
+    forAllSystems = nixpkgs.lib.genAttrs ["x86_64-linux" "aarch64-linux"];
+
+    # hostname:   hosts/<hostname> 目录名
+    # secretsKey: nix-secrets 中的键名，null 表示不使用 secrets
+    mkHost = {
+      hostname,
+      username,
+      secretsKey ? null,
+      system ? "x86_64-linux",
+    }:
+      nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs username;
+          secrets =
+            if secretsKey != null
+            then (import nix-secrets).${secretsKey}
+            else {};
+        };
+        modules =
+          [
+            ./modules/common/base.nix
+            ./hosts/${hostname}
+          ]
+          ++ nixpkgs.lib.optional (secretsKey != null) nix-secrets.nixosModules.${secretsKey};
+      };
   in {
-    # steal from https://github.com/Misterio77/nix-starter-configs/blob/main/standard/flake.nix
-    packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
     overlays = import ./overlays {inherit inputs;};
-    nixosModules = import ./modules/nixos;
-    homeManagerModules = import ./modules/home-manager;
+
     nixosConfigurations = {
-      cone-vps = let
-        username = "cone";
-        specialArgs = inputs // {
-          inherit outputs username;
-          secrets = (import nix-secrets).cone;
-        };
-      in
-        nixpkgs.lib.nixosSystem {
-          inherit specialArgs;
-          system = "x86_64-linux";
-
-          modules = [
-            nix-secrets.nixosModules.cone
-            kkkykin.nixosModules.default
-            ./hosts/cone-vps
-            ./users/${username}/nixos.nix
-
-            ./modules/nixos/profiles/server.nix
-          ];
-        };
-      dmit-vps = let
-        username = "dmit";
-        specialArgs = inputs // {
-          inherit outputs username;
-          secrets = (import nix-secrets).dmit;
-        };
-      in
-        nixpkgs.lib.nixosSystem {
-          inherit specialArgs;
-          system = "x86_64-linux";
-
-          modules = [
-            nix-secrets.nixosModules.dmit
-            ./hosts/dmit-vps
-            ./users/${username}/nixos.nix
-
-            ./modules/nixos/profiles/server.nix
-          ];
-        };
-      legion-wsl = let
-        username = "nixos";
-        specialArgs = inputs // {inherit outputs username;};
-      in
-        nixpkgs.lib.nixosSystem {
-          inherit specialArgs;
-          system = "x86_64-linux";
-
-          modules = [
-            sops-nix.nixosModules.sops
-            nixos-wsl.nixosModules.default
-            ./modules/nixos/profiles/wsl.nix
-            ./hosts/legion-wsl
-            ./users/${username}/nixos.nix
-
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                extraSpecialArgs = inputs // specialArgs;
-                users.${username} = {
-                  imports = [
-                    ./users/${username}/home.nix
-                  ];
-                  home.stateVersion = "25.05";
-                };
-              };
-            }
-          ];
-        };
-      asus = let
+      asus = mkHost {
+        hostname = "asus";
+        secretsKey = "asus";
         username = "kkky";
-        dotfileDir = "/home/${username}/dotfiles";
-        specialArgs = inputs // {
-          inherit outputs username dotfileDir;
-          secrets = (import nix-secrets).asus;
-        };
-      in
-        nixpkgs.lib.nixosSystem {
-          inherit specialArgs;
-          system = "x86_64-linux";
-
-          modules = [
-            nixos-hardware.nixosModules.asus-battery
-            nixos-hardware.nixosModules.common-cpu-intel
-            nixos-hardware.nixosModules.common-gpu-nvidia-disable
-            nixos-hardware.nixosModules.common-pc-laptop-hdd
-            nixos-hardware.nixosModules.common-pc-laptop-ssd
-
-            nur.modules.nixos.default
-            kkkykin.nixosModules.default
-
-            {
-              hardware = {
-                asus.battery.chargeUpto = 60;
-                intelgpu.vaapiDriver = "intel-media-driver";
-              };
-            }
-            nix-secrets.nixosModules.asus
-            {
-              sops = {
-                gnupg = {
-                  home = "/root/.gnupg";
-                  sshKeyPaths = [];
-                };
-              };
-            }
-
-            inputs.hermes-agent.nixosModules.default
-            ./modules/nixos/profiles/server.nix
-            ./hosts/asus
-            ./users/${username}/nixos.nix
-
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                extraSpecialArgs = inputs // specialArgs;
-                users.${username} = {
-                  imports = [
-                    ./users/${username}/home.nix
-                  ];
-                  home.stateVersion = "25.05";
-                };
-              };
-            }
-          ];
-        };
-    };
-    devShells = {
-      x86_64-linux.default = let
-        pkgs = import nixpkgs { system = "x86_64-linux"; };
-        sopsImportHook = (pkgs.callPackage sops-nix {}).sops-import-keys-hook;
-      in pkgs.mkShell {
-        name = "sops-gpg-import";
-
-        nativeBuildInputs = [
-          sopsImportHook
-        ];
-
-        sopsPGPKeyDirs = [
-          "${self}/keys/hosts"
-          "${self}/keys/users"
-        ];
-
-        # 可选：使用独立 GNUPGHOME，避免污染默认 keyring
-        sopsCreateGPGHome = true;
-
-        shellHook = ''
-          export GPG_TTY=$(tty)
-      gpgconf -R gpg-agent
-      echo "🔐 sops-nix GPG import shell ready."
-      echo "📁 Keys loaded from: keys/hosts and keys/users"
-      echo "📦 GNUPGHOME: $GNUPGHOME"
-        '';
+      };
+      cone-vps = mkHost {
+        hostname = "cone-vps";
+        secretsKey = "cone";
+        username = "cone";
+      };
+      dmit-vps = mkHost {
+        hostname = "dmit-vps";
+        secretsKey = "dmit";
+        username = "dmit";
+      };
+      legion-wsl = mkHost {
+        hostname = "legion-wsl";
+        username = "nixos";
       };
     };
-
   };
 }

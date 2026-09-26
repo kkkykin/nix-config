@@ -36,6 +36,12 @@ else
   UPDATE_SECRETS_CMD  ?= true
 endif
 
+# 如果 ../nur-packages 存在且未设置 NUR_REMOTE=1，使用本地的包与模块
+NUR_DIR := $(realpath $(FLAKE_DIR)/../nur-packages)
+ifneq ($(and $(wildcard $(NUR_DIR)),$(filter-out 1,$(NUR_REMOTE))),)
+  OVERRIDE_INPUTS += --override-input kkkykin path:$(NUR_DIR)
+endif
+
 # -------------------------------
 # 远程构建支持
 # -------------------------------
@@ -103,3 +109,4 @@ help:
 	@echo "  PROXY_OFF=1  禁用默认的 SOCKS5 代理"
 	@echo "  NO_MIRROR=1  禁用 mirror，只用官方 cache.nixos.org"
 	@echo "  REMOTE=host 或 user@host  在远程主机上 rebuild"
+	@echo "  NUR_REMOTE=1 不使用本地 ../nur-packages，使用 flake.lock 中的版本"

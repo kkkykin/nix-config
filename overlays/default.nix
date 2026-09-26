@@ -1,38 +1,20 @@
 {inputs, ...}: {
-  # This one brings our custom packages from the 'pkgs' directory
-  additions = final: _prev: import ../pkgs final.pkgs;
-
-  # This one contains whatever you want to overlay
-  # You can change versions, add patches, set compilation flags, anything really.
-  # https://nixos.wiki/wiki/Overlays
   modifications = final: prev: {
     sillytavern = final.unstable.sillytavern.overrideAttrs (old: {
-      patches = (old.patches or []) ++ [
-        ./patches/sillytavern/0001-openai-reverse-proxy-image-video.patch
-      ];
+      patches =
+        (old.patches or [])
+        ++ [
+          ./patches/sillytavern/0001-openai-reverse-proxy-image-video.patch
+        ];
     });
-    # example = prev.example.overrideAttrs (oldAttrs: rec {
-    # ...
-    # });
   };
 
-  # When applied, the unstable nixpkgs set (declared in the flake inputs) will
-  # be accessible through 'pkgs.unstable'
-  unstable-packages = final: _prev: let
+  # pkgs.unstable.* 与 pkgs.kkkykin.*（../nur-packages）
+  extra-package-sets = final: _prev: {
     unstable = import inputs.nixpkgs-unstable {
       system = final.stdenv.hostPlatform.system;
       config.allowUnfree = true;
     };
-    pkg25-05 = import inputs.nixpkgs-25-05 {
-      system = final.stdenv.hostPlatform.system;
-      config.allowUnfree = true;
-    };
-    kkkykin = import inputs.kkkykin {
-      pkgs = final.pkgs;
-    };
-  in {
-    unstable = unstable;
-    pkg25-05 = pkg25-05;
-    kkkykin = kkkykin;
+    kkkykin = import inputs.kkkykin {pkgs = final;};
   };
 }

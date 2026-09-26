@@ -1,9 +1,0 @@
-{
-  config,
-  ...
-}: {
-  users = {
-    users.nixos = {
-    };
-  };
-}

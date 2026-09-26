@@ -5,17 +5,19 @@
   config,
   pkgs,
   username,
-  outputs,
+  inputs,
   secrets,
   ...
 }: {
   imports = [
-    outputs.nixosModules.all-services
-    outputs.nixosModules.sing-box
-    outputs.nixosModules.caddy
-    # outputs.nixosModules.proxy-checker
-    outputs.nixosModules.resin
     ./hardware-configuration.nix
+    ../../modules/common/server.nix
+    ../../users/vps.nix
+    inputs.kkkykin.nixosModules.default
+
+    ../../modules/services/caddy.nix
+    ../../modules/services/resin.nix
+    ../../modules/services/sing-box.nix
   ];
 
   systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.caddy.path;

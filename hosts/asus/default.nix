@@ -1,42 +1,59 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
 {
   config,
   pkgs,
   username,
-  outputs,
+  inputs,
   secrets,
   ...
 }: {
   imports = [
-    outputs.nixosModules.all-services
-    outputs.nixosModules.caddy
-    outputs.nixosModules.romm
-    outputs.nixosModules.matrix-pylon
-    outputs.nixosModules.cli-proxy-api
-    outputs.nixosModules.sing-box
-    outputs.nixosModules.sillytavern
-    outputs.nixosModules.openlist
-    outputs.nixosModules.podman
-    # outputs.nixosModules.axonhub
-    # outputs.nixosModules.gpt-load
-    # outputs.nixosModules.uni-api
-    outputs.nixosModules.libvirt
-    outputs.nixosModules.hermes-agent
-    # outputs.nixosModules.litellm
-    outputs.nixosModules.music-sync
-    # outputs.nixosModules.wallpaper
-    outputs.nixosModules.aria2
-    outputs.nixosModules.jellyfin
-    outputs.nixosModules.komga
-    outputs.nixosModules.fdroid
-    outputs.nixosModules.freshrss
-    outputs.nixosModules.tcpdump
-    outputs.nixosModules.cloudflared
-    outputs.nixosModules.ungoogled-chromium
     ./hardware-configuration.nix
+    ../../modules/common/server.nix
+    ../../modules/common/web-apps.nix
+    ../../users/kkky.nix
+
+    inputs.nixos-hardware.nixosModules.asus-battery
+    inputs.nixos-hardware.nixosModules.common-cpu-intel
+    inputs.nixos-hardware.nixosModules.common-gpu-nvidia-disable
+    inputs.nixos-hardware.nixosModules.common-pc-laptop-hdd
+    inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+    inputs.nur.modules.nixos.default
+    inputs.kkkykin.nixosModules.default
+    inputs.hermes-agent.nixosModules.default
+
+    ../../modules/services/aria2.nix
+    ../../modules/services/caddy.nix
+    ../../modules/services/cli-proxy-api.nix
+    ../../modules/services/cloudflared.nix
+    ../../modules/services/fdroid.nix
+    ../../modules/services/freshrss.nix
+    ../../modules/services/hermes-agent.nix
+    ../../modules/services/jellyfin.nix
+    ../../modules/services/komga.nix
+    ../../modules/services/libvirt.nix
+    ../../modules/services/matrix-pylon.nix
+    ../../modules/services/music-sync.nix
+    ../../modules/services/openlist.nix
+    ../../modules/services/podman.nix
+    ../../modules/services/romm.nix
+    ../../modules/services/sillytavern.nix
+    ../../modules/services/sing-box.nix
+    ../../modules/services/tcpdump.nix
+    ../../modules/services/ungoogled-chromium.nix
   ];
+
+  my.lanDomain = "asus.local";
+
+  hardware = {
+    asus.battery.chargeUpto = 60;
+    intelgpu.vaapiDriver = "intel-media-driver";
+  };
+
+  sops.gnupg = {
+    home = "/root/.gnupg";
+    sshKeyPaths = [];
+  };
+
   users.users.${username} = {
     extraGroups = ["openlist"];
   };
@@ -49,76 +66,17 @@
   services = {
     caddy = {
       virtualHosts.":80".extraConfig = ''
-${builtins.readFile ../../modules/nixos/caddy/sub/rsshub.Caddyfile}
+${builtins.readFile ../../modules/services/caddy/sub/rsshub.Caddyfile}
 handle_path /jellyfin/* {
   reverse_proxy 127.0.0.1:8096
 }
     '';
      }; 
-    # picoclaw = {
-    #   enable = true;
-    #   configFile = config.sops.secrets.picoclaw.path;
-    # };
     openssh = {
       settings = {
         X11Forwarding = true;
         X11UseLocalhost = true;
       };
-    };
-    postgresql = {
-      enable = true;
-      enableTCPIP = true;
-      authentication = ''
-        host axonhub axonhub 127.0.0.1/32 scram-sha-256
-        host gpt-load gpt-load 127.0.0.1/32 scram-sha-256
-        host litellm litellm 127.0.0.1/32 scram-sha-256
-        host uni-api uni-api 127.0.0.1/32 scram-sha-256
-        host openlist openlist 127.0.0.1/32 scram-sha-256
-        host freshrss freshrss 127.0.0.1/32 scram-sha-256
-        host romm romm 10.88.0.0/16 scram-sha-256
-      '';
-      ensureDatabases = [
-        "romm"
-        "axonhub"
-        "gpt-load"
-        "litellm"
-        "uni-api"
-        "openlist"
-        "freshrss"
-      ];
-      ensureUsers = [
-        {
-          name = "romm";
-          ensureDBOwnership = true;
-        }
-        {
-          name = "axonhub";
-          ensureDBOwnership = true;
-        }
-        {
-          name = "gpt-load";
-          ensureDBOwnership = true;
-        }
-        {
-          name = "litellm";
-          ensureDBOwnership = true;
-        }
-        {
-          name = "uni-api";
-          ensureDBOwnership = true;
-        }
-        {
-          name = "openlist";
-          ensureDBOwnership = true;
-        }
-        {
-          name = "freshrss";
-          ensureDBOwnership = true;
-        }
-      ];
-      extensions = ps: with ps; [
-        plpython3
-      ];
     };
     upower = {
       enable = true;

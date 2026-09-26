@@ -5,20 +5,23 @@
   config,
   pkgs,
   username,
-  outputs,
+  inputs,
   secrets,
   lib,
   ...
 }: {
   imports = [
-    outputs.nixosModules.all-services
-    outputs.nixosModules.sing-box
-    outputs.nixosModules.gitolite
-    outputs.nixosModules.matrix-continuwuity
-    outputs.nixosModules.dictd
-    outputs.nixosModules.mediamtx
-    outputs.nixosModules.caddy
     ./hardware-configuration.nix
+    ../../modules/common/server.nix
+    ../../users/vps.nix
+    inputs.kkkykin.nixosModules.default
+
+    ../../modules/services/caddy.nix
+    ../../modules/services/dictd.nix
+    ../../modules/services/gitolite.nix
+    ../../modules/services/matrix-continuwuity.nix
+    ../../modules/services/mediamtx.nix
+    ../../modules/services/sing-box.nix
   ];
 
   systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.caddy.path;
@@ -99,11 +102,6 @@ reverse_proxy @mtx 127.0.0.1:8889
           '';
         };
       };
-    };
-    picoclaw = {
-      enable = false;
-      configFile = config.sops.secrets.picoclawConfig.path;
-      environmentFile = config.sops.secrets.picoclawEnv.path;
     };
     srsDecompile = {
       enable = true;
