@@ -3,7 +3,7 @@
     ../../home/core.nix
     ../../home/programs
     ../../home/programs/emacs.nix
-    ../../home/programs/coding-agents.nix
+    # ../../home/programs/coding-agents.nix
   ];
   home.packages = with pkgs; [
     czkawka
