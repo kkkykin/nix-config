@@ -11,7 +11,12 @@ let
   virt-win-ip = secrets.hermes.virt-win-ip;
   llm-gateway = "cpa.opencode.ai";
   extra-pkgs = [
+    pkgs._7zz-rar
+    pkgs.jellyfin-ffmpeg
+    pkgs.android-tools
     pkgs.fdroidserver
+    pkgs.sdkmanager
+    pkgs.jdk
     pkgs.emacs-nox
     pkgs.rclone
     pkgs.nix
