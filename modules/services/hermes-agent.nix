@@ -31,8 +31,7 @@ let
     pkgs.ripgrep
     pkgs.tmux
   ];
-  container-path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:"
-    + lib.makeBinPath extra-pkgs;
+  extra-path = lib.makeBinPath extra-pkgs;
 in {
   environment.systemPackages = extra-pkgs;
 
@@ -57,21 +56,20 @@ in {
     # override 一次，把 groups 重置为 []
     package = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.minimal;
     extraDependencyGroups = [
-      "matrix"
       "messaging"
       "firecrawl"
       "voice"
     ];
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
     environment = {
-      CONTAINER_PATH = container-path;  # for container shell
+      CONTAINER_PATH = extra-path;  # for container shell
     };
     addToSystemPackages = true;
 
     container = {
       enable = true;
       backend = "podman";
-      image = "70b4e6fe8f87b259f958def5d6c7b7bf94a73060ab67335881ea9ac8522e1626";
+      image = "6273e85487dfd8b31836018e0fec19aaf2deb56d6f76b53c1653068d35203e28";
       hostUsers = [ username ];
 
       extraVolumes = [
@@ -79,7 +77,7 @@ in {
       ];
 
       extraOptions = [
-        "-e" "PATH=${container-path}" # for hermes
+        "--init"
         "-e" "TZ=Asia/Singapore"
         "--add-host=${llm-gateway}:host-gateway"
       ];
@@ -346,6 +344,13 @@ in {
       };
 
       platforms = {
+        irc = {
+          enabled = true;
+          extra = {
+            use_tls = true;
+            max_message_length = 450;
+          };
+        };
         qqbot = {
           enabled = true;
           extra = {

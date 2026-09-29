@@ -19,7 +19,8 @@
     ../../modules/services/caddy.nix
     ../../modules/services/dictd.nix
     ../../modules/services/gitolite.nix
-    ../../modules/services/matrix-continuwuity.nix
+    # ../../modules/services/matrix-continuwuity.nix
+    ../../modules/services/ergochat.nix
     ../../modules/services/mediamtx.nix
     ../../modules/services/sing-box.nix
   ];
@@ -28,6 +29,7 @@
   services = let
     srs-dir = "/var/lib/srs-decompile/";
     dot-domain = "sting.${secrets.domain}";
+    irc-domain = "icu.${secrets.domain}";
   in {
     caddy = {
       globalConfig = ''
@@ -83,18 +85,25 @@ layer4 {
             proxy tcp/127.0.0.1:53
         }
     }
+    tcp/:6697 {
+        @dot {
+            remote_ip_list ${srs-dir}/geoip-cn.cidr.txt
+            tls sni ${irc-domain}
+        }
+        route @dot {
+            tls {
+                connection_policy {
+                    alpn dot
+                }
+            }
+            proxy tcp/127.0.0.1:6667
+        }
+    }
 }
       '';
       virtualHosts = {
         "*.${secrets.domain}" = {
           extraConfig = ''
-@matrix {
-    host conty.${secrets.domain}
-    path /_matrix/*
-    path /.well-known/matrix/*
-}
-reverse_proxy @matrix unix/${config.services.matrix-continuwuity.settings.global.unix_socket_path}
-
 @mtx-hls host mtx-hls.${secrets.domain}
 reverse_proxy @mtx-hls 127.0.0.1:8888
 @mtx host mtx.${secrets.domain}

@@ -7,6 +7,17 @@
           ./patches/sillytavern/0001-openai-reverse-proxy-image-video.patch
         ];
     });
+
+    ergochat = prev.ergochat.overrideAttrs (old: rec {
+      version = "2.19.1";
+      src = final.fetchFromGitHub {
+        owner = "ergochat";
+        repo = "ergo";
+        rev = "v${version}";
+        sha256 = "sha256-yzGLOpECalSOv1zBpVkyDlHGaHSsQNsAoNa2jgLpsgM=";
+      };
+      tags = (old.tags or []) ++ [ "sqlite" ];
+    });
   };
 
   # pkgs.unstable.* 与 pkgs.kkkykin.*（../nur-packages）

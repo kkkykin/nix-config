@@ -31,7 +31,7 @@
     ../../modules/services/jellyfin.nix
     ../../modules/services/komga.nix
     ../../modules/services/libvirt.nix
-    ../../modules/services/matrix-pylon.nix
+    # ../../modules/services/matrix-pylon.nix
     ../../modules/services/music-sync.nix
     ../../modules/services/openlist.nix
     ../../modules/services/podman.nix

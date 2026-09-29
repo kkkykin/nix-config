@@ -39,7 +39,7 @@ RUN rm -rf /var/lib/apt/lists/*
 
 RUN cat >> /etc/profile <<'EOF'
 if [ -f /data/.hermes/.env ]; then
-    PATH="$(sed -n 's/^CONTAINER_PATH=//p' /data/.hermes/.env)"
+    PATH="$PATH:$(sed -n 's/^CONTAINER_PATH=//p' /data/.hermes/.env)"
     export PATH
 fi
 EOF
