@@ -18,6 +18,12 @@ in {
         registration = {
           enabled = false;
         };
+        # nick-reservation = {
+        #   enabled = true;
+        #   allow-custom-enforcement = true;
+        #   method = "strict";
+        #   force-nick-equals-account = true;
+        # };
         require-sasl = {
           enabled = true;
           exempted = [

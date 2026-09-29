@@ -21,6 +21,7 @@
     ../../modules/services/gitolite.nix
     # ../../modules/services/matrix-continuwuity.nix
     ../../modules/services/ergochat.nix
+    ../../modules/services/matterbridge.nix
     ../../modules/services/mediamtx.nix
     ../../modules/services/sing-box.nix
   ];
