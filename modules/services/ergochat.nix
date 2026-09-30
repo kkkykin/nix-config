@@ -15,20 +15,18 @@ in {
     settings = {
       allow-environment-overrides = true;
       accounts = {
+        login-via-pass-command = true;
         registration = {
           enabled = false;
         };
-        # nick-reservation = {
-        #   enabled = true;
-        #   allow-custom-enforcement = true;
-        #   method = "strict";
-        #   force-nick-equals-account = true;
-        # };
+        nick-reservation = {
+          enabled = true;
+          allow-custom-enforcement = false;
+          method = "strict";
+          force-nick-equals-account = true;
+        };
         require-sasl = {
           enabled = true;
-          exempted = [
-            "localhost"
-          ];
         };
       };
       oper-classes = {
@@ -43,7 +41,6 @@ in {
             "sajoin"
             "samode"
             "snomasks"
-            "roleplay"
           ];
         };
         server-admin = {
@@ -74,6 +71,8 @@ in {
         };
       };
       history = {
+        autoreplay-on-join = 100;
+        chathistory-maxmessages = 1000;
         retention = {
           allow-individual-delete = true;
           enable-account-indexing = true;
@@ -85,21 +84,27 @@ in {
           direct-messages = "opt-out";
         };
       };
-      roleplay.enabled = true;
       network = {
         name = "dadada";
       };
       server = {
         name = server-name;
-        casemapping = "ascii";
+        casemapping = "precis";
         check-ident = true;
         lookup-hostnames = true;
+        proxy-allowed-from = [
+          "localhost"
+        ];
         forward-confirm-hostnames = true;
         ip-cloaking = {
           enabled = true;
           netname = server-name;
         };
-        relaymsg.enabled = true;
+        relaymsg = {
+          enabled = true;
+          separators = "/";
+          available-to-chanops = true;
+        };
       };
     };
   };

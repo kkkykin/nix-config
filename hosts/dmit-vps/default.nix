@@ -92,12 +92,10 @@ layer4 {
             tls sni ${irc-domain}
         }
         route @dot {
-            tls {
-                connection_policy {
-                    alpn dot
-                }
+            tls
+            proxy tcp/127.0.0.1:6667 {
+                proxy_protocol v1
             }
-            proxy tcp/127.0.0.1:6667
         }
     }
 }
