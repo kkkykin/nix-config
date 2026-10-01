@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+files=()
+while IFS= read -r -d '' file; do
+    files+=("$file")
+done < <(git diff --cached --name-only --diff-filter=ACM -z -- '*.nix')
+
+if [ ${#files[@]} -eq 0 ]; then
+    exit 0
+fi
+
+nix --extra-experimental-features "nix-command flakes" --accept-flake-config fmt -- "${files[@]}"
+
+git add "${files[@]}"
+
+echo "[pre-commit] Formatting completed and staged."
