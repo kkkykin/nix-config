@@ -29,6 +29,20 @@ in {
           enabled = true;
         };
       };
+      fakelag = {
+        enabled = true;
+        window = "1s";
+        burst-limit = 5;
+        messages-per-window = 2;
+        cooldown = "2s";
+        command-budgets = {
+          CHATHISTORY = 16;
+          MARKREAD = 16;
+          MONITOR = 1;
+          WHO = 4;
+          WEBPUSH = 1;
+        };
+      };
       oper-classes = {
         chat-moderator = {
           title = "Chat Moderator";

@@ -56,6 +56,7 @@ in {
       NickServNick="mb-bot"
       NickServPassword="${config.sops.placeholder.mb_icu_pass}"
       UseSASL=true
+      MessageDelay=600
       IgnoreMessages="^/"
       UseRelayMsg = true
       RemoteNickFormat = "{NICK}-{USERID}/{PROTOCOL}"
