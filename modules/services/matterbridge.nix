@@ -41,6 +41,15 @@ in {
       QuoteLengthLimit=46 # Truncuate long quotes to prevent spammy bridged messages
       IgnoreMessages="^/"
 
+      [discord.mydiscord]
+      Token="${config.sops.placeholder.mb_dc_token}"
+      Server="${config.sops.placeholder.mb_dc_server}"
+      AllowMention=["everyone", "roles", "users"]
+      ShowEmbeds=true
+      EmbedFormat="\n# {TITLE} ({URL}) by {AUTHOR} ({AUTHORURL})\n{DESCRIPTION}\n{TIME}\n{FOOTER}"
+      QuoteLengthLimit=46
+      IgnoreMessages="^/"
+
       [irc.icu]
       Server="127.0.0.1:6667"
       Nick="mb-bot"
@@ -77,6 +86,9 @@ in {
       account="telegram.mytelegram"
       channel="-5321965798"
 
+      [[gateway.inout]]
+      account="discord.mydiscord"
+      channel="bridge-test"
 
       [[gateway]]
       name="brmk"
