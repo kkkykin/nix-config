@@ -61,6 +61,9 @@ in {
         admin = {
           class = "server-admin";
         };
+        daily = {
+          class = "chat-moderator";
+        };
       };
       datastore = {
         sqlite = {

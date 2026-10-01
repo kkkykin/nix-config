@@ -108,11 +108,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1790777921,
-        "narHash": "sha256-u4lq7bOHBjzmIkvOeQLk5YdlIBB8V7cCV79Gg5+Uzc4=",
+        "lastModified": 1790823772,
+        "narHash": "sha256-pKV1cxInnYW08qzwew81YQrsEbLFLhO1pgzFHCRKiHM=",
         "owner": "kkkykin",
         "repo": "nur-packages",
-        "rev": "518da82d3689fbbcac1c21e95d338b29b168d3b0",
+        "rev": "75a938e58bdfb9c94017f1a7e55a6b0f0b8b536f",
         "type": "github"
       },
       "original": {
@@ -132,11 +132,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790790387,
-        "narHash": "sha256-fnyDvOfTrZQ6Zs34SSm/VwmJcTU3q0u95ULD6+bAEf4=",
+        "lastModified": 1790836403,
+        "narHash": "sha256-kznW+e2FfwgCEMquqPVZeS8n7BT7tCAWUxaUQF9JeGI=",
         "ref": "refs/heads/main",
-        "rev": "59aa3f903f9b9c7ed822fa8bb1941cd8ee6412cd",
-        "revCount": 82,
+        "rev": "9775beaf101c206aa856098d7442bac1df818a2c",
+        "revCount": 84,
         "type": "git",
         "url": "file:///home/kkky/nix-secrets"
       },
@@ -219,11 +219,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1790600678,
-        "narHash": "sha256-6k3n7X2UsZ6tAlWTz99RimiZab+17tMUrw9sRUcELiA=",
+        "lastModified": 1790652569,
+        "narHash": "sha256-641r7xrlSOHYoktL9/aArPIYNgZJ9eM5URzSEOtPJDY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "f45c6f04c2f013f004bf94e284e95d72898d9393",
+        "rev": "b6c8664de9b6cc07fe5666a29f91884ba81197c4",
         "type": "github"
       },
       "original": {

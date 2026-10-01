@@ -66,7 +66,8 @@ layer4 {
             subroute {
                 @mtx tls sni mtx.${secrets.domain}
                 @mtx-hls tls sni mtx-hls.${secrets.domain}
-                route @mtx @mtx-hls {
+                @mb tls sni mb.${secrets.domain}
+                route @mtx @mtx-hls @mb {
                   proxy 127.0.0.1:7777
                 }
             }

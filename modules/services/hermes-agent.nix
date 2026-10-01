@@ -344,6 +344,10 @@ in {
       };
 
       platforms = {
+        email = {
+          enabled = true;
+          gateway_restart_notification = false;
+        };
         irc = {
           enabled = true;
           extra = {
