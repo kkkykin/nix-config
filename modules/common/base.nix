@@ -59,7 +59,7 @@
   nix.gc = {
     automatic = lib.mkDefault true;
     dates = lib.mkDefault "weekly";
-    options = lib.mkDefault "--delete-older-than 30d";
+    options = lib.mkDefault "--delete-older-than 7d";
   };
 
   # Set your time zone.

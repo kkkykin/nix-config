@@ -44,6 +44,8 @@
 
   my.lanDomain = "asus.local";
 
+  nix.gc.options = "--delete-older-than 30d";
+
   hardware = {
     asus.battery.chargeUpto = 60;
     intelgpu.vaapiDriver = "intel-media-driver";
