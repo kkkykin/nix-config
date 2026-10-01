@@ -9,7 +9,6 @@
 in {
   imports = [./postgresql.nix];
 
-
   services.freshrss = {
     enable = true;
     package = pkgs.freshrss;

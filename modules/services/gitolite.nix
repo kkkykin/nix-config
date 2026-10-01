@@ -3,7 +3,8 @@
   pkgs,
   ...
 }: let
-  postReceiveHook = pkgs.writeShellScriptBin "post-receive"
+  postReceiveHook =
+    pkgs.writeShellScriptBin "post-receive"
     (builtins.readFile ./gitolite/post-receive);
 in {
   services.gitolite = {

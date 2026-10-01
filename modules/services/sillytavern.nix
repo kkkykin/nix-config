@@ -17,18 +17,18 @@ in {
     };
   };
   my.webApps.sillytavern.caddyConfig = ''
-@openai {
-  method POST
-  path /api/openai/generate-image
-  path /api/openai/generate-video
-}
+    @openai {
+      method POST
+      path /api/openai/generate-image
+      path /api/openai/generate-video
+    }
 
-json_transform @openai {
-  jq `.reverse_proxy = "http://127.0.0.1:4000/v1"`
-}
+    json_transform @openai {
+      jq `.reverse_proxy = "http://127.0.0.1:4000/v1"`
+    }
 
-reverse_proxy ${url} {
-  flush_interval -1
-}
-'';
+    reverse_proxy ${url} {
+      flush_interval -1
+    }
+  '';
 }

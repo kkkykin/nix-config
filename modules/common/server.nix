@@ -1,7 +1,4 @@
-{
-  secrets,
-  ...
-}: {
+{secrets, ...}: {
   networking.nftables.enable = true;
 
   services = {
@@ -15,5 +12,4 @@
   users.users.root.openssh.authorizedKeys.keys = [
     secrets.openssh.defaultKey
   ];
-
 }

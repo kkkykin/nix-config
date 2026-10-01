@@ -16,11 +16,11 @@ in {
 
   services.caddy.virtualHosts."*.${secrets.domain}".extraConfig = ''
     @mb-media host mb.${secrets.domain}
-  
+
     basic_auth @mb-media {
       matterbridge {$MATTERBRIDGE_MEDIA_PASS}
     }
-  
+
     root @mb-media ${mediaDir}
     file_server @mb-media
   '';

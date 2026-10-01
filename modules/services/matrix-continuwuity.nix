@@ -1,11 +1,10 @@
 {
-  lib
-  , pkgs
-  , config
-  , secrets
-  , ... }:
-
-let
+  lib,
+  pkgs,
+  config,
+  secrets,
+  ...
+}: let
   server_name = "conty.${secrets.domain}";
 in {
   users.users.caddy.extraGroups = [config.services.matrix-continuwuity.group];

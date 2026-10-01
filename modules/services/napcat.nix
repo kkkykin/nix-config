@@ -5,7 +5,6 @@
   pkgs,
   ...
 }: {
-
   services.napcat = {
     enable = true;
     backend = "podman";

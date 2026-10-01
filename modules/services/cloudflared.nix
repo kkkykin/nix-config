@@ -2,13 +2,13 @@
   config,
   secrets,
   ...
-}:let
+}: let
   cloudflared-service = {
     environment = {
       "TUNNEL_TRANSPORT_PROTOCOL" = "http2";
     };
   };
-in  {
+in {
   systemd = {
     services = {
       "cloudflared-tunnel-${secrets.cloudflared.uuid}" = cloudflared-service;

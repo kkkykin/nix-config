@@ -42,20 +42,18 @@ in {
   };
 
   config = {
-    services.caddy.virtualHosts =
-      mapAttrs' (name: app:
-        nameValuePair "http://${lanHost name}" {
-          inherit (app) serverAliases;
-          extraConfig = app.caddyConfig;
-        })
-      (filterAttrs (_: app: app.caddyConfig != null) cfg.webApps);
+    services.caddy.virtualHosts = mapAttrs' (name: app:
+      nameValuePair "http://${lanHost name}" {
+        inherit (app) serverAliases;
+        extraConfig = app.caddyConfig;
+      })
+    (filterAttrs (_: app: app.caddyConfig != null) cfg.webApps);
 
-    services.cloudflared.tunnels.${secrets.cloudflared.uuid}.ingress =
-      mapAttrs' (name: _:
-        nameValuePair "${name}.${secrets.cloudflared.domain}" {
-          service = "http://127.0.0.1";
-          originRequest.httpHostHeader = lanHost name;
-        })
-      (filterAttrs (_: app: app.tunnel) cfg.webApps);
+    services.cloudflared.tunnels.${secrets.cloudflared.uuid}.ingress = mapAttrs' (name: _:
+      nameValuePair "${name}.${secrets.cloudflared.domain}" {
+        service = "http://127.0.0.1";
+        originRequest.httpHostHeader = lanHost name;
+      })
+    (filterAttrs (_: app: app.tunnel) cfg.webApps);
   };
 }

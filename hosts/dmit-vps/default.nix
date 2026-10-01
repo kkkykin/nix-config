@@ -34,80 +34,80 @@
   in {
     caddy = {
       globalConfig = ''
-acme_dns cloudflare {env.CF_API_TOKEN}
-https_port 7777
-layer4 {
-    tcp/:12628 {
-        @cn remote_ip_list ${srs-dir}/geoip-cn.cidr.txt
-        route @cn {
-            proxy {
-                upstream {
-                    dial tcp/127.0.0.1:2628
-                    # max_connections 5
+        acme_dns cloudflare {env.CF_API_TOKEN}
+        https_port 7777
+        layer4 {
+            tcp/:12628 {
+                @cn remote_ip_list ${srs-dir}/geoip-cn.cidr.txt
+                route @cn {
+                    proxy {
+                        upstream {
+                            dial tcp/127.0.0.1:2628
+                            # max_connections 5
+                        }
+                    }
                 }
             }
-        }
-    }
-    tcp/:443 {
-        @conty tls sni conty.${secrets.domain}
-        route @conty {
-            subroute {
-                @cf remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
-                @cone remote_ip ${lib.strings.concatStringsSep " " secrets.ips.cone}
-                @dmit remote_ip ${lib.strings.concatStringsSep " " secrets.ips.dmit}
-                route @cf @cone @dmit {
-                    proxy 127.0.0.1:7777
+            tcp/:443 {
+                @conty tls sni conty.${secrets.domain}
+                route @conty {
+                    subroute {
+                        @cf remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
+                        @cone remote_ip ${lib.strings.concatStringsSep " " secrets.ips.cone}
+                        @dmit remote_ip ${lib.strings.concatStringsSep " " secrets.ips.dmit}
+                        route @cf @cone @dmit {
+                            proxy 127.0.0.1:7777
+                        }
+                    }
                 }
-            }
-        }
 
-        @cf remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
-        route @cf {
-            subroute {
-                @mtx tls sni mtx.${secrets.domain}
-                @mtx-hls tls sni mtx-hls.${secrets.domain}
-                @mb tls sni mb.${secrets.domain}
-                route @mtx @mtx-hls @mb {
-                  proxy 127.0.0.1:7777
+                @cf remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
+                route @cf {
+                    subroute {
+                        @mtx tls sni mtx.${secrets.domain}
+                        @mtx-hls tls sni mtx-hls.${secrets.domain}
+                        @mb tls sni mb.${secrets.domain}
+                        route @mtx @mtx-hls @mb {
+                          proxy 127.0.0.1:7777
+                        }
+                    }
+                }
+            }
+            tcp/:853 {
+                @dot {
+                    remote_ip_list ${srs-dir}/geoip-cn.cidr.txt
+                    tls sni ${dot-domain}
+                }
+                route @dot {
+                    tls {
+                        connection_policy {
+                            alpn dot
+                        }
+                    }
+                    proxy tcp/127.0.0.1:53
+                }
+            }
+            tcp/:6697 {
+                @dot {
+                    remote_ip_list ${srs-dir}/geoip-cn.cidr.txt
+                    tls sni ${irc-domain}
+                }
+                route @dot {
+                    tls
+                    proxy tcp/127.0.0.1:6667 {
+                        proxy_protocol v1
+                    }
                 }
             }
         }
-    }
-    tcp/:853 {
-        @dot {
-            remote_ip_list ${srs-dir}/geoip-cn.cidr.txt
-            tls sni ${dot-domain}
-        }
-        route @dot {
-            tls {
-                connection_policy {
-                    alpn dot
-                }
-            }
-            proxy tcp/127.0.0.1:53
-        }
-    }
-    tcp/:6697 {
-        @dot {
-            remote_ip_list ${srs-dir}/geoip-cn.cidr.txt
-            tls sni ${irc-domain}
-        }
-        route @dot {
-            tls
-            proxy tcp/127.0.0.1:6667 {
-                proxy_protocol v1
-            }
-        }
-    }
-}
       '';
       virtualHosts = {
         "*.${secrets.domain}" = {
           extraConfig = ''
-@mtx-hls host mtx-hls.${secrets.domain}
-reverse_proxy @mtx-hls 127.0.0.1:8888
-@mtx host mtx.${secrets.domain}
-reverse_proxy @mtx 127.0.0.1:8889
+            @mtx-hls host mtx-hls.${secrets.domain}
+            reverse_proxy @mtx-hls 127.0.0.1:8888
+            @mtx host mtx.${secrets.domain}
+            reverse_proxy @mtx 127.0.0.1:8889
           '';
         };
       };
@@ -132,12 +132,16 @@ reverse_proxy @mtx 127.0.0.1:8889
 
   ############### Add by reinstall.sh ###############
   boot.loader.grub.device = "/dev/vda";
-  swapDevices = [{ device = "/swapfile"; size = 1076; }];
-  boot.kernelParams = [ "console=ttyS0,115200n8" "console=tty0" ];
+  swapDevices = [
+    {
+      device = "/swapfile";
+      size = 1076;
+    }
+  ];
+  boot.kernelParams = ["console=ttyS0,115200n8" "console=tty0"];
   networking = secrets.networking;
   systemd.network = secrets.network;
   ###################################################
-
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

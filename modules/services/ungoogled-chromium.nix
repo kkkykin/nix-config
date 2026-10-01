@@ -3,13 +3,10 @@
   pkgs,
   lib,
   ...
-}:
-
-let
+}: let
   ungoogledChromiumUser = "ungoogled-chromium";
   stateDir = "/var/lib/ungoogled-chromium";
-in
-{
+in {
   users.groups.${ungoogledChromiumUser} = {};
 
   users.users.${ungoogledChromiumUser} = {
@@ -27,7 +24,7 @@ in
   systemd.services.ungoogled-chromium = {
     description = "Ungoogled Chromium inside Xpra";
 
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = ["multi-user.target"];
     after = [
       "network.target"
     ];

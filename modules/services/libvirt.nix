@@ -21,9 +21,9 @@
   };
 
   # https://github.com/NixOS/nixpkgs/issues/263359#issuecomment-1987267279
-  networking.firewall.interfaces."virbr*".allowedUDPPorts = [ 53 67 ];
+  networking.firewall.interfaces."virbr*".allowedUDPPorts = [53 67];
 
   users.users.${username} = {
-    extraGroups = [ "libvirtd" ];
+    extraGroups = ["libvirtd"];
   };
 }

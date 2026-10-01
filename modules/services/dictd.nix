@@ -1,8 +1,9 @@
-{ lib, pkgs, ... }:
-
-let
-  makeDictdDB =
-    src: name: subdir: locale:
+{
+  lib,
+  pkgs,
+  ...
+}: let
+  makeDictdDB = src: name: subdir: locale:
     pkgs.stdenv.mkDerivation {
       name = "dictd-db-${name}";
       inherit src;
@@ -29,7 +30,8 @@ let
       };
     };
 
-  eng2zho = makeDictdDB
+  eng2zho =
+    makeDictdDB
     (pkgs.fetchurl {
       url = "https://download.freedict.org/dictionaries/eng-zho/2025.11.23/freedict-eng-zho-2025.11.23.dictd.tar.xz";
       sha256 = "sha256-uLYsQhFQP7dv/dS8WGIqsQL7z6SfJMnBupTtbRTt4zA=";
@@ -37,15 +39,15 @@ let
     "eng-zho"
     "eng-zho"
     "en_US";
-in
-{
+in {
   services.dictd = {
     enable = true;
 
-    DBs =
-      with pkgs.dictdDBs; [
+    DBs = with pkgs.dictdDBs;
+      [
         eng2zho
-      ] ++ [
+      ]
+      ++ [
         jpn2eng
         wordnet
         eng2jpn

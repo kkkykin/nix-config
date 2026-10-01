@@ -6,8 +6,7 @@
   ...
 }: let
   conf-dir = "/etc/sing-box/";
-in{
-
+in {
   systemd.tmpfiles.rules = [
     "d ${conf-dir} 0770 ${username} sing-box -"
   ];

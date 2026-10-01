@@ -9,7 +9,6 @@
 in {
   imports = [./postgresql.nix];
 
-
   services.romm = {
     enable = true;
 
@@ -27,7 +26,7 @@ in {
     # };
 
     hostName = "romm.${secrets.domain}";
-    
+
     database = {
       driver = "postgresql";
       host = "host.containers.internal";

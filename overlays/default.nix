@@ -16,7 +16,7 @@
         rev = "v${version}";
         sha256 = "sha256-yzGLOpECalSOv1zBpVkyDlHGaHSsQNsAoNa2jgLpsgM=";
       };
-      tags = (old.tags or []) ++ [ "i18n" "sqlite" ];
+      tags = (old.tags or []) ++ ["i18n" "sqlite"];
     });
   };
 

@@ -10,9 +10,9 @@ in {
   services.caddy.virtualHosts = {
     ":80" = {
       extraConfig = ''
-reverse_proxy /opds/v1.2/* ${backend}
-reverse_proxy /opds/v2/* ${backend}
-'';
+        reverse_proxy /opds/v1.2/* ${backend}
+        reverse_proxy /opds/v2/* ${backend}
+      '';
     };
   };
   services.komga = {

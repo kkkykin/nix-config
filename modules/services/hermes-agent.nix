@@ -6,8 +6,7 @@
   lib,
   inputs,
   ...
-}:
-let
+}: let
   virt-win-ip = secrets.hermes.virt-win-ip;
   llm-gateway = "cpa.opencode.ai";
   extra-pkgs = [
@@ -35,15 +34,19 @@ let
 in {
   environment.systemPackages = extra-pkgs;
 
-  security.sudo.extraRules = [{
-    users = [ username ];
-    commands = [{
-      command = "/run/current-system/sw/bin/podman";
-      options = [ "NOPASSWD" ];
-    }];
-  }];
+  security.sudo.extraRules = [
+    {
+      users = [username];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/podman";
+          options = ["NOPASSWD"];
+        }
+      ];
+    }
+  ];
 
-  users.users.hermes.extraGroups = [ config.users.users.aria2.group ];
+  users.users.hermes.extraGroups = [config.users.users.aria2.group];
 
   systemd.services.hermes-agent.after = [
     "sing-box.service"
@@ -60,9 +63,9 @@ in {
       "firecrawl"
       "voice"
     ];
-    environmentFiles = [ config.sops.secrets."hermes-env".path ];
+    environmentFiles = [config.sops.secrets."hermes-env".path];
     environment = {
-      CONTAINER_PATH = extra-path;  # for container shell
+      CONTAINER_PATH = extra-path; # for container shell
     };
     addToSystemPackages = true;
 
@@ -70,7 +73,7 @@ in {
       enable = true;
       backend = "podman";
       image = "6273e85487dfd8b31836018e0fec19aaf2deb56d6f76b53c1653068d35203e28";
-      hostUsers = [ username ];
+      hostUsers = [username];
 
       extraVolumes = [
         "${config.services.aria2.settings.dir}:${config.services.aria2.settings.dir}:rw"
@@ -78,13 +81,13 @@ in {
 
       extraOptions = [
         "--init"
-        "-e" "TZ=Asia/Singapore"
+        "-e"
+        "TZ=Asia/Singapore"
         "--add-host=${llm-gateway}:host-gateway"
       ];
     };
 
     settings = {
-
       agent = {
         disabled_toolsets = [
           "bfl"

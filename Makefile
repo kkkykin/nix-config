@@ -91,6 +91,17 @@ endif
 gc:
 	$(TARGET_CMD) nix-collect-garbage -d
 
+# 代码格式化
+.PHONY: fmt
+fmt:
+	nix --extra-experimental-features "nix-command flakes" --accept-flake-config fmt -- .
+
+# 初始化 Git hooks
+.PHONY: init-hooks
+init-hooks:
+	git config core.hooksPath .githooks
+	chmod +x .githooks/pre-commit
+
 # 帮助
 .PHONY: help
 help:
@@ -104,6 +115,8 @@ help:
 	@echo "  dry-run  仅评估，不构建"
 	@echo "  list	 列出 generations"
 	@echo "  gc	   清理旧 generations 和 store"
+	@echo "  fmt      使用 Alejandra 格式化全部 Nix 文件"
+	@echo "  init-hooks 启用仓库自带的 Git pre-commit hook"
 	@echo
 	@echo "环境变量:"
 	@echo "  PROXY_OFF=1  禁用默认的 SOCKS5 代理"
