@@ -34,7 +34,10 @@
       inputs.sops-nix.follows = "sops-nix";
     };
     # 自定义包与服务模块，本地开发时由 Makefile 指向 ../nur-packages
-    kkkykin.url = "github:kkkykin/nur-packages/master";
+    kkkykin = {
+      url = "github:kkkykin/nur-packages/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {

@@ -9,15 +9,18 @@
 }: let
   virt-win-ip = secrets.hermes.virt-win-ip;
   llm-gateway = "cpa.opencode.ai";
+  system = pkgs.stdenv.hostPlatform.system;
   extra-pkgs = [
     pkgs._7zz-rar
-    pkgs.jellyfin-ffmpeg
+    inputs.hermes-agent.inputs.nixpkgs.legacyPackages.${system}.ffmpeg
+    inputs.hermes-agent.inputs.nixpkgs.legacyPackages.${system}.ripgrep
     pkgs.android-tools
     pkgs.fdroidserver
     pkgs.sdkmanager
     pkgs.jdk
     pkgs.emacs-nox
     pkgs.rclone
+    pkgs.ergochat
     pkgs.nix
     pkgs.git
     pkgs.less
@@ -27,7 +30,6 @@
     pkgs.czkawka
     pkgs.lua
     pkgs.stylua
-    pkgs.ripgrep
     pkgs.tmux
   ];
   extra-path = lib.makeBinPath extra-pkgs;
@@ -57,7 +59,7 @@ in {
     # 即 minimal.override { extraDependencyGroups = [...]; }，由模块来 override。
     # 若直接写 package = minimal.override {...}，以后设置 extraPythonPackages 时模块会再
     # override 一次，把 groups 重置为 []
-    package = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.minimal;
+    package = inputs.hermes-agent.packages.${system}.minimal;
     extraDependencyGroups = [
       "messaging"
       "firecrawl"
