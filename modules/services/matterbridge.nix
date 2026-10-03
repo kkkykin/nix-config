@@ -32,7 +32,7 @@ in {
       MediaDownloadPath = "${mediaDir}"
       MediaServerDownload = "https://mb.${secrets.domain}"
       MediaDownloadSize=30000000
-      RemoteNickFormat = "{NICK}/{PROTOCOL}: "
+      RemoteNickFormat = ""
 
       [telegram.mytelegram]
       Token="${config.sops.placeholder.mb_tg_token}"

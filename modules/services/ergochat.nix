@@ -6,6 +6,7 @@
   ...
 }: let
   server-name = "icu.${secrets.domain}";
+  network = "dadada";
 in {
   systemd.services.ergochat.serviceConfig = {
     EnvironmentFile = config.sops.secrets.ergochat.path;
@@ -102,11 +103,11 @@ in {
         };
       };
       network = {
-        name = "dadada";
+        name = network;
       };
       server = {
         name = server-name;
-        casemapping = "precis";
+        casemapping = "precis"; # permissive not support chinese in client
         check-ident = true;
         lookup-hostnames = true;
         proxy-allowed-from = [
@@ -115,7 +116,7 @@ in {
         forward-confirm-hostnames = true;
         ip-cloaking = {
           enabled = true;
-          netname = server-name;
+          netname = "${network}.chat";
         };
         relaymsg = {
           enabled = true;
