@@ -26,6 +26,7 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
     hermes-agent.url = "github:NousResearch/hermes-agent";
     # 真实仓库通过 Makefile 的 --override-input 指向 ../nix-secrets
     nix-secrets = {
@@ -36,7 +37,7 @@
     # 自定义包与服务模块，本地开发时由 Makefile 指向 ../nur-packages
     kkkykin = {
       url = "github:kkkykin/nur-packages/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 

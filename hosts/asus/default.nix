@@ -90,6 +90,10 @@
 
   environment.systemPackages = with pkgs; [
     calibre
+    
+    # telega
+    unstable.tdlib
+    pkg-config
   ];
 
   fonts = {

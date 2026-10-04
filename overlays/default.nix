@@ -18,6 +18,8 @@
       };
       tags = (old.tags or []) ++ ["i18n" "sqlite"];
     });
+
+    emacs-git-nox = inputs.emacs-overlay.packages.${final.stdenv.hostPlatform.system}.emacs-git-nox;
   };
 
   # pkgs.unstable.* 与 pkgs.kkkykin.*（../nur-packages）
