@@ -35,7 +35,6 @@
     ../../modules/services/music-sync.nix
     ../../modules/services/openlist.nix
     ../../modules/services/podman.nix
-    ../../modules/services/romm.nix
     ../../modules/services/sillytavern.nix
     ../../modules/services/sing-box.nix
     ../../modules/services/tcpdump.nix
