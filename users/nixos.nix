@@ -4,14 +4,11 @@
   users.users.nixos.packages = with pkgs; [
     torsocks
     ripgrep
-    codex-acp
     nodejs
     bun
 
     boohu
-    cataclysmDDA.stable.curses
     (narsil.override {enableSdl2 = false;})
-    tome2
   ];
 
   environment.shellAliases.tome2 = "tome-gcu";

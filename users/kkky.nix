@@ -13,6 +13,7 @@
     hashedPasswordFile = config.sops.secrets.kkky_pass.path;
     packages = with pkgs; [
       czkawka
+      emacs-git-nox
       kkkykin.montecarlo-ip-searcher
     ];
   };

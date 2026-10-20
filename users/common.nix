@@ -14,7 +14,6 @@
     python3
     uv
 
-    emacs-git-nox
     aspell
     aspellDicts.en
     tree-sitter
