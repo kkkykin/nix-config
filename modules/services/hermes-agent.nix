@@ -308,7 +308,6 @@ in {
       };
 
       memory = {
-        provider = "holographic";
         write_approval = true;
       };
 
@@ -320,10 +319,6 @@ in {
         redact_secrets = true;
         tirith_enabled = true;
         tirith_fail_open = false;
-      };
-
-      plugins.hermes-memory-store = {
-        auto_extract = true;
       };
 
       custom_providers = [

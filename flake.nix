@@ -4,7 +4,9 @@
     extra-substituters = [
       "https://nix-community.cachix.org"
       "https://nur--m.cachix.org"
-      "https://attic.xuyh0120.win/lantian"
+
+      # https://github.com/xddxdd/nix-cachyos-kernel/issues/110
+      # "https://attic.xuyh0120.win/lantian"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
