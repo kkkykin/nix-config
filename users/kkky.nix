@@ -13,7 +13,6 @@
     hashedPasswordFile = config.sops.secrets.kkky_pass.path;
     packages = with pkgs; [
       czkawka
-      sing-box
       kkkykin.montecarlo-ip-searcher
     ];
   };

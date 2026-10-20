@@ -18,7 +18,7 @@
     pkgs.fdroidserver
     pkgs.sdkmanager
     pkgs.jdk
-    pkgs.emacs-nox
+    pkgs.emacs-git-nox
     pkgs.rclone
     pkgs.ergochat
     pkgs.nix
@@ -28,6 +28,7 @@
     pkgs.gitleaks
     pkgs.neovim
     pkgs.czkawka
+    pkgs.tintin
     pkgs.lua
     pkgs.stylua
     pkgs.tmux
