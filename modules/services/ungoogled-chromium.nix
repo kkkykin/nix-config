@@ -34,6 +34,10 @@ in {
 
       User = ungoogledChromiumUser;
       Group = ungoogledChromiumUser;
+      SupplementaryGroups = [
+        "render"
+        "video"
+      ];
 
       EnvironmentFile =
         config.sops.secrets."ungoogled-chromium".path;
@@ -57,7 +61,9 @@ in {
           --start-child="${pkgs.ungoogled-chromium}/bin/chromium \
             --user-data-dir=${stateDir}/profile-0 \
             --no-first-run \
+            --remote-debugging-address=127.0.0.1 \
             --remote-debugging-port=9222 \
+            --ignore-gpu-blocklist \
             --no-default-browser-check"
       '';
 
