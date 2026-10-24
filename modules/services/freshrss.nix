@@ -29,7 +29,7 @@ in {
   };
 
   # 虚拟主机由 services.freshrss 生成，这里只开隧道
-  my.webApps.freshrss = {};
+  # my.webApps.freshrss = {};
 
   services.postgresql = {
     ensureDatabases = ["freshrss"];
