@@ -5,15 +5,6 @@
   pkgs,
   ...
 }: let
-  llm-filter = ''
-    llm_privacy_filter {
-    	api auto
-    	gitleaks_toml https://raw.githubusercontent.com/gitleaks/gitleaks/refs/heads/master/config/gitleaks.toml
-    	gitleaks_toml_refresh_interval 1h
-    	max_body_size 8388608
-    	fail_open false
-    }
-  '';
   reverse-proxy-cpa = ''
     request_header @claude x-opencode-session {header.X-Claude-Code-Session-Id}
     request_header @codex x-opencode-session {header.session-id}
@@ -61,7 +52,6 @@ in {
 
       handle @proxy {
           route /v1/* {
-              ${llm-filter}
               import trans-forward
           }
           handle_path /raw/* {
