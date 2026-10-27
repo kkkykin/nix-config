@@ -71,6 +71,12 @@
                         import remove-forward-headers
                     }
                 }
+                handle /wayward/* {
+                    reverse_proxy {
+                        to https://sintention.com
+                        import remove-forward-headers
+                    }
+                }
                 file_server /games/* browse {
                     root /var/lib/caddy
                 }
