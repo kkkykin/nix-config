@@ -75,7 +75,7 @@ in {
     container = {
       enable = true;
       backend = "podman";
-      image = "6273e85487dfd8b31836018e0fec19aaf2deb56d6f76b53c1653068d35203e28";
+      image = "46772a97a0972fe46298d9670337e73821a3449ca4632a216ae9b8ee4eaf603e";
       hostUsers = [username];
 
       extraVolumes = [

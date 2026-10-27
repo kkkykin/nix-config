@@ -15,7 +15,7 @@ in {
     };
   };
   services.cloudflared = {
-    enable = true;
+    enable = false;
     tunnels = {
       "${secrets.cloudflared.uuid}" = {
         edgeIPVersion = "auto";
