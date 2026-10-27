@@ -17,7 +17,7 @@
     inputs.kkkykin.nixosModules.default
 
     ../../modules/services/caddy.nix
-    ../../modules/services/dictd.nix
+    ../../modules/services/dico.nix
     ../../modules/services/gitolite.nix
     # ../../modules/services/matrix-continuwuity.nix
     ../../modules/services/ergochat.nix
