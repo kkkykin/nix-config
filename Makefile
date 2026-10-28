@@ -38,8 +38,10 @@ endif
 
 # 如果 ../nur-packages 存在且未设置 NUR_REMOTE=1，使用本地的包与模块
 NUR_DIR := $(realpath $(FLAKE_DIR)/../nur-packages)
-ifneq ($(and $(wildcard $(NUR_DIR)),$(filter-out 1,$(NUR_REMOTE))),)
+ifneq ($(wildcard $(NUR_DIR)),)
+ifneq ($(NUR_REMOTE),1)
   OVERRIDE_INPUTS += --override-input kkkykin path:$(NUR_DIR)
+endif
 endif
 
 # -------------------------------
