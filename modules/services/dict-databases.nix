@@ -38,4 +38,13 @@ in [
     inputFile = "stardict-XiaoXueTang-cj-2.4.2/XiaoXueTang-cj.ifo";
     languages = [];
   })
+  (makeDictdDB {
+    src = pkgs.fetchurl {
+      url = "https://github.com/stephenmk/stephenmk.github.io/releases/download/2026.10.03.0/jitendex-yomitan.zip";
+      hash = "sha256-6RTHZZYiDf/G7gwGnNBZkvA62ymIwSw86+gXo6wnE1Y=";
+    };
+    dbName = "jitendex-jpn-eng";
+    inputFormat = "Yomichan";
+    meta.license = pkgs.lib.licenses.cc-by-sa-40;
+  })
 ]

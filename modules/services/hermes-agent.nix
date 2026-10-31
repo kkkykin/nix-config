@@ -23,6 +23,7 @@
     pkgs.ergochat
     pkgs.nix
     pkgs.git
+    pkgs.openssh
     pkgs.less
     pkgs.jq
     pkgs.gitleaks
