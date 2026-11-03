@@ -29,6 +29,9 @@
     pkgs.gitleaks
     pkgs.neovim
     pkgs.czkawka
+    pkgs.mpv
+    pkgs.unstable.sing-box
+    pkgs.shellcheck
     pkgs.tintin
     pkgs.lua
     pkgs.stylua

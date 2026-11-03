@@ -8,7 +8,7 @@
   services.napcat = {
     enable = true;
     backend = "podman";
-    image = "mlikiowa/napcat-docker:v4.18.28";
+    image = "mlikiowa/napcat-docker:v4.18.42";
     publishPorts = true;
     environmentFile = config.sops.secrets.napcat.path;
   };
