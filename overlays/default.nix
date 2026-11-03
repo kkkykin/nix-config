@@ -8,16 +8,7 @@
         ];
     });
 
-    ergochat = prev.ergochat.overrideAttrs (old: rec {
-      version = "2.19.1";
-      src = final.fetchFromGitHub {
-        owner = "ergochat";
-        repo = "ergo";
-        rev = "v${version}";
-        sha256 = "sha256-yzGLOpECalSOv1zBpVkyDlHGaHSsQNsAoNa2jgLpsgM=";
-      };
-      tags = (old.tags or []) ++ ["i18n" "sqlite"];
-    });
+    ergochat = final.unstable.ergochat;
 
     emacs-git-nox = inputs.emacs-overlay.packages.${final.stdenv.hostPlatform.system}.emacs-git-nox;
   };
