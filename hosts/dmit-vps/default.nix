@@ -49,8 +49,8 @@
                 }
             }
             tcp/:443 {
-                @conty tls sni conty.${secrets.domain}
-                route @conty {
+                @mb tls sni mb.${secrets.domain}
+                route @mb {
                     subroute {
                         @cf remote_ip_list ${srs-dir}/geoip-cloudflare.cidr.txt
                         @cone remote_ip ${lib.strings.concatStringsSep " " secrets.ips.cone}
