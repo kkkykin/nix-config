@@ -29,7 +29,8 @@
     pkgs.gitleaks
     pkgs.neovim
     pkgs.czkawka
-    pkgs.mpv
+    pkgs.unstable.mupdf-headless
+    pkgs.unstable.mpv
     pkgs.unstable.sing-box
     pkgs.shellcheck
     pkgs.tintin

@@ -63,6 +63,10 @@ in {
       ForwardChannelTimeout = 86400
       ReverseMention = true
       BotMentionTarget = "${config.sops.placeholder.mb_icu_master}"
+      MediaLinkAccounts = ["${config.sops.placeholder.mb_icu_master}"]
+      MediaLinkToken = "${config.sops.placeholder.mb_icu_media_link_token}"
+      MediaLinkHosts = ${config.sops.placeholder.mb_icu_media_link_hosts}
+      MediaLinkTimeout = 60
 
       [onebot.qq]
       Server = "ws://${config.sops.placeholder.mb_qq_host}:3001/"
