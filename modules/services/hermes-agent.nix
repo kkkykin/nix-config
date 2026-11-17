@@ -29,6 +29,8 @@
     pkgs.gitleaks
     pkgs.neovim
     pkgs.czkawka
+    pkgs.kkkykin.calibre-no-speech
+    pkgs.unstable.koreader
     pkgs.unstable.mupdf-headless
     pkgs.unstable.mpv
     pkgs.unstable.sing-box

@@ -23,13 +23,14 @@
 
     ../../modules/services/aria2.nix
     ../../modules/services/caddy.nix
+    ../../modules/services/calibre-server.nix
     ../../modules/services/cli-proxy-api.nix
     ../../modules/services/cloudflared.nix
     ../../modules/services/fdroid.nix
     ../../modules/services/freshrss.nix
     ../../modules/services/hermes-agent.nix
     ../../modules/services/jellyfin.nix
-    ../../modules/services/komga.nix
+    # ../../modules/services/komga.nix
     ../../modules/services/libvirt.nix
     ../../modules/services/napcat.nix
     ../../modules/services/music-sync.nix
@@ -88,8 +89,8 @@
   };
 
   environment.systemPackages = with pkgs; [
-    calibre
-    
+    # calibre
+
     # telega
     unstable.tdlib
     pkg-config
