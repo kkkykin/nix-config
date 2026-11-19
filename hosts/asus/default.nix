@@ -5,7 +5,9 @@
   inputs,
   secrets,
   ...
-}: {
+}: let
+  HttpProxy = "http://${secrets.LocalProxy.host}:${toString secrets.LocalProxy.port}";
+in {
   imports = [
     ./hardware-configuration.nix
     ../../modules/common/server.nix
@@ -66,9 +68,15 @@
 
   systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.caddy.path;
   services = {
+    rsshubProxy = {
+      enable = true;
+      proxy = HttpProxy;
+      extraBackends = [
+        "https://kayin.zeabur.app"
+      ];
+    };
     caddy = {
       virtualHosts.":80".extraConfig = ''
-        ${builtins.readFile ../../modules/services/caddy/sub/rsshub.Caddyfile}
         handle_path /jellyfin/* {
           reverse_proxy 127.0.0.1:8096
         }
