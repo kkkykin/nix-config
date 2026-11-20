@@ -65,7 +65,7 @@ in {
       BotMentionTarget = "${config.sops.placeholder.mb_icu_master}"
       MediaLinkAccounts = ["${config.sops.placeholder.mb_icu_master}"]
       MediaLinkToken = "${config.sops.placeholder.mb_icu_media_link_token}"
-      MediaLinkHosts = ${config.sops.placeholder.mb_icu_media_link_hosts}
+      MediaLinkHostRegex = '${config.sops.placeholder.mb_icu_media_link_host_regex}'
       MediaLinkTimeout = 60
 
       [onebot.qq]
