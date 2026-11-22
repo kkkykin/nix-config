@@ -2,43 +2,39 @@
   config,
   pkgs,
   lib,
+  username,
   ...
 }: let
+  mountPoint = "/mnt/x7music";
+  sourceDir = "/mnt/mediadata/jellyfin/music";
+  destination = config.fileSystems.${mountPoint};
   syncScript = pkgs.writeShellScript "music-sync.sh" ''
-    set -euo pipefail  # 任何错误立即退出
-
-    MOUNT_POINT="/mnt/x7music/"
-    SOURCE_DIR="/mnt/mediadata/jellyfin/music/"
-    MOUNTED=false
-
-    # 清理函数：确保卸载
-    cleanup() {
-      if [ "$MOUNTED" = true ]; then
-        # 先尝试正常卸载，失败则使用 lazy umount
-        umount "$MOUNT_POINT" 2>/dev/null || umount -l "$MOUNT_POINT"
-      fi
-    }
-    trap cleanup EXIT INT TERM
-
-    # 1. 检查挂载点
-    [ -d "$MOUNT_POINT" ] || exit 1
-
-    # 2. 挂载
-    if ! mountpoint -q "$MOUNT_POINT"; then
-      mount "$MOUNT_POINT"
-      MOUNTED=true
-    fi
-
-    # 3. 检查源目录
-    [ -d "$SOURCE_DIR" ] || exit 1
-    [ -w "$MOUNT_POINT" ] || exit 1
-
-    # 4. 同步
-    rclone sync "$SOURCE_DIR" "$MOUNT_POINT"
-
-    # 5. cleanup 会自动卸载
+    set -euo pipefail
+    mountpoint -q ${lib.escapeShellArg mountPoint}
+    test -d ${lib.escapeShellArg sourceDir}
+    test -w ${lib.escapeShellArg mountPoint}
+    exec rclone sync ${lib.escapeShellArg sourceDir} ${lib.escapeShellArg mountPoint}
   '';
 in {
+  users.groups.music-sync = {};
+  users.users.music-sync = {
+    isSystemUser = true;
+    group = "music-sync";
+  };
+  users.users.${username}.extraGroups = ["music-sync"];
+
+  # libmount resolves the group name at mount time; no fixed GID is needed.
+  fileSystems.${mountPoint}.options = ["gid=music-sync" "fmask=0117" "dmask=0007"];
+  systemd.mounts = [
+    {
+      what = destination.device;
+      where = mountPoint;
+      type = destination.fsType;
+      options = lib.concatStringsSep "," destination.options;
+      unitConfig.StopWhenUnneeded = true;
+    }
+  ];
+
   # 定义定时服务
   systemd.services.music-sync = {
     description = "Sync music to x7music";
@@ -48,14 +44,24 @@ in {
     # 添加必要的命令到 PATH
     path = with pkgs; [util-linux rclone];
 
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      ExecStart = "${syncScript}";
-      TimeoutStartSec = "1h";
-    };
+    unitConfig.RequiresMountsFor = [mountPoint sourceDir];
 
-    after = ["network-online.target" "local-fs.target"];
-    wants = ["network-online.target"];
+    serviceConfig =
+      pkgs.kkkykin.lib.serviceHardening
+      // {
+        Type = "oneshot";
+        User = "music-sync";
+        Group = "music-sync";
+        # Apply read access after the source disk is mounted, including new files.
+        # Only this fixed setup command runs privileged; rclone has no capabilities.
+        ExecStartPre = "+${pkgs.acl}/bin/setfacl -R -m u:music-sync:rX ${sourceDir}";
+        ExecStart = "${syncScript}";
+        ReadOnlyPaths = [sourceDir];
+        ReadWritePaths = [mountPoint];
+        PrivateNetwork = true;
+        TimeoutStartSec = "1h";
+      };
+
+    after = ["local-fs.target"];
   };
 }

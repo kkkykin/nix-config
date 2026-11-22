@@ -126,4 +126,14 @@ in {
     package = pkgs.kkkykin.matterbridge;
     configPath = config.sops.templates."matterbridge.toml".path;
   };
+
+  systemd.services.matterbridge.serviceConfig =
+    pkgs.kkkykin.lib.serviceHardening
+    // {
+      CacheDirectory = "matterbridge";
+      CacheDirectoryMode = "0750";
+      ReadWritePaths = [mediaDir];
+      # Caddy serves media through the matterbridge group.
+      UMask = "0027";
+    };
 }

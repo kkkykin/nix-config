@@ -14,7 +14,8 @@ in {
   services.calibre-server = {
     enable = true;
     package = pkg;
-    openFirewall = true;
+    host = "127.0.0.1";
+    openFirewall = false;
     auth = {
       enable = true;
       mode = "basic";
@@ -24,5 +25,16 @@ in {
       "${baseDir}/books"
       "${baseDir}/comic"
     ];
+  };
+
+  systemd.services.calibre-server.serviceConfig =
+    pkgs.kkkykin.lib.serviceHardening
+    // {
+      ReadWritePaths = [baseDir config.users.users.${user}.home];
+    };
+
+  my.webApps.calibre = {
+    tunnel = false;
+    caddyConfig = "reverse_proxy http://127.0.0.1:${toString config.services.calibre-server.port}";
   };
 }

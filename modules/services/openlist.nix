@@ -12,6 +12,7 @@
     enable = true;
     envFile = config.sops.secrets.openlist.path;
   };
+  systemd.services.openlist.serviceConfig.ReadWritePaths = [config.services.aria2.settings.dir];
   my.webApps.openlist.caddyConfig = "reverse_proxy http://127.0.0.1:5244";
 
   services.postgresql = {

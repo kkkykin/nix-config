@@ -29,53 +29,60 @@ in {
       "network.target"
     ];
 
-    serviceConfig = {
-      Type = "simple";
+    serviceConfig =
+      pkgs.kkkykin.lib.serviceHardening
+      // {
+        Type = "simple";
 
-      User = ungoogledChromiumUser;
-      Group = ungoogledChromiumUser;
-      SupplementaryGroups = [
-        "render"
-        "video"
-      ];
+        User = ungoogledChromiumUser;
+        Group = ungoogledChromiumUser;
+        SupplementaryGroups = [
+          "render"
+          "video"
+        ];
+        # Chromium's own sandbox uses namespaces; Xpra/Chromium use the GPU.
+        RestrictNamespaces = false;
+        PrivateDevices = false;
+        DevicePolicy = "closed";
+        DeviceAllow = ["char-drm rw"];
 
-      EnvironmentFile =
-        config.sops.secrets."ungoogled-chromium".path;
+        EnvironmentFile =
+          config.sops.secrets."ungoogled-chromium".path;
 
-      WorkingDirectory = stateDir;
+        WorkingDirectory = stateDir;
 
-      Restart = "always";
-      RestartSec = 5;
+        Restart = "always";
+        RestartSec = 5;
 
-      StateDirectory = "ungoogled-chromium";
+        StateDirectory = "ungoogled-chromium";
 
-      ExecStart = ''
-        ${pkgs.xpra}/bin/xpra start :100 \
-          --daemon=no \
-          --html=on \
-          --bind-tcp=127.0.0.1:14500 \
-          --mdns=no \
-          --pulseaudio=no \
-          --notifications=no \
-          --exit-with-children=yes \
-          --start-child="${pkgs.ungoogled-chromium}/bin/chromium \
-            --user-data-dir=${stateDir}/profile-0 \
-            --no-first-run \
-            --remote-debugging-address=127.0.0.1 \
-            --remote-debugging-port=9222 \
-            --ignore-gpu-blocklist \
-            --no-default-browser-check"
-      '';
+        ExecStart = ''
+          ${pkgs.xpra}/bin/xpra start :100 \
+            --daemon=no \
+            --html=on \
+            --bind-tcp=127.0.0.1:14500 \
+            --mdns=no \
+            --pulseaudio=no \
+            --notifications=no \
+            --exit-with-children=yes \
+            --start-child="${pkgs.ungoogled-chromium}/bin/chromium \
+              --user-data-dir=${stateDir}/profile-0 \
+              --no-first-run \
+              --remote-debugging-address=127.0.0.1 \
+              --remote-debugging-port=9222 \
+              --ignore-gpu-blocklist \
+              --no-default-browser-check"
+        '';
 
-      NoNewPrivileges = true;
+        NoNewPrivileges = true;
 
-      ProtectSystem = "strict";
+        ProtectSystem = "strict";
 
-      ReadWritePaths = [
-        stateDir
-      ];
+        ReadWritePaths = [
+          stateDir
+        ];
 
-      PrivateTmp = true;
-    };
+        PrivateTmp = true;
+      };
   };
 }

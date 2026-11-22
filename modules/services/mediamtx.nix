@@ -7,9 +7,11 @@
   hls-addr = "127.0.0.1:8888";
   trusted-proxies = ["127.0.0.1"];
 in {
-  systemd.services.mediamtx.serviceConfig = {
-    EnvironmentFile = config.sops.secrets.mediamtx.path;
-  };
+  systemd.services.mediamtx.serviceConfig =
+    pkgs.kkkykin.lib.serviceHardening
+    // {
+      EnvironmentFile = config.sops.secrets.mediamtx.path;
+    };
   services.mediamtx = {
     enable = true;
 

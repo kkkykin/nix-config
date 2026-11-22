@@ -91,6 +91,13 @@ in {
 
       extraOptions = [
         "--init"
+        # Keep container sudo/package installation, but remove capabilities
+        # unnecessary for the agent, especially with host networking.
+        "--cap-drop=NET_RAW"
+        "--cap-drop=MKNOD"
+        "--cap-drop=SETFCAP"
+        "--cap-drop=AUDIT_WRITE"
+        "--pids-limit=1024"
         "-e"
         "TZ=Asia/Singapore"
         "--add-host=${llm-gateway}:host-gateway"

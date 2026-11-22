@@ -2,15 +2,19 @@
 {
   config,
   username,
+  pkgs,
   ...
 }: {
   users.users.${username} = {
     extraGroups = ["aria2"];
   };
   systemd.services.aria2 = {
-    serviceConfig = {
-      WorkingDirectory = "/var/lib/aria2";
-    };
+    serviceConfig =
+      pkgs.kkkykin.lib.serviceHardening
+      // {
+        WorkingDirectory = "/var/lib/aria2";
+        ReadWritePaths = ["/var/lib/aria2" config.services.aria2.settings.dir];
+      };
   };
   services = {
     caddy.virtualHosts.":80".extraConfig = "${builtins.readFile ./caddy/sub/aria2.Caddyfile}";
@@ -91,7 +95,7 @@
         on-bt-download-complete = "scripts/bt-download-complete.py";
         enable-rpc = true;
         rpc-allow-origin-all = true;
-        rpc-listen-all = true;
+        rpc-listen-all = false;
         rpc-listen-port = 6800;
         rpc-max-request-size = "10M";
         console-log-level = "notice";

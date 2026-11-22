@@ -8,9 +8,11 @@
   server-name = "icu.${secrets.domain}";
   network = "dadada";
 in {
-  systemd.services.ergochat.serviceConfig = {
-    EnvironmentFile = config.sops.secrets.ergochat.path;
-  };
+  systemd.services.ergochat.serviceConfig =
+    pkgs.kkkykin.lib.serviceHardening
+    // {
+      EnvironmentFile = config.sops.secrets.ergochat.path;
+    };
   services.ergochat = {
     enable = true;
     settings = {

@@ -63,4 +63,11 @@ in {
         ])
       );
   };
+
+  systemd.services.dictd.serviceConfig =
+    pkgs.kkkykin.lib.serviceHardening
+    // {
+      User = "dictd";
+      Group = "dictd";
+    };
 }
