@@ -45,6 +45,7 @@ in {
   ];
 
   my.lanDomain = "asus.local";
+  my.sing-box.configFiles = ["/etc/sing-box/client/500-tun.json"];
 
   nix.gc.options = "--delete-older-than 30d";
 
