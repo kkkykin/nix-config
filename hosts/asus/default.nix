@@ -69,6 +69,7 @@ in {
 
   systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.caddy.path;
   services = {
+    aria2.settings.dir = "/mnt/attach1/downloads";
     rsshubProxy = {
       enable = true;
       proxy = HttpProxy;

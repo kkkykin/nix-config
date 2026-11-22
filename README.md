@@ -73,3 +73,8 @@ AF_NETLINK/AF_UNIX，因此用户名称解析和网卡监视不需要继续放�
 `python3 tests/sing-box-route-predicates.py`（可通过 `SING_BOX` 指定二进制）。
 跨用户查询所需的 capability、进程可见性及沙箱配置由 `tests/sing-box-hardening.nix` 评估；
 应用后还需在宿主机验证跨 UID 进程路由。
+
+asus 直接设置 `services.aria2.settings.dir = "/mnt/attach1/downloads"`，aria2 的
+下载目录写入白名单随该设置更新，目录属主和组权限由上游 aria2 tmpfiles 规则管理。
+aria2 使用 `RequiresMountsFor` 等待来源硬盘挂载；硬盘不可用时服务不能启动，
+硬盘的 `nofail` 允许系统继续启动。

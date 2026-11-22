@@ -1,6 +1,7 @@
 # [[file:../../../dotfiles/aria2/20250220T211258--aria2__network.org::#109e43d4-f990-4e01-a20c-916a3c6171d2][module:1]]
 {
   config,
+  lib,
   username,
   pkgs,
   ...
@@ -9,6 +10,7 @@
     extraGroups = ["aria2"];
   };
   systemd.services.aria2 = {
+    unitConfig.RequiresMountsFor = [config.services.aria2.settings.dir];
     serviceConfig =
       pkgs.kkkykin.lib.serviceHardening
       // {
@@ -24,7 +26,7 @@
       serviceUMask = "0002";
       settings = {
         # [[file:../20250220T211258--aria2__network.org::#2847641e-b3b8-4f68-b91c-4a1c6722d88e][save file:1]]
-        dir = "/var/lib/aria2/downloads";
+        dir = lib.mkDefault "/var/lib/aria2/downloads";
         disk-cache = "64M";
         file-allocation = "falloc";
         no-file-allocation-limit = "64M";
