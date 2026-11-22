@@ -1,7 +1,6 @@
 # nix-instantiate --eval --strict --json tests/sing-box-hardening.nix --arg nixpkgs /path/to/nixpkgs
 {
   nixpkgs,
-  nurPackages ? ../../nur-packages,
   system ? "x86_64-linux",
 }: let
   lib = import (nixpkgs + "/lib");
@@ -10,7 +9,6 @@
     overlays = [
       (final: prev: {
         unstable = prev;
-        kkkykin.lib.serviceHardening = import (nurPackages + "/lib/service-hardening.nix") {inherit lib;};
       })
     ];
   };
@@ -35,7 +33,6 @@
   };
   service = config.systemd.services.sing-box.serviceConfig;
   unit = config.systemd.units."sing-box.service".text;
-  networkCapabilities = ["" "CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE"];
   checks = {
     dedicatedServiceUser = service.User == "sing-box" && service.Group == "sing-box";
     readOnlyConfig = service.ConfigurationDirectory == "" && builtins.elem "/etc/sing-box/" service.ReadOnlyPaths;
@@ -44,9 +41,15 @@
     directTunConfig = lib.hasInfix ''"-c" "/etc/sing-box/client/500-tun.json"'' client.systemd.units."sing-box.service".text;
     separateServerFragments = lib.hasInfix ''"-c" "/etc/sing-box/server/500-main.json" "-c" "/etc/sing-box/server/500-dns.json" "-c" "/etc/sing-box/server/500-s0.json"'' server.systemd.units."sing-box.service".text;
     deploymentGroupInheritance = builtins.elem "d /etc/sing-box/ 2750 deployer sing-box -" config.systemd.tmpfiles.rules;
-    noDacOrPtraceBypass = service.CapabilityBoundingSet == networkCapabilities && service.AmbientCapabilities == networkCapabilities;
-    tunStillAvailable = !service.PrivateDevices && builtins.elem "/dev/net/tun rw" service.DeviceAllow && !service.ProtectKernelTunables;
-    sandboxRetained = service.ProtectSystem == "strict" && service.ProtectHome && service.NoNewPrivileges;
+    upstreamUnitIsExtended =
+      builtins.elem config.systemd.units."sing-box.service".overrideStrategy ["asDropin" "asDropinIfExists"]
+      && lib.any (package: package.outPath == config.services.sing-box.package.outPath) config.systemd.packages;
+    upstreamCapabilitiesInherited = !(service ? CapabilityBoundingSet) && !(service ? AmbientCapabilities);
+    crossUserProcessesVisible = (service.ProtectProc or "default") == "default" && (service.ProcSubset or "all") == "all";
+    hostUsersAndInterfacesVisible = !(service.PrivateUsers or false) && !(service.PrivateNetwork or false);
+    upstreamDeviceAndKernelAccess = !(service.PrivateDevices or false) && !(service.ProtectKernelTunables or false) && !(service ? DevicePolicy) && !(service ? DeviceAllow);
+    upstreamNamespacesRetained = !(service.RestrictNamespaces or false);
+    sandboxRetained = service.ProtectSystem == "strict" && service.ProtectHome && service.NoNewPrivileges && service.PrivateTmp && service.UMask == "0077";
   };
 in
   assert lib.assertMsg (lib.all (result: result) (builtins.attrValues checks))

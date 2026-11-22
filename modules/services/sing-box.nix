@@ -35,37 +35,25 @@ in {
     };
 
     systemd.services.sing-box = {
-      serviceConfig =
-        pkgs.kkkykin.lib.serviceHardening
-        // {
-          ExecStart = [
-            ""
-            "${singbox}/bin/sing-box -D \${STATE_DIRECTORY} ${utils.escapeSystemdExecArgs configArgs} run"
-          ];
-          StateDirectory = "sing-box";
-          StateDirectoryMode = "0700";
-          WorkingDirectory = "/var/lib/sing-box";
+      # Inherit capabilities, process/network/device access from the packaged
+      # upstream unit, and the service user/state directories from NixOS.
+      # Generic application sandbox defaults conflict with TUN/process routing.
+      serviceConfig = {
+        ExecStart = [
+          ""
+          "${singbox}/bin/sing-box -D \${STATE_DIRECTORY} ${utils.escapeSystemdExecArgs configArgs} run"
+        ];
+        NoNewPrivileges = true;
+        ProtectSystem = "strict";
+        ProtectHome = true;
+        PrivateTmp = true;
+        UMask = "0077";
 
-          # Reset the capabilities inherited from the upstream unit. TUN and
-          # transparent routing need network capabilities, not ptrace/DAC bypass.
-          CapabilityBoundingSet = lib.mkForce [
-            ""
-            "CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE"
-          ];
-          AmbientCapabilities = lib.mkForce [
-            ""
-            "CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE"
-          ];
-          PrivateDevices = false;
-          DevicePolicy = "closed";
-          DeviceAllow = ["/dev/net/tun rw"];
-          # auto_redirect may update network sysctls when configuring TUN routes.
-          ProtectKernelTunables = false;
-          # tmpfiles owns this external config directory. Do not let systemd's
-          # ConfigurationDirectory make it a writable exception to ProtectSystem.
-          ConfigurationDirectory = lib.mkForce "";
-          ReadOnlyPaths = [conf-dir];
-        };
+        # tmpfiles owns the deployed configs; StateDirectory remains writable.
+        # Avoid ConfigurationDirectory making /etc/sing-box a writable exception.
+        ConfigurationDirectory = lib.mkForce "";
+        ReadOnlyPaths = [conf-dir];
+      };
     };
     services = {
       sing-box = {
